@@ -349,9 +349,8 @@ function renderStockWidgets(){
   });
 }
 {
-  const bank = [...main.children].find(el => el.querySelector('h2')?.textContent.startsWith('Bank og investering'));
   const stocksSec = buildStocksSection();
-  if (bank) bank.after(stocksSec); else main.appendChild(stocksSec);
+  main.prepend(stocksSec);
   renderStockWidgets();
   matchMedia('(prefers-color-scheme: dark)').addEventListener('change', renderStockWidgets);
 }
