@@ -149,7 +149,10 @@
     box-shadow:var(--shadow);overflow:hidden;transition:transform .15s ease,box-shadow .15s ease,border-color .15s;
   }
   .stock:hover{transform:translateY(-2px);box-shadow:var(--shadow-hover);border-color:var(--border-strong)}
-  .stock .tv{height:150px;padding:10px 6px 0 8px;position:relative;color-scheme:light}
+  .stock .tv{height:150px;position:relative;color-scheme:light;overflow:hidden}
+  .stock .tv .layer{position:absolute;inset:10px 6px 0 8px;transition:opacity .35s ease}
+  .stock .tv .layer.pending{opacity:0;pointer-events:none}
+  h2 .upd{font-size:11px;font-weight:500;letter-spacing:.02em;text-transform:none;color:var(--faint);font-variant-numeric:tabular-nums;white-space:nowrap}
   .stock .tv .tradingview-widget-container,.stock .tv .tradingview-widget-container__widget{height:100%;width:100%}
   .stock .tv .loading{position:absolute;inset:0;display:grid;place-items:center;font-size:12px;color:var(--faint)}
   .stock .foot{
@@ -316,7 +319,7 @@ function buildStocksSection(){
   const sec = document.createElement('section');
   sec.id = 'aksjer';
   sec.style.setProperty('--c', '#14b8a6');
-  let h = `<h2><span class="dot"></span>Aksjer<span class="line"></span></h2><div class="stocks">`;
+  let h = `<h2><span class="dot"></span>Aksjer<span class="line"></span><time class="upd" id="stocksUpdated" aria-live="polite">Henter kurser …</time></h2><div class="stocks">`;
   for (const st of STOCKS){
     const url = `https://www.tradingview.com/symbols/${st.tv.replace(':','-')}/`;
     h += `<div class="stock"><div class="tv" data-symbol="${st.tv}"><div class="loading">Henter kurs …</div></div>
@@ -324,35 +327,80 @@ function buildStocksSection(){
         <span class="meta"><span class="who">${esc(st.name)}</span><span class="sub">${st.ex} · ${st.cur}</span></span>
         <span class="arrow" aria-hidden="true">↗</span></a></div>`;
   }
-  h += `</div><p class="stocks-note">Kurser og graf (siste måned) fra <a href="https://www.tradingview.com/" target="_blank" rel="noopener noreferrer">TradingView</a>. Kursene kan være forsinket.</p>`;
+  h += `</div><p class="stocks-note">Kurser og graf (siste måned) fra <a href="https://www.tradingview.com/" target="_blank" rel="noopener noreferrer">TradingView</a>. Kursene er ca. 15 minutter forsinket (gjelder både Nasdaq og Oslo Børs i gratis-widgetene); siden henter dem på nytt hvert minutt.</p>`;
   sec.innerHTML = h;
   return sec;
 }
-let stocksTheme = null;
-function renderStockWidgets(){
-  const theme = effectiveTheme();
-  if (theme === stocksTheme) return;
-  stocksTheme = theme;
-  document.querySelectorAll('#aksjer .tv').forEach(box=>{
-    const sym = box.dataset.symbol;
-    box.innerHTML = '<div class="loading">Henter kurs …</div>';
-    const c = document.createElement('div'); c.className = 'tradingview-widget-container';
-    const w = document.createElement('div'); w.className = 'tradingview-widget-container__widget'; c.appendChild(w);
-    const sc = document.createElement('script');
-    sc.src = 'https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js';
-    sc.async = true;
-    sc.textContent = JSON.stringify({ symbol:sym, width:"100%", height:"100%", locale:"no", dateRange:"1M",
-      colorTheme:theme, isTransparent:true, autosize:true, largeChartUrl:"", chartOnly:false, noTimeScale:false });
-    c.appendChild(sc);
-    box.appendChild(c);
-    setTimeout(()=>{ const l = box.querySelector('.loading'); if (l) l.remove(); }, 2500);
+/* Kursene oppdateres hvert minutt: nye widgeter lastes skjult oppå de gamle og byttes inn først når de er klare. */
+const STOCK_REFRESH_MS = 60 * 1000;
+const STOCK_SWAP_DELAY_MS = 1500;     // tid etter iframe-load før bytte (lar widgeten tegne kurs og graf)
+const STOCK_SWAP_TIMEOUT_MS = 12000;  // bytt uansett etter dette
+let stocksTheme = null, stockTimer = null, stockGen = 0, lastStockRefresh = 0;
+const fmtUpd = new Intl.DateTimeFormat('nb-NO',{hour:'2-digit',minute:'2-digit',timeZone:'Europe/Oslo'});
+function makeWidget(sym, theme){
+  const c = document.createElement('div'); c.className = 'tradingview-widget-container';
+  const w = document.createElement('div'); w.className = 'tradingview-widget-container__widget'; c.appendChild(w);
+  const sc = document.createElement('script');
+  sc.src = 'https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js';
+  sc.async = true;
+  sc.textContent = JSON.stringify({ symbol:sym, width:"100%", height:"100%", locale:"no", dateRange:"1M",
+    colorTheme:theme, isTransparent:true, autosize:true, largeChartUrl:"", chartOnly:false, noTimeScale:false });
+  c.appendChild(sc);
+  return c;
+}
+function refreshBox(box, theme, gen){
+  return new Promise(resolve=>{
+    const layer = document.createElement('div');
+    layer.className = 'layer pending';
+    layer.appendChild(makeWidget(box.dataset.symbol, theme));
+    box.appendChild(layer);
+    let done = false, poll = null;
+    const swap = ()=>{
+      if (done) return; done = true; clearInterval(poll);
+      if (gen !== stockGen){ layer.remove(); return resolve(false); }   // en nyere oppdatering har tatt over
+      layer.classList.remove('pending');
+      box.querySelectorAll(':scope > .layer:not(.pending)').forEach(old=>{ if (old !== layer) setTimeout(()=>old.remove(), 400); });
+      const l = box.querySelector('.loading'); if (l) l.remove();
+      resolve(true);
+    };
+    poll = setInterval(()=>{
+      const f = layer.querySelector('iframe');
+      if (f && !f.dataset.watch){ f.dataset.watch = '1'; f.addEventListener('load', ()=>setTimeout(swap, STOCK_SWAP_DELAY_MS), {once:true}); }
+    }, 100);
+    setTimeout(swap, STOCK_SWAP_TIMEOUT_MS);
   });
+}
+async function refreshStocks(){
+  const theme = effectiveTheme();
+  stocksTheme = theme;
+  const gen = ++stockGen;
+  lastStockRefresh = Date.now();
+  // fjern evt. halvferdige lag fra en tidligere runde
+  document.querySelectorAll('#aksjer .tv > .layer.pending').forEach(l=>l.remove());
+  const results = await Promise.all([...document.querySelectorAll('#aksjer .tv')].map(b=>refreshBox(b, theme, gen)));
+  if (gen === stockGen && results.some(Boolean)){
+    const el = document.getElementById('stocksUpdated');
+    el.textContent = `Oppdatert ${fmtUpd.format(new Date()).replace('.',':')}`;
+    el.dateTime = new Date().toISOString();
+  }
+}
+function scheduleStocks(){
+  clearInterval(stockTimer);
+  stockTimer = setInterval(()=>{ if (!document.hidden) refreshStocks(); }, STOCK_REFRESH_MS);
+}
+function renderStockWidgets(){            // brukes ved temabytte
+  if (effectiveTheme() === stocksTheme) return;
+  refreshStocks(); scheduleStocks();
 }
 {
   const stocksSec = buildStocksSection();
   main.prepend(stocksSec);
-  renderStockWidgets();
+  refreshStocks(); scheduleStocks();
   matchMedia('(prefers-color-scheme: dark)').addEventListener('change', renderStockWidgets);
+  document.addEventListener('visibilitychange', ()=>{
+    if (document.hidden){ clearInterval(stockTimer); stockTimer = null; }
+    else { refreshStocks(); scheduleStocks(); }
+  });
 }
 
 /* Clock, date, greeting */
