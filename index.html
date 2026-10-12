@@ -370,7 +370,7 @@ function buildStocksSection(){
     }
     h += `</div></div>`;
   }
-  h += `<p class="stocks-note">Kurser, graf (siste måned) og nøkkeltall fra <a href="https://www.tradingview.com/" target="_blank" rel="noopener noreferrer">TradingView</a>. Kursene er ca. 15 minutter forsinket (gjelder både Nasdaq og Oslo Børs i gratis-widgetene); siden henter dem på nytt hvert minutt.</p>`;
+  h += `<p class="stocks-note">Kurser, intradaggraf (i dag eller siste handelsdag) og nøkkeltall fra <a href="https://www.tradingview.com/" target="_blank" rel="noopener noreferrer">TradingView</a>. Kursene er ca. 15 minutter forsinket (gjelder både Nasdaq og Oslo Børs i gratis-widgetene); siden henter dem på nytt hvert minutt.</p>`;
   sec.innerHTML = h;
   return sec;
 }
@@ -436,7 +436,7 @@ function makeWidget(sym, theme){
   const sc = document.createElement('script');
   sc.src = 'https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js';
   sc.async = true;
-  sc.textContent = JSON.stringify({ symbol:sym, width:"100%", height:"100%", locale:"no", dateRange:"1M",
+  sc.textContent = JSON.stringify({ symbol:sym, width:"100%", height:"100%", locale:"no", dateRange:"1D",
     colorTheme:theme, isTransparent:true, autosize:true, largeChartUrl:"", chartOnly:false, noTimeScale:false });
   c.appendChild(sc);
   return c;
