@@ -143,7 +143,29 @@
 
 
   /* Aksjer */
-  .stocks{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+  .stocks{display:grid;gap:12px}
+  .stocks.oslo{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .stocks.usa{grid-template-columns:repeat(5,minmax(0,1fr))}
+  .sgroup + .sgroup{margin-top:16px}
+  .sgt{font-size:12.5px;font-weight:600;color:var(--text);margin:0 0 8px 2px;display:flex;align-items:center;gap:8px}
+  .sgt::after{content:"";flex:1;height:1px;background:var(--border)}
+  .stats{padding:4px 14px 12px;font-size:12px;display:flex;flex-direction:column;gap:9px}
+  .stats .day{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:2px 8px;font-size:11px;color:var(--muted);font-weight:600;padding-top:8px;border-top:1px solid var(--border)}
+  .stats .when{white-space:nowrap}
+  .stats .sess{flex:none;display:inline-flex;align-items:center;gap:5px;font-weight:500;color:var(--faint)}
+  .stats .sess::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor;display:none}
+  .stats .sess.open{color:#16a34a}.stats .sess.pre{color:#d97706}.stats .sess.closed{color:var(--faint)}
+  .stats .sess:not(:empty)::before{display:inline-block}
+  .stats .chg{font-variant-numeric:tabular-nums;margin-left:4px}
+  .stats .chg.up{color:#16a34a}.stats .chg.down{color:#dc2626}
+  .stats .k{color:var(--faint);font-size:11px}
+  .stats .v{color:var(--text);font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap}
+  .stats .grid2{display:grid;grid-template-columns:1fr 1fr;gap:7px 12px}
+  .stats .st{display:flex;flex-direction:column;gap:1px;min-width:0}
+  .stats .st .v{overflow:hidden;text-overflow:ellipsis}
+  .stats .rl{display:flex;justify-content:space-between;gap:8px;align-items:baseline;margin-bottom:5px}
+  .stats .bar{position:relative;height:4px;border-radius:4px;background:var(--icon-bg)}
+  .stats .bar i{position:absolute;top:50%;width:10px;height:10px;margin:-5px 0 0 -5px;border-radius:50%;background:var(--c,var(--accent));box-shadow:0 0 0 2px var(--surface);opacity:0;transition:left .4s ease,opacity .3s}
   .stock{
     display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--border);border-radius:16px;
     box-shadow:var(--shadow);overflow:hidden;transition:transform .15s ease,box-shadow .15s ease,border-color .15s;
@@ -171,6 +193,7 @@
   footer{margin-top:40px;text-align:center;font-size:12px;color:var(--faint)}
   footer a{color:inherit}
 
+  @media (max-width:1100px){ .stocks.usa{grid-template-columns:repeat(3,minmax(0,1fr))} }
   @media (max-width:980px){
     section.half,section.third{grid-column:span 12}
   }
@@ -189,7 +212,7 @@
     .ico{width:34px;height:34px}
     .ico img{width:22px;height:22px}
     main{gap:20px}
-    .stocks{grid-template-columns:1fr;gap:10px}
+    .stocks.oslo,.stocks.usa{grid-template-columns:1fr;gap:10px}
     .stock .tv{height:168px}
   }
   @media (prefers-reduced-motion:reduce){*{transition:none!important}}
@@ -304,32 +327,102 @@ for (const s of SECTIONS){
 }
 
 
-/* Aksjer – TradingView mini symbol overview widgets (gratis, ingen nøkkel) */
-const STOCKS = [
-  { name:"Tesla",             tv:"NASDAQ:TSLA",  ex:"Nasdaq",    cur:"USD" },
-  { name:"SpaceX",            tv:"NASDAQ:SPCX",  ex:"Nasdaq",    cur:"USD" },
-  { name:"NVIDIA",            tv:"NASDAQ:NVDA",  ex:"Nasdaq",    cur:"USD" },
-  { name:"Alphabet (Google)", tv:"NASDAQ:GOOGL", ex:"Nasdaq",    cur:"USD" },
-  { name:"Apple",             tv:"NASDAQ:AAPL",  ex:"Nasdaq",    cur:"USD" },
-  { name:"Kongsberg Gruppen", tv:"OSL:KOG",      ex:"Oslo Børs", cur:"NOK" },
-  { name:"Kongsberg Maritime",tv:"OSL:KMAR",     ex:"Oslo Børs", cur:"NOK" },
+/* Aksjer – TradingView mini symbol overview widgets (gratis, ingen nøkkel) + nøkkeltall fra TradingViews åpne scanner-API */
+const STOCK_GROUPS = [
+  { title:"Oslo Børs", cls:"oslo", tz:"Europe/Oslo", stocks:[
+    { name:"Kongsberg Gruppen",  tv:"OSL:KOG",  ex:"Oslo Børs", cur:"NOK" },
+    { name:"Kongsberg Maritime", tv:"OSL:KMAR", ex:"Oslo Børs", cur:"NOK" },
+    { name:"Hunter Group",       tv:"OSL:HUNT", ex:"Oslo Børs", cur:"NOK" },
+  ]},
+  { title:"USA", cls:"usa", tz:"America/New_York", stocks:[
+    { name:"Tesla",             tv:"NASDAQ:TSLA",  ex:"Nasdaq", cur:"USD" },
+    { name:"SpaceX",            tv:"NASDAQ:SPCX",  ex:"Nasdaq", cur:"USD" },
+    { name:"NVIDIA",            tv:"NASDAQ:NVDA",  ex:"Nasdaq", cur:"USD" },
+    { name:"Alphabet (Google)", tv:"NASDAQ:GOOGL", ex:"Nasdaq", cur:"USD" },
+    { name:"Apple",             tv:"NASDAQ:AAPL",  ex:"Nasdaq", cur:"USD" },
+  ]},
 ];
+const STOCKS = STOCK_GROUPS.flatMap(g => g.stocks.map(st => ({...st, tz:g.tz})));
 function effectiveTheme(){ return document.documentElement.dataset.theme || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'); }
+function statsSkeleton(){
+  const cell = (k,l) => `<div class="st"><span class="k">${l}</span><span class="v" data-f="${k}">–</span></div>`;
+  return `<div class="stats" aria-live="off">
+    <div class="day"><span class="when"><span data-f="when">Henter nøkkeltall …</span> <span class="chg" data-f="chg"></span></span><span class="sess" data-f="sess"></span></div>
+    <div class="range"><div class="rl"><span class="k">Dagens spenn</span><span class="v" data-f="dayr">–</span></div><div class="bar"><i data-f="dayp"></i></div></div>
+    <div class="grid2">${cell('open','Åpning')}${cell('prev','Forrige slutt')}${cell('vol','Volum')}${cell('cap','Markedsverdi')}</div>
+    <div class="range"><div class="rl"><span class="k">52 uker</span><span class="v" data-f="wkr">–</span></div><div class="bar"><i data-f="wkp"></i></div></div>
+  </div>`;
+}
 function buildStocksSection(){
   const sec = document.createElement('section');
   sec.id = 'aksjer';
   sec.style.setProperty('--c', '#14b8a6');
-  let h = `<h2><span class="dot"></span>Aksjer<span class="line"></span><time class="upd" id="stocksUpdated" aria-live="polite">Henter kurser …</time></h2><div class="stocks">`;
-  for (const st of STOCKS){
-    const url = `https://www.tradingview.com/symbols/${st.tv.replace(':','-')}/`;
-    h += `<div class="stock"><div class="tv" data-symbol="${st.tv}"><div class="loading">Henter kurs …</div></div>
-      <a class="foot" href="${url}" target="_blank" rel="noopener noreferrer" title="Se ${esc(st.name)} på TradingView">
-        <span class="meta"><span class="who">${esc(st.name)}</span><span class="sub">${st.ex} · ${st.cur}</span></span>
-        <span class="arrow" aria-hidden="true">↗</span></a></div>`;
+  let h = `<h2><span class="dot"></span>Aksjer<span class="line"></span><time class="upd" id="stocksUpdated" aria-live="polite">Henter kurser …</time></h2>`;
+  for (const g of STOCK_GROUPS){
+    h += `<div class="sgroup"><h3 class="sgt">${esc(g.title)}</h3><div class="stocks ${g.cls}">`;
+    for (const st of g.stocks){
+      const url = `https://www.tradingview.com/symbols/${st.tv.replace(':','-')}/`;
+      h += `<div class="stock" data-sym="${st.tv}"><div class="tv" data-symbol="${st.tv}"><div class="loading">Henter kurs …</div></div>
+        ${statsSkeleton()}
+        <a class="foot" href="${url}" target="_blank" rel="noopener noreferrer" title="Se ${esc(st.name)} på TradingView">
+          <span class="meta"><span class="who">${esc(st.name)}</span><span class="sub">${st.ex} · ${st.cur}</span></span>
+          <span class="arrow" aria-hidden="true">↗</span></a></div>`;
+    }
+    h += `</div></div>`;
   }
-  h += `</div><p class="stocks-note">Kurser og graf (siste måned) fra <a href="https://www.tradingview.com/" target="_blank" rel="noopener noreferrer">TradingView</a>. Kursene er ca. 15 minutter forsinket (gjelder både Nasdaq og Oslo Børs i gratis-widgetene); siden henter dem på nytt hvert minutt.</p>`;
+  h += `<p class="stocks-note">Kurser, graf (siste måned) og nøkkeltall fra <a href="https://www.tradingview.com/" target="_blank" rel="noopener noreferrer">TradingView</a>. Kursene er ca. 15 minutter forsinket (gjelder både Nasdaq og Oslo Børs i gratis-widgetene); siden henter dem på nytt hvert minutt.</p>`;
   sec.innerHTML = h;
   return sec;
+}
+/* Nøkkeltall: én samlet forespørsel for alle aksjene */
+const STAT_COLS = ["open","high","low","close","change_abs","change","volume","price_52_week_high","price_52_week_low","total_shares_outstanding_current","time","current_session","currency"];
+const nbNum = (v,d=2) => v==null||!isFinite(v) ? '–' : v.toLocaleString('nb-NO',{minimumFractionDigits:d,maximumFractionDigits:d});
+const nbCompact = v => v==null||!isFinite(v) ? '–' : v < 1e6 ? Math.round(v).toLocaleString('nb-NO') : new Intl.NumberFormat('nb-NO',{notation:'compact',maximumFractionDigits:v>=1e12?2:1}).format(v);
+const pct = (x,lo,hi) => (hi>lo && x!=null) ? Math.max(0,Math.min(100,(x-lo)/(hi-lo)*100)) : null;
+const SESS = { market:['Åpen','open'], pre_market:['Før åpning','pre'], post_market:['Etterhandel','pre'], out_of_session:['Stengt','closed'] };
+let statsLoadedOnce = false;
+async function loadStockStats(){
+  try{
+    const r = await fetch('https://scanner.tradingview.com/global/scan', { method:'POST', headers:{'Content-Type':'text/plain'},
+      body: JSON.stringify({ symbols:{ tickers: STOCKS.map(s=>s.tv) }, columns: STAT_COLS }) });
+    if (!r.ok) throw new Error(r.status);
+    const j = await r.json();
+    for (const row of j.data || []){
+      const st = STOCKS.find(s=>s.tv===row.s); if (!st) continue;
+      const d = Object.fromEntries(STAT_COLS.map((c,i)=>[c,row.d[i]]));
+      const card = document.querySelector(`#aksjer .stock[data-sym="${row.s}"]`); if (!card) continue;
+      const set = (f,v) => { const el = card.querySelector(`[data-f="${f}"]`); if (el) el.textContent = v; };
+      const bar = (f,p) => { const el = card.querySelector(`[data-f="${f}"]`); if (el){ el.style.left = p==null ? '50%' : p+'%'; el.style.opacity = p==null ? 0 : 1; } };
+      const cur = d.currency || st.cur;
+      // Er dagslinjen fra i dag (i børsens tidssone) eller fra siste handelsdag?
+      const dfmt = new Intl.DateTimeFormat('nb-NO',{timeZone:st.tz,year:'numeric',month:'2-digit',day:'2-digit'});
+      const barDay = d.time ? dfmt.format(new Date(d.time*1000)) : null;
+      const today = dfmt.format(new Date());
+      const isToday = barDay && barDay === today;
+      const dayLabel = d.time ? new Intl.DateTimeFormat('nb-NO',{timeZone:st.tz,weekday:'short',day:'numeric',month:'short'}).format(new Date(d.time*1000)) : '';
+      set('when', isToday ? 'I dag' : `Siste handelsdag · ${dayLabel}`);
+      const chEl = card.querySelector('[data-f="chg"]');
+      if (d.change!=null){
+        const sign = d.change>0 ? '+' : d.change<0 ? '−' : '';
+        chEl.textContent = `${sign}${nbNum(Math.abs(d.change))} % (${sign}${nbNum(Math.abs(d.change_abs))})`;
+        chEl.className = 'chg ' + (d.change>0 ? 'up' : d.change<0 ? 'down' : '');
+      }
+      const [sl,sc] = SESS[d.current_session] || ['',''];
+      const sEl = card.querySelector('[data-f="sess"]'); sEl.textContent = sl; sEl.className = 'sess ' + sc;
+      set('dayr', `${nbNum(d.low)} – ${nbNum(d.high)}`); bar('dayp', pct(d.close,d.low,d.high));
+      set('wkr', `${nbNum(d.price_52_week_low)} – ${nbNum(d.price_52_week_high)}`); bar('wkp', pct(d.close,d.price_52_week_low,d.price_52_week_high));
+      set('open', nbNum(d.open));
+      set('prev', (d.close!=null && d.change_abs!=null) ? nbNum(d.close - d.change_abs) : '–');
+      set('vol', nbCompact(d.volume));
+      const cap = (d.total_shares_outstanding_current && d.close) ? d.total_shares_outstanding_current * d.close : null;
+      set('cap', cap ? `${nbCompact(cap)} ${cur}` : '–');
+    }
+    statsLoadedOnce = true;
+    return true;
+  }catch(e){
+    if (!statsLoadedOnce) document.querySelectorAll('#aksjer [data-f="when"]').forEach(el=>el.textContent='Nøkkeltall utilgjengelig');
+    return false;
+  }
 }
 /* Kursene oppdateres hvert minutt: nye widgeter lastes skjult oppå de gamle og byttes inn først når de er klare. */
 const STOCK_REFRESH_MS = 60 * 1000;
@@ -377,7 +470,9 @@ async function refreshStocks(){
   lastStockRefresh = Date.now();
   // fjern evt. halvferdige lag fra en tidligere runde
   document.querySelectorAll('#aksjer .tv > .layer.pending').forEach(l=>l.remove());
+  const statsP = loadStockStats();
   const results = await Promise.all([...document.querySelectorAll('#aksjer .tv')].map(b=>refreshBox(b, theme, gen)));
+  await statsP;
   if (gen === stockGen && results.some(Boolean)){
     const el = document.getElementById('stocksUpdated');
     el.textContent = `Oppdatert ${fmtUpd.format(new Date()).replace('.',':')}`;
