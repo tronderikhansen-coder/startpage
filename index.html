@@ -219,11 +219,13 @@
   .stock.a5down .abadge{background:#dc2626;color:#fff}
   :root[data-theme="dark"] .stock.a3 .abadge{color:#fbbf24}
   @media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .stock.a3 .abadge{color:#fbbf24}}
-  .toasts{position:fixed;right:18px;bottom:18px;z-index:50;display:flex;flex-direction:column;gap:10px;max-width:min(380px,calc(100vw - 36px))}
-  .toast{display:flex;gap:12px;align-items:flex-start;padding:12px 14px;border-radius:14px;background:var(--surface);border:1px solid var(--border-strong);
+  .toasts{position:fixed;right:18px;bottom:18px;z-index:50;display:flex;flex-direction:column;gap:10px;width:min(380px,calc(100vw - 36px));max-height:min(60vh,520px);overflow-y:auto;overscroll-behavior:contain;padding:2px 4px 2px 2px;scrollbar-width:thin}
+  .toasts:empty{display:none}
+  .toast{flex:none;cursor:pointer;display:flex;gap:12px;align-items:flex-start;padding:12px 14px;border-radius:14px;background:var(--surface);border:1px solid var(--border-strong);
     border-left:4px solid var(--tc,#f59e0b);box-shadow:var(--shadow-hover);font-size:13.5px;color:var(--text);animation:tin .25s ease}
   .toast b{display:block;font-size:12px;color:var(--muted);font-weight:600;margin-bottom:2px}
-  .toast button{margin-left:auto;border:0;background:none;color:var(--faint);font-size:18px;line-height:1;cursor:pointer;padding:0 2px}
+  .toast button{margin-left:auto;flex:none;width:28px;height:28px;border-radius:8px;border:0;background:var(--icon-bg);color:var(--muted);font-size:18px;line-height:1;cursor:pointer;display:grid;place-items:center}
+  .toast button:hover{color:var(--text);background:var(--border-strong)}
   @keyframes tin{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 
   footer{margin-top:40px;text-align:center;font-size:12px;color:var(--faint)}
@@ -477,6 +479,9 @@ async function loadStockStats(){
 /* Kursalarmer: ±3 % / ±5 % dagsendring, maks én gang per aksje/retning/nivå per handelsdag */
 const ALARM_TEST = (()=>{ const v = new URLSearchParams(location.search).get('testalarm'); return v==='1' ? 'today' : v==='stale' ? 'stale' : null; })();
 const ALARM_TEST_CHANGES = { "OSL:KMAR":5.2, "OSL:HUNT":-6.1, "NASDAQ:TSLA":-3.4, "NASDAQ:NVDA":3.6 };
+const ALARM_TTL_MS = (ALARM_TEST && +new URLSearchParams(location.search).get('alarmttl') > 0)
+  ? +new URLSearchParams(location.search).get('alarmttl') * 1000 : 5 * 60 * 1000;   // varsler vises i 5 min (testparameter alarmttl=sekunder)
+const ALARM_MAX_TOASTS = 8;
 const ALARM_NS = ALARM_TEST ? 'startside-test-' : 'startside-';           // testmodus rører ikke ekte innstillinger/historikk
 const alarmCfg = Object.assign({ t3:true, t5:true, sound:false }, (()=>{ try{ return JSON.parse(localStorage.getItem(ALARM_NS+'varsel-innst')) || {}; }catch(e){ return {}; } })());
 const saveAlarmCfg = () => { try{ localStorage.setItem(ALARM_NS+'varsel-innst', JSON.stringify(alarmCfg)); }catch(e){} };
@@ -501,9 +506,13 @@ function toast(title, msg, color){
   if (!box){ box = document.createElement('div'); box.className='toasts'; box.setAttribute('role','status'); box.setAttribute('aria-live','polite'); document.body.appendChild(box); }
   const t = document.createElement('div'); t.className='toast'; t.style.setProperty('--tc', color);
   t.innerHTML = `<div><b>${esc(title)}</b>${esc(msg)}</div><button type="button" aria-label="Lukk">×</button>`;
-  t.querySelector('button').onclick = ()=>t.remove();
+  t.querySelector('button').onclick = e=>{ e.stopPropagation(); t.remove(); };
   box.appendChild(t);
-  setTimeout(()=>t.remove(), ALARM_TEST ? 600000 : 15000);
+  t.title = 'Klikk for å lukke';
+  t.onclick = ()=>t.remove();
+  while (box.children.length > ALARM_MAX_TOASTS) box.firstElementChild.remove();   // eldste ut
+  box.scrollTop = box.scrollHeight;
+  setTimeout(()=>t.remove(), ALARM_TTL_MS);
 }
 function checkAlarm(st, d, isToday, barDay, card, cur){
   const ch = d.change;
@@ -532,7 +541,10 @@ function checkAlarm(st, d, isToday, barDay, card, cur){
   toast(title, msg, color);
   beep(want===5);
   if ('Notification' in window && Notification.permission === 'granted'){
-    try{ new Notification(title, { body: msg, tag: `${barDay}:${up?'opp':'ned'}:${st.tv}`, icon: 'https://www.google.com/s2/favicons?domain=tradingview.com&sz=64' }); }catch(e){}
+    try{
+      const n = new Notification(title, { body: msg, tag: `${barDay}:${up?'opp':'ned'}:${st.tv}`, requireInteraction: true, icon: 'https://www.google.com/s2/favicons?domain=tradingview.com&sz=64' });
+      setTimeout(()=>{ try{ n.close(); }catch(e){} }, ALARM_TTL_MS);
+    }catch(e){}
   }
 }
 function setupAlarmUI(){
