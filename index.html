@@ -190,6 +190,42 @@
   .stocks-note{font-size:11.5px;color:var(--faint);margin:8px 2px 0}
   .stocks-note a{color:inherit}
 
+  /* Kursalarmer */
+  #aksjer{position:relative}
+  .abtn{margin-left:4px;display:inline-flex;align-items:center;gap:6px;height:26px;padding:0 10px;border-radius:999px;border:1px solid var(--border-strong);
+    background:var(--surface);color:var(--muted);font:inherit;font-size:11.5px;font-weight:600;letter-spacing:0;text-transform:none;cursor:pointer;box-shadow:var(--shadow)}
+  .abtn:hover{color:var(--accent);border-color:var(--accent)}
+  .abtn svg{width:14px;height:14px}
+  .abtn.on{color:var(--accent)}
+  .apanel{position:absolute;right:0;top:30px;z-index:20;width:300px;max-width:calc(100vw - 32px);padding:14px 16px;border-radius:16px;
+    background:var(--surface);border:1px solid var(--border-strong);box-shadow:var(--shadow-hover);font-size:13px;color:var(--text)}
+  .apanel[hidden]{display:none}
+  .apanel h4{margin:0 0 10px;font-size:13.5px}
+  .apanel label{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:6px 0;cursor:pointer}
+  .apanel input{width:16px;height:16px;accent-color:var(--accent)}
+  .apanel .perm{width:100%;margin:8px 0 6px;height:34px;border:0;border-radius:10px;background:var(--accent);color:#fff;font:inherit;font-weight:600;cursor:pointer}
+  :root[data-theme="dark"] .apanel .perm{color:#0b1020}
+  @media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .apanel .perm{color:#0b1020}}
+  .apanel .perm:disabled{opacity:.6;cursor:default}
+  .apanel .pstat{font-size:11.5px;color:var(--muted);margin:0 0 6px}
+  .apanel .hint{font-size:11.5px;color:var(--faint);margin:8px 0 0;line-height:1.4}
+  .abadge{display:none;flex:none;padding:1px 7px;border-radius:999px;font-size:10.5px;font-weight:700;letter-spacing:.02em;white-space:nowrap}
+  .stock.a3 .abadge,.stock.a5up .abadge,.stock.a5down .abadge{display:inline-block}
+  .stock.a3{border-color:rgba(245,158,11,.55)}
+  .stock.a3 .abadge{background:rgba(245,158,11,.16);color:#b45309}
+  .stock.a5up{border-color:rgba(22,163,74,.7);box-shadow:0 0 0 2px rgba(22,163,74,.18),var(--shadow)}
+  .stock.a5up .abadge{background:#16a34a;color:#fff}
+  .stock.a5down{border-color:rgba(220,38,38,.7);box-shadow:0 0 0 2px rgba(220,38,38,.18),var(--shadow)}
+  .stock.a5down .abadge{background:#dc2626;color:#fff}
+  :root[data-theme="dark"] .stock.a3 .abadge{color:#fbbf24}
+  @media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .stock.a3 .abadge{color:#fbbf24}}
+  .toasts{position:fixed;right:18px;bottom:18px;z-index:50;display:flex;flex-direction:column;gap:10px;max-width:min(380px,calc(100vw - 36px))}
+  .toast{display:flex;gap:12px;align-items:flex-start;padding:12px 14px;border-radius:14px;background:var(--surface);border:1px solid var(--border-strong);
+    border-left:4px solid var(--tc,#f59e0b);box-shadow:var(--shadow-hover);font-size:13.5px;color:var(--text);animation:tin .25s ease}
+  .toast b{display:block;font-size:12px;color:var(--muted);font-weight:600;margin-bottom:2px}
+  .toast button{margin-left:auto;border:0;background:none;color:var(--faint);font-size:18px;line-height:1;cursor:pointer;padding:0 2px}
+  @keyframes tin{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
   footer{margin-top:40px;text-align:center;font-size:12px;color:var(--faint)}
   footer a{color:inherit}
 
@@ -347,7 +383,7 @@ function effectiveTheme(){ return document.documentElement.dataset.theme || (mat
 function statsSkeleton(){
   const cell = (k,l) => `<div class="st"><span class="k">${l}</span><span class="v" data-f="${k}">–</span></div>`;
   return `<div class="stats" aria-live="off">
-    <div class="day"><span class="when"><span data-f="when">Henter nøkkeltall …</span> <span class="chg" data-f="chg"></span></span><span class="sess" data-f="sess"></span></div>
+    <div class="day"><span class="when"><span data-f="when">Henter nøkkeltall …</span> <span class="chg" data-f="chg"></span></span><span class="abadge" data-f="badge"></span><span class="sess" data-f="sess"></span></div>
     <div class="range"><div class="rl"><span class="k">Dagens spenn</span><span class="v" data-f="dayr">–</span></div><div class="bar"><i data-f="dayp"></i></div></div>
     <div class="grid2">${cell('open','Åpning')}${cell('prev','Forrige slutt')}${cell('vol','Volum')}${cell('cap','Markedsverdi')}</div>
     <div class="range"><div class="rl"><span class="k">52 uker</span><span class="v" data-f="wkr">–</span></div><div class="bar"><i data-f="wkp"></i></div></div>
@@ -357,7 +393,16 @@ function buildStocksSection(){
   const sec = document.createElement('section');
   sec.id = 'aksjer';
   sec.style.setProperty('--c', '#14b8a6');
-  let h = `<h2><span class="dot"></span>Aksjer<span class="line"></span><time class="upd" id="stocksUpdated" aria-live="polite">Henter kurser …</time></h2>`;
+  let h = `<h2><span class="dot"></span>Aksjer<span class="line"></span><time class="upd" id="stocksUpdated" aria-live="polite">Henter kurser …</time><button type="button" class="abtn" id="alarmBtn" aria-haspopup="true" aria-expanded="false" title="Kursvarsler"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg><span id="alarmBtnTxt">Varsler</span></button></h2>
+  <div class="apanel" id="alarmPanel" hidden>
+    <h4>Kursvarsler</h4>
+    <p class="pstat" id="alarmPerm"></p>
+    <button type="button" class="perm" id="alarmPermBtn">Slå på varsler</button>
+    <label>Varsle ved ±3 % <input type="checkbox" id="alarm3"></label>
+    <label>Varsle ved ±5 % <input type="checkbox" id="alarm5"></label>
+    <label>Lyd <input type="checkbox" id="alarmSound"></label>
+    <p class="hint">Varsler sendes bare mens startsiden er åpen i en nettleserfane, og høyst én gang per aksje, retning og nivå per handelsdag. Kursene er ca. 15 min forsinket.</p>
+  </div>`;
   for (const g of STOCK_GROUPS){
     h += `<div class="sgroup"><h3 class="sgt">${esc(g.title)}</h3><div class="stocks ${g.cls}">`;
     for (const st of g.stocks){
@@ -390,6 +435,10 @@ async function loadStockStats(){
     for (const row of j.data || []){
       const st = STOCKS.find(s=>s.tv===row.s); if (!st) continue;
       const d = Object.fromEntries(STAT_COLS.map((c,i)=>[c,row.d[i]]));
+      if (ALARM_TEST && ALARM_TEST_CHANGES[row.s] != null){   // ?testalarm=1 / ?testalarm=stale: simulerte endringer, kun visning/test
+        const prev = d.close - d.change_abs; d.change = ALARM_TEST_CHANGES[row.s]; d.close = +(prev*(1+d.change/100)).toFixed(2); d.change_abs = d.close - prev;
+        if (ALARM_TEST === 'stale') d.time -= 86400; else d.time = Math.floor(Date.now()/1000);
+      }
       const card = document.querySelector(`#aksjer .stock[data-sym="${row.s}"]`); if (!card) continue;
       const set = (f,v) => { const el = card.querySelector(`[data-f="${f}"]`); if (el) el.textContent = v; };
       const bar = (f,p) => { const el = card.querySelector(`[data-f="${f}"]`); if (el){ el.style.left = p==null ? '50%' : p+'%'; el.style.opacity = p==null ? 0 : 1; } };
@@ -416,6 +465,7 @@ async function loadStockStats(){
       set('vol', nbCompact(d.volume));
       const cap = (d.total_shares_outstanding_current && d.close) ? d.total_shares_outstanding_current * d.close : null;
       set('cap', cap ? `${nbCompact(cap)} ${cur}` : '–');
+      checkAlarm(st, d, isToday, barDay, card, cur);
     }
     statsLoadedOnce = true;
     return true;
@@ -423,6 +473,88 @@ async function loadStockStats(){
     if (!statsLoadedOnce) document.querySelectorAll('#aksjer [data-f="when"]').forEach(el=>el.textContent='Nøkkeltall utilgjengelig');
     return false;
   }
+}
+/* Kursalarmer: ±3 % / ±5 % dagsendring, maks én gang per aksje/retning/nivå per handelsdag */
+const ALARM_TEST = (()=>{ const v = new URLSearchParams(location.search).get('testalarm'); return v==='1' ? 'today' : v==='stale' ? 'stale' : null; })();
+const ALARM_TEST_CHANGES = { "OSL:KMAR":5.2, "OSL:HUNT":-6.1, "NASDAQ:TSLA":-3.4, "NASDAQ:NVDA":3.6 };
+const ALARM_NS = ALARM_TEST ? 'startside-test-' : 'startside-';           // testmodus rører ikke ekte innstillinger/historikk
+const alarmCfg = Object.assign({ t3:true, t5:true, sound:false }, (()=>{ try{ return JSON.parse(localStorage.getItem(ALARM_NS+'varsel-innst')) || {}; }catch(e){ return {}; } })());
+const saveAlarmCfg = () => { try{ localStorage.setItem(ALARM_NS+'varsel-innst', JSON.stringify(alarmCfg)); }catch(e){} };
+function firedLoad(){ try{ return JSON.parse(localStorage.getItem(ALARM_NS+'varsel-logg')) || {}; }catch(e){ return {}; } }
+function firedSave(o){ const days = Object.keys(o).sort().slice(-5); const k = {}; days.forEach(d=>k[d]=o[d]); try{ localStorage.setItem(ALARM_NS+'varsel-logg', JSON.stringify(k)); }catch(e){} }
+let audioCtx = null;
+function unlockAudio(){ try{ audioCtx = audioCtx || new (window.AudioContext||window.webkitAudioContext)(); if (audioCtx.state==='suspended') audioCtx.resume(); }catch(e){} }
+function beep(strong){
+  if (!alarmCfg.sound || !audioCtx) return;
+  try{
+    const t = audioCtx.currentTime;
+    (strong ? [0,0.18] : [0]).forEach(off=>{
+      const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+      o.type='sine'; o.frequency.value = strong ? 880 : 660;
+      g.gain.setValueAtTime(0.0001,t+off); g.gain.exponentialRampToValueAtTime(0.15,t+off+0.02); g.gain.exponentialRampToValueAtTime(0.0001,t+off+0.15);
+      o.connect(g).connect(audioCtx.destination); o.start(t+off); o.stop(t+off+0.16);
+    });
+  }catch(e){}
+}
+function toast(title, msg, color){
+  let box = document.querySelector('.toasts');
+  if (!box){ box = document.createElement('div'); box.className='toasts'; box.setAttribute('role','status'); box.setAttribute('aria-live','polite'); document.body.appendChild(box); }
+  const t = document.createElement('div'); t.className='toast'; t.style.setProperty('--tc', color);
+  t.innerHTML = `<div><b>${esc(title)}</b>${esc(msg)}</div><button type="button" aria-label="Lukk">×</button>`;
+  t.querySelector('button').onclick = ()=>t.remove();
+  box.appendChild(t);
+  setTimeout(()=>t.remove(), ALARM_TEST ? 600000 : 15000);
+}
+function checkAlarm(st, d, isToday, barDay, card, cur){
+  const ch = d.change;
+  card.classList.remove('a3','a5up','a5down');
+  const badge = card.querySelector('[data-f="badge"]');
+  if (ch == null || !isFinite(ch)) return;
+  const mag = Math.abs(ch), up = ch > 0;
+  const lvl = mag >= 5 ? 5 : mag >= 3 ? 3 : 0;
+  if (lvl){                                    // merket vises alltid, også for siste handelsdag
+    card.classList.add(lvl===5 ? (up?'a5up':'a5down') : 'a3');
+    badge.textContent = `${up?'▲':'▼'} ${lvl} %`;
+    badge.title = `${up?'Opp':'Ned'} ${nbNum(mag,1)} % ${isToday?'i dag':'siste handelsdag'}`;
+  }
+  if (!isToday || !barDay) return;             // varsle aldri på gammel data
+  const want = mag >= 5 && alarmCfg.t5 ? 5 : mag >= 3 && alarmCfg.t3 ? 3 : 0;
+  if (!want) return;
+  const dir = up ? 'opp' : 'ned';
+  const log = firedLoad(); const day = log[barDay] = log[barDay] || [];
+  const k3 = `${st.tv}:${dir}:3`, k5 = `${st.tv}:${dir}:5`;
+  if (want === 5 ? day.includes(k5) : (day.includes(k3) || day.includes(k5))) return;
+  day.push(want===5 ? k5 : k3); if (want===5 && !day.includes(k3)) day.push(k3);   // 5 % rett på: bare 5 %-varsel, og 3 % regnes som brukt
+  firedSave(log);
+  const msg = `${st.name} har ${up?'steget':'falt'} ${nbNum(mag,1)} % i dag (${nbNum(d.close)} ${cur})`;
+  const title = `Kursvarsel ${up?'▲':'▼'} ${want} %`;
+  const color = want===5 ? (up?'#16a34a':'#dc2626') : '#f59e0b';
+  toast(title, msg, color);
+  beep(want===5);
+  if ('Notification' in window && Notification.permission === 'granted'){
+    try{ new Notification(title, { body: msg, tag: `${barDay}:${up?'opp':'ned'}:${st.tv}`, icon: 'https://www.google.com/s2/favicons?domain=tradingview.com&sz=64' }); }catch(e){}
+  }
+}
+function setupAlarmUI(){
+  const btn = document.getElementById('alarmBtn'), panel = document.getElementById('alarmPanel');
+  const permBtn = document.getElementById('alarmPermBtn'), permTxt = document.getElementById('alarmPerm');
+  const c3 = document.getElementById('alarm3'), c5 = document.getElementById('alarm5'), cs = document.getElementById('alarmSound');
+  c3.checked = alarmCfg.t3; c5.checked = alarmCfg.t5; cs.checked = alarmCfg.sound;
+  const upd = () => {
+    const has = 'Notification' in window, p = has ? Notification.permission : 'unsupported';
+    permTxt.textContent = p==='granted' ? 'Nettleservarsler er på.' : p==='denied' ? 'Varsler er blokkert i nettleseren – endre det i nettstedsinnstillingene.' : p==='unsupported' ? 'Nettleseren støtter ikke varsler – du får varsel på siden.' : 'Nettleservarsler er av. Du får fortsatt varsel på siden.';
+    permBtn.hidden = p !== 'default';
+    btn.classList.toggle('on', p==='granted');
+    document.getElementById('alarmBtnTxt').textContent = (p==='granted' ? 'Varsler på' : 'Varsler') + (ALARM_TEST ? ' · TEST' : '');
+  };
+  upd();
+  btn.addEventListener('click', e => { e.stopPropagation(); unlockAudio(); panel.hidden = !panel.hidden; btn.setAttribute('aria-expanded', String(!panel.hidden)); });
+  panel.addEventListener('click', e => e.stopPropagation());
+  document.addEventListener('click', () => { if (!panel.hidden){ panel.hidden = true; btn.setAttribute('aria-expanded','false'); } });
+  permBtn.addEventListener('click', async () => { unlockAudio(); try{ await Notification.requestPermission(); }catch(e){} upd(); });
+  c3.onchange = () => { alarmCfg.t3 = c3.checked; saveAlarmCfg(); };
+  c5.onchange = () => { alarmCfg.t5 = c5.checked; saveAlarmCfg(); };
+  cs.onchange = () => { alarmCfg.sound = cs.checked; saveAlarmCfg(); if (cs.checked){ unlockAudio(); beep(false); } };
 }
 /* Kursene oppdateres hvert minutt: nye widgeter lastes skjult oppå de gamle og byttes inn først når de er klare. */
 const STOCK_REFRESH_MS = 60 * 1000;
@@ -490,6 +622,7 @@ function renderStockWidgets(){            // brukes ved temabytte
 {
   const stocksSec = buildStocksSection();
   main.prepend(stocksSec);
+  setupAlarmUI();
   refreshStocks(); scheduleStocks();
   matchMedia('(prefers-color-scheme: dark)').addEventListener('change', renderStockWidgets);
   document.addEventListener('visibilitychange', ()=>{
