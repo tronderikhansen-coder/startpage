@@ -151,7 +151,8 @@
   .sgt::after{content:"";flex:1;height:1px;background:var(--border)}
   .stats{padding:4px 14px 12px;font-size:12px;display:flex;flex-direction:column;gap:9px}
   .stats .day{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:2px 8px;font-size:11px;color:var(--muted);font-weight:600;padding-top:8px;border-top:1px solid var(--border)}
-  .stats .when{white-space:nowrap}
+  .stats .when{white-space:normal;min-width:0}
+  .stats .chg{white-space:nowrap}
   .stats .sess{flex:none;display:inline-flex;align-items:center;gap:5px;font-weight:500;color:var(--faint)}
   .stats .sess::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor;display:none}
   .stats .sess.open{color:#16a34a}.stats .sess.pre{color:#d97706}.stats .sess.closed{color:var(--faint)}
@@ -171,12 +172,31 @@
     box-shadow:var(--shadow);overflow:hidden;transition:transform .15s ease,box-shadow .15s ease,border-color .15s;
   }
   .stock:hover{transform:translateY(-2px);box-shadow:var(--shadow-hover);border-color:var(--border-strong)}
-  .stock .tv{height:150px;position:relative;color-scheme:light;overflow:hidden}
-  .stock .tv .layer{position:absolute;inset:10px 6px 0 8px;transition:opacity .35s ease}
-  .stock .tv .layer.pending{opacity:0;pointer-events:none}
+  .stock .tv{position:relative;padding:12px 14px 0;--up:#16a34a;--down:#dc2626;--flat:#94a3b8}
+  .stock .tv{--lc:var(--flat)} .stock[data-dir="up"] .tv{--lc:var(--up)} .stock[data-dir="down"] .tv{--lc:var(--down)}
   h2 .upd{font-size:11px;font-weight:500;letter-spacing:.02em;text-transform:none;color:var(--faint);font-variant-numeric:tabular-nums;white-space:nowrap}
-  .stock .tv .tradingview-widget-container,.stock .tv .tradingview-widget-container__widget{height:100%;width:100%}
-  .stock .tv .loading{position:absolute;inset:0;display:grid;place-items:center;font-size:12px;color:var(--faint)}
+  .qhead{display:flex;align-items:center;gap:9px;min-width:0}
+  .qlogo{width:26px;height:26px;flex:none;border-radius:50%;background:var(--icon-bg);display:grid;place-items:center;overflow:hidden;font-weight:700;font-size:12px;color:var(--muted)}
+  .qlogo img{width:100%;height:100%;object-fit:cover}
+  .qid{display:flex;flex-direction:column;min-width:0;line-height:1.2}
+  .qtk{font-weight:700;font-size:13.5px}
+  .qnm{font-size:10.5px;color:var(--faint);text-transform:uppercase;letter-spacing:.02em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .qprice{display:flex;align-items:baseline;gap:6px;margin:6px 0 2px;white-space:nowrap}
+  .qp{font-size:24px;font-weight:700;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+  .qcur{font-size:11px;color:var(--faint);font-weight:600}
+  .qch{font-size:14px;font-weight:600;font-variant-numeric:tabular-nums;margin-left:2px}
+  .qch.up{color:#16a34a}.qch.down{color:#dc2626}
+  .stock .chart{height:104px;position:relative;margin:0 -4px}
+  .stock .chart svg{display:block;overflow:visible}
+  .stock .chart .loading{position:absolute;inset:0;display:grid;place-items:center;font-size:12px;color:var(--faint)}
+  .chart .ln{stroke:var(--lc);stroke-width:1.7;stroke-linejoin:round;stroke-linecap:round}
+  .chart .dt{fill:var(--lc);stroke:var(--surface);stroke-width:1.5}
+  .chart .gs1{stop-color:var(--lc);stop-opacity:.22} .chart .gs2{stop-color:var(--lc);stop-opacity:0}
+  .chart .pc{stroke:var(--faint);stroke-width:1;stroke-dasharray:4 3;opacity:.9}
+  .chart .pcl{font-size:10px;fill:var(--muted);font-weight:600;paint-order:stroke;stroke:var(--surface);stroke-width:3px;stroke-linejoin:round}
+  .chart .base{stroke:var(--border-strong);stroke-width:1}
+  .chart .tk{stroke:var(--border-strong);stroke-width:1}
+  .chart .ax{font-size:10px;fill:var(--faint);font-variant-numeric:tabular-nums}
   .stock .foot{
     display:flex;align-items:center;justify-content:space-between;gap:8px;padding:9px 14px;
     border-top:1px solid var(--border);font-size:12px;color:var(--muted);text-decoration:none;
@@ -251,7 +271,7 @@
     .ico img{width:22px;height:22px}
     main{gap:20px}
     .stocks.oslo,.stocks.usa{grid-template-columns:1fr;gap:10px}
-    .stock .tv{height:168px}
+    .stock .chart{height:120px}
   }
   @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
@@ -409,7 +429,11 @@ function buildStocksSection(){
     h += `<div class="sgroup"><h3 class="sgt">${esc(g.title)}</h3><div class="stocks ${g.cls}">`;
     for (const st of g.stocks){
       const url = `https://www.tradingview.com/symbols/${st.tv.replace(':','-')}/`;
-      h += `<div class="stock" data-sym="${st.tv}"><div class="tv" data-symbol="${st.tv}"><div class="loading">Henter kurs …</div></div>
+      h += `<div class="stock" data-sym="${st.tv}"><div class="tv" data-symbol="${st.tv}">
+          <div class="qhead"><span class="qlogo" data-f="logo">${esc(st.tv.split(':')[1][0])}</span><span class="qid"><span class="qtk">${esc(st.tv.split(':')[1])}</span><span class="qnm" data-f="desc">${esc(st.name)}</span></span></div>
+          <div class="qprice"><span class="qp" data-f="price">–</span><span class="qcur">${st.cur}</span><span class="qch" data-f="qchg"></span></div>
+          <div class="chart" data-f="chart"><div class="loading">Henter graf …</div></div>
+        </div>
         ${statsSkeleton()}
         <a class="foot" href="${url}" target="_blank" rel="noopener noreferrer" title="Se ${esc(st.name)} på TradingView">
           <span class="meta"><span class="who">${esc(st.name)}</span><span class="sub">${st.ex} · ${st.cur}</span></span>
@@ -417,12 +441,13 @@ function buildStocksSection(){
     }
     h += `</div></div>`;
   }
-  h += `<p class="stocks-note">Kurser, intradaggraf (i dag eller siste handelsdag) og nøkkeltall fra <a href="https://www.tradingview.com/" target="_blank" rel="noopener noreferrer">TradingView</a>. Kursene er ca. 15 minutter forsinket (gjelder både Nasdaq og Oslo Børs i gratis-widgetene); siden henter dem på nytt hvert minutt.</p>`;
+  h += `<p class="stocks-note">Kurser og nøkkeltall fra <a href="https://www.tradingview.com/" target="_blank" rel="noopener noreferrer">TradingView</a>, intradaggraf (1 min, i dag eller siste handelsdag) fra <a href="https://www.cnbc.com/markets/" target="_blank" rel="noopener noreferrer">CNBC</a>. Grønn/rød graf = opp/ned mot forrige sluttkurs (stiplet linje). Kursene er ca. 15 minutter forsinket (gjelder både Nasdaq og Oslo Børs), og grafen vises med samme forsinkelse; siden henter alt på nytt hvert minutt.</p>`;
   sec.innerHTML = h;
   return sec;
 }
 /* Nøkkeltall: én samlet forespørsel for alle aksjene */
-const STAT_COLS = ["open","high","low","close","change_abs","change","volume","price_52_week_high","price_52_week_low","total_shares_outstanding_current","time","current_session","currency"];
+const STAT_COLS = ["open","high","low","close","change_abs","change","volume","price_52_week_high","price_52_week_low","total_shares_outstanding_current","time","current_session","currency","logoid","description"];
+const STAT_DATA = {};
 const nbNum = (v,d=2) => v==null||!isFinite(v) ? '–' : v.toLocaleString('nb-NO',{minimumFractionDigits:d,maximumFractionDigits:d});
 const nbCompact = v => v==null||!isFinite(v) ? '–' : v < 1e6 ? Math.round(v).toLocaleString('nb-NO') : new Intl.NumberFormat('nb-NO',{notation:'compact',maximumFractionDigits:v>=1e12?2:1}).format(v);
 const pct = (x,lo,hi) => (hi>lo && x!=null) ? Math.max(0,Math.min(100,(x-lo)/(hi-lo)*100)) : null;
@@ -468,6 +493,13 @@ async function loadStockStats(){
       const cap = (d.total_shares_outstanding_current && d.close) ? d.total_shares_outstanding_current * d.close : null;
       set('cap', cap ? `${nbCompact(cap)} ${cur}` : '–');
       checkAlarm(st, d, isToday, barDay, card, cur);
+      STAT_DATA[row.s] = d;
+      set('price', nbNum(d.close));
+      const qc = card.querySelector('[data-f="qchg"]');
+      if (d.change!=null){ const sg = d.change>0?'+':d.change<0?'−':''; qc.textContent = `${sg}${nbNum(Math.abs(d.change))} %`; qc.className = 'qch ' + (d.change>0?'up':d.change<0?'down':''); }
+      if (d.description) set('desc', d.description);
+      const lg = card.querySelector('[data-f="logo"]');
+      if (d.logoid && !lg.dataset.id){ lg.dataset.id = d.logoid; const im = new Image(); im.alt=''; im.onload = ()=>{ lg.textContent=''; lg.appendChild(im); }; im.src = `https://s3-symbol-logo.tradingview.com/${d.logoid}.svg`; }
     }
     statsLoadedOnce = true;
     return true;
@@ -568,56 +600,97 @@ function setupAlarmUI(){
   c5.onchange = () => { alarmCfg.t5 = c5.checked; saveAlarmCfg(); };
   cs.onchange = () => { alarmCfg.sound = cs.checked; saveAlarmCfg(); if (cs.checked){ unlockAudio(); beep(false); } };
 }
-/* Kursene oppdateres hvert minutt: nye widgeter lastes skjult oppå de gamle og byttes inn først når de er klare. */
+/* Kursene oppdateres hvert minutt. Grafen er egen SVG (1-min-bars fra CNBC), farget etter dagsendring, med stiplet linje for forrige slutt. */
 const STOCK_REFRESH_MS = 60 * 1000;
-const STOCK_SWAP_DELAY_MS = 1500;     // tid etter iframe-load før bytte (lar widgeten tegne kurs og graf)
-const STOCK_SWAP_TIMEOUT_MS = 12000;  // bytt uansett etter dette
+const CHART_DELAY_MS = 15 * 60 * 1000;   // vis grafen med samme forsinkelse som kursene (ca. 15 min)
+const SESSIONS = { "Europe/Oslo":{ open:[9,0], close:[16,25] }, "America/New_York":{ open:[9,30], close:[16,0] } };
 let stocksTheme = null, stockTimer = null, stockGen = 0, lastStockRefresh = 0;
+const CHART_BARS = {};
 const fmtUpd = new Intl.DateTimeFormat('nb-NO',{hour:'2-digit',minute:'2-digit',timeZone:'Europe/Oslo'});
-function makeWidget(sym, theme){
-  const c = document.createElement('div'); c.className = 'tradingview-widget-container';
-  const w = document.createElement('div'); w.className = 'tradingview-widget-container__widget'; c.appendChild(w);
-  const sc = document.createElement('script');
-  sc.src = 'https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js';
-  sc.async = true;
-  sc.textContent = JSON.stringify({ symbol:sym, width:"100%", height:"100%", locale:"no", dateRange:"1D",
-    colorTheme:theme, isTransparent:true, autosize:true, largeChartUrl:"", chartOnly:false, noTimeScale:false });
-  c.appendChild(sc);
-  return c;
+const fmtAxis = new Intl.DateTimeFormat('nb-NO',{hour:'2-digit',minute:'2-digit',timeZone:'Europe/Oslo'});
+const cnbcSym = tv => { const [ex,t] = tv.split(':'); return ex==='OSL' ? `${t}-NO` : t; };
+function tzOffsetMin(tz, ms){
+  const p = Object.fromEntries(new Intl.DateTimeFormat('en-US',{timeZone:tz,hourCycle:'h23',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit'}).formatToParts(new Date(ms)).map(x=>[x.type,x.value]));
+  return (Date.UTC(+p.year,+p.month-1,+p.day,+p.hour,+p.minute,+p.second) - ms) / 60000;
 }
-function refreshBox(box, theme, gen){
-  return new Promise(resolve=>{
-    const layer = document.createElement('div');
-    layer.className = 'layer pending';
-    layer.appendChild(makeWidget(box.dataset.symbol, theme));
-    box.appendChild(layer);
-    let done = false, poll = null;
-    const swap = ()=>{
-      if (done) return; done = true; clearInterval(poll);
-      if (gen !== stockGen){ layer.remove(); return resolve(false); }   // en nyere oppdatering har tatt over
-      layer.classList.remove('pending');
-      box.querySelectorAll(':scope > .layer:not(.pending)').forEach(old=>{ if (old !== layer) setTimeout(()=>old.remove(), 400); });
-      const l = box.querySelector('.loading'); if (l) l.remove();
-      resolve(true);
-    };
-    poll = setInterval(()=>{
-      const f = layer.querySelector('iframe');
-      if (f && !f.dataset.watch){ f.dataset.watch = '1'; f.addEventListener('load', ()=>setTimeout(swap, STOCK_SWAP_DELAY_MS), {once:true}); }
-    }, 100);
-    setTimeout(swap, STOCK_SWAP_TIMEOUT_MS);
-  });
+const zoned = (tz,ymd,h,mi) => { const [y,m,d] = ymd.split('-').map(Number); const g = Date.UTC(y,m-1,d,h,mi); return g - tzOffsetMin(tz,g)*60000; };
+const dayKey = (tz,ms) => new Intl.DateTimeFormat('en-CA',{timeZone:tz,year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date(ms));
+async function loadCharts(){
+  await Promise.all(STOCKS.map(async st=>{
+    try{
+      const r = await fetch(`https://ts-api.cnbc.com/harmony/app/charts/1D.json?symbol=${encodeURIComponent(cnbcSym(st.tv))}`);
+      if (!r.ok) throw new Error(r.status);
+      const j = await r.json();
+      const bars = (j.barData && j.barData.priceBars || []).map(b=>({ t:+b.tradeTimeinMills, c:+b.close })).filter(b=>isFinite(b.t)&&isFinite(b.c)).sort((x,y)=>x.t-y.t);
+      if (bars.length) CHART_BARS[st.tv] = bars;
+    }catch(e){ /* behold forrige graf */ }
+  }));
 }
+function pickSession(st, bars){
+  const sess = SESSIONS[st.tz], cutoff = Date.now() - CHART_DELAY_MS;
+  const usable = bars.filter(b=>b.t <= cutoff);
+  const days = [...new Set(usable.map(b=>dayKey(st.tz,b.t)))].sort().reverse();
+  for (const day of days){
+    const start = zoned(st.tz, day, ...sess.open), end = zoned(st.tz, day, ...sess.close);
+    const pts = usable.filter(b=>b.t>=start && b.t<=end);
+    if (pts.length >= 2) return { day, start, end, pts };
+  }
+  return null;
+}
+function renderChart(card, st){
+  const box = card.querySelector('[data-f="chart"]');
+  const bars = CHART_BARS[st.tv], d = STAT_DATA[st.tv];
+  const S = bars && pickSession(st, bars);
+  if (!S){ if (!box.querySelector('svg')) box.innerHTML = `<div class="loading">${bars ? 'Ingen handel å vise' : 'Graf utilgjengelig'}</div>`; return; }
+  const W = Math.max(120, Math.round(box.clientWidth)), H = Math.round(box.clientHeight) || 104, AX = 16, PT = 6, PB = 4;
+  const statDay = d && d.time ? dayKey(st.tz, d.time*1000) : null;
+  const prev = (d && statDay === S.day && d.close!=null && d.change_abs!=null) ? d.close - d.change_abs : null;
+  const chg = (d && statDay === S.day && d.change!=null) ? d.change : (prev!=null ? S.pts.at(-1).c - prev : null);
+  const dir = chg==null ? 'flat' : chg>0 ? 'up' : chg<0 ? 'down' : 'flat';
+  card.dataset.dir = dir;
+  let lo = Math.min(...S.pts.map(p=>p.c)), hi = Math.max(...S.pts.map(p=>p.c));
+  if (prev!=null){ lo = Math.min(lo, prev); hi = Math.max(hi, prev); }
+  if (hi - lo < hi*1e-4){ hi += hi*5e-4; lo -= lo*5e-4; }
+  const pad = (hi-lo)*0.08; lo -= pad; hi += pad;
+  const ch = H - AX - PT - PB;
+  const x = t => ((t - S.start) / (S.end - S.start)) * (W - 2) + 1;
+  const y = v => PT + (hi - v) / (hi - lo) * ch;
+  const line = S.pts.map((p,i)=>`${i?'L':'M'}${x(p.t).toFixed(1)},${y(p.c).toFixed(1)}`).join('');
+  const last = S.pts.at(-1), first = S.pts[0];
+  const area = `${line}L${x(last.t).toFixed(1)},${(PT+ch).toFixed(1)}L${x(first.t).toFixed(1)},${(PT+ch).toFixed(1)}Z`;
+  const gid = 'g' + st.tv.replace(/\W/g,'');
+  // tidsakse: hele timer i norsk tid, maks 4 merker
+  const ticks = []; const hour = 3600e3;
+  for (let t = Math.ceil(S.start/hour)*hour; t <= S.end; t += hour) ticks.push(t);
+  const step = Math.ceil(ticks.length / 4) || 1;
+  const axis = ticks.filter((_,i)=>i%step===0).map(t=>{ const tx = x(t); const anchor = tx < 18 ? 'start' : tx > W-18 ? 'end' : 'middle';
+    return `<line x1="${tx.toFixed(1)}" x2="${tx.toFixed(1)}" y1="${PT+ch}" y2="${PT+ch+3}" class="tk"/><text x="${tx.toFixed(1)}" y="${H-3}" text-anchor="${anchor}" class="ax">${fmtAxis.format(new Date(t)).replace('.',':')}</text>`; }).join('');
+  let prevSvg = '';
+  if (prev!=null){
+    const py = y(prev).toFixed(1); const isToday = S.day === dayKey(st.tz, Date.now());
+    const label = `${isToday ? 'I går' : 'Forrige slutt'}: ${nbNum(prev)}`;
+    const ty = (+py < PT + 12) ? +py + 11 : +py - 4;
+    prevSvg = `<line x1="0" x2="${W}" y1="${py}" y2="${py}" class="pc" data-prev="${prev}"/><text x="4" y="${ty.toFixed(1)}" class="pcl">${label}</text>`;
+  }
+  box.innerHTML = `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-label="Intradaggraf ${esc(st.name)}, ${dir==='up'?'opp':dir==='down'?'ned':'uendret'}">
+    <defs><linearGradient id="${gid}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" class="gs1"/><stop offset="1" class="gs2"/></linearGradient></defs>
+    <line x1="0" x2="${W}" y1="${PT+ch}" y2="${PT+ch}" class="base"/>
+    <path d="${area}" fill="url(#${gid})" class="ar"/>
+    ${prevSvg}
+    <path d="${line}" class="ln" fill="none"/>
+    <circle cx="${x(last.t).toFixed(1)}" cy="${y(last.c).toFixed(1)}" r="2.6" class="dt"/>
+    ${axis}</svg>`;
+  box.dataset.day = S.day; box.dataset.prev = prev ?? ''; box.dataset.last = last.c;
+}
+function renderAllCharts(){ document.querySelectorAll('#aksjer .stock').forEach(c=>{ const st = STOCKS.find(s=>s.tv===c.dataset.sym); if (st) renderChart(c, st); }); }
 async function refreshStocks(){
-  const theme = effectiveTheme();
-  stocksTheme = theme;
+  stocksTheme = effectiveTheme();
   const gen = ++stockGen;
   lastStockRefresh = Date.now();
-  // fjern evt. halvferdige lag fra en tidligere runde
-  document.querySelectorAll('#aksjer .tv > .layer.pending').forEach(l=>l.remove());
-  const statsP = loadStockStats();
-  const results = await Promise.all([...document.querySelectorAll('#aksjer .tv')].map(b=>refreshBox(b, theme, gen)));
-  await statsP;
-  if (gen === stockGen && results.some(Boolean)){
+  const [ok] = await Promise.all([loadStockStats(), loadCharts()]);
+  if (gen !== stockGen) return;
+  renderAllCharts();
+  if (ok){
     const el = document.getElementById('stocksUpdated');
     el.textContent = `Oppdatert ${fmtUpd.format(new Date()).replace('.',':')}`;
     el.dateTime = new Date().toISOString();
@@ -627,15 +700,15 @@ function scheduleStocks(){
   clearInterval(stockTimer);
   stockTimer = setInterval(()=>{ if (!document.hidden) refreshStocks(); }, STOCK_REFRESH_MS);
 }
-function renderStockWidgets(){            // brukes ved temabytte
-  if (effectiveTheme() === stocksTheme) return;
-  refreshStocks(); scheduleStocks();
+function renderStockWidgets(){            // temabytte: SVG-en bruker CSS-variabler, så bare tegn på nytt
+  stocksTheme = effectiveTheme(); renderAllCharts();
 }
 {
   const stocksSec = buildStocksSection();
   main.prepend(stocksSec);
   setupAlarmUI();
   refreshStocks(); scheduleStocks();
+  let rzT = null; addEventListener('resize', ()=>{ clearTimeout(rzT); rzT = setTimeout(renderAllCharts, 150); });
   matchMedia('(prefers-color-scheme: dark)').addEventListener('change', renderStockWidgets);
   document.addEventListener('visibilitychange', ()=>{
     if (document.hidden){ clearInterval(stockTimer); stockTimer = null; }
