@@ -192,6 +192,10 @@
   .chart .ln{stroke:var(--lc);stroke-width:1.7;stroke-linejoin:round;stroke-linecap:round}
   .chart .dt{fill:var(--lc);stroke:var(--surface);stroke-width:1.5}
   .chart .gs1{stop-color:var(--lc);stop-opacity:.22} .chart .gs2{stop-color:var(--lc);stop-opacity:0}
+  .chart .ln.up{stroke:#16a34a} .chart .ln.down{stroke:#dc2626}
+  .chart .dt.up{fill:#16a34a} .chart .dt.down{fill:#dc2626}
+  .chart .gu1{stop-color:#16a34a;stop-opacity:.26} .chart .gu2{stop-color:#16a34a;stop-opacity:.06}
+  .chart .gd1{stop-color:#dc2626;stop-opacity:.26} .chart .gd2{stop-color:#dc2626;stop-opacity:.06}
   .chart .pc{stroke:var(--faint);stroke-width:1;stroke-dasharray:4 3;opacity:.9}
   .chart .pcl{font-size:10px;fill:var(--muted);font-weight:600;paint-order:stroke;stroke:var(--surface);stroke-width:3px;stroke-linejoin:round}
   .chart .base{stroke:var(--border-strong);stroke-width:1}
@@ -606,6 +610,7 @@ const CHART_DELAY_MS = 15 * 60 * 1000;   // vis grafen med samme forsinkelse som
 const SESSIONS = { "Europe/Oslo":{ open:[9,0], close:[16,25] }, "America/New_York":{ open:[9,30], close:[16,0] } };
 let stocksTheme = null, stockTimer = null, stockGen = 0, lastStockRefresh = 0;
 const CHART_BARS = {};
+const SPLIT_TEST = new URLSearchParams(location.search).get('testsplit') === '1';
 const fmtUpd = new Intl.DateTimeFormat('nb-NO',{hour:'2-digit',minute:'2-digit',timeZone:'Europe/Oslo'});
 const fmtAxis = new Intl.DateTimeFormat('nb-NO',{hour:'2-digit',minute:'2-digit',timeZone:'Europe/Oslo'});
 const cnbcSym = tv => { const [ex,t] = tv.split(':'); return ex==='OSL' ? `${t}-NO` : t; };
@@ -644,7 +649,8 @@ function renderChart(card, st){
   if (!S){ if (!box.querySelector('svg')) box.innerHTML = `<div class="loading">${bars ? 'Ingen handel å vise' : 'Graf utilgjengelig'}</div>`; return; }
   const W = Math.max(120, Math.round(box.clientWidth)), H = Math.round(box.clientHeight) || 104, AX = 16, PT = 6, PB = 4;
   const statDay = d && d.time ? dayKey(st.tz, d.time*1000) : null;
-  const prev = (d && statDay === S.day && d.close!=null && d.change_abs!=null) ? d.close - d.change_abs : null;
+  let prev = (d && statDay === S.day && d.close!=null && d.change_abs!=null) ? d.close - d.change_abs : null;
+  if (SPLIT_TEST && prev!=null){ const cs = S.pts.map(p=>p.c).sort((a,b)=>a-b); prev = cs[Math.floor(cs.length/2)]; }   // ?testsplit=1: kun test
   const chg = (d && statDay === S.day && d.change!=null) ? d.change : (prev!=null ? S.pts.at(-1).c - prev : null);
   const dir = chg==null ? 'flat' : chg>0 ? 'up' : chg<0 ? 'down' : 'flat';
   card.dataset.dir = dir;
@@ -672,13 +678,36 @@ function renderChart(card, st){
     const ty = (+py < PT + 12) ? +py + 11 : +py - 4;
     prevSvg = `<line x1="0" x2="${W}" y1="${py}" y2="${py}" class="pc" data-prev="${prev}"/><text x="4" y="${ty.toFixed(1)}" class="pcl">${label}</text>`;
   }
-  box.innerHTML = `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-label="Intradaggraf ${esc(st.name)}, ${dir==='up'?'opp':dir==='down'?'ned':'uendret'}">
-    <defs><linearGradient id="${gid}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" class="gs1"/><stop offset="1" class="gs2"/></linearGradient></defs>
-    <line x1="0" x2="${W}" y1="${PT+ch}" y2="${PT+ch}" class="base"/>
-    <path d="${area}" fill="url(#${gid})" class="ar"/>
-    ${prevSvg}
-    <path d="${line}" class="ln" fill="none"/>
-    <circle cx="${x(last.t).toFixed(1)}" cy="${y(last.c).toFixed(1)}" r="2.6" class="dt"/>
+  let body;
+  if (prev!=null){
+    // Delt farge: grønn over forrige slutt, rød under – byttes nøyaktig der linjen krysser (clipPath ved y = forrige slutt)
+    const py = y(prev), bot = PT + ch;
+    const fx = x(first.t).toFixed(1), lx = x(last.t).toFixed(1), pys = py.toFixed(1);
+    const fillArea = `${line}L${lx},${pys}L${fx},${pys}Z`;
+    const cu = gid+'u', cd = gid+'d';
+    const lastCls = last.c > prev ? 'up' : last.c < prev ? 'down' : 'flat';
+    body = `<defs>
+        <clipPath id="${cu}"><rect x="-4" y="-20" width="${W+8}" height="${(py+20).toFixed(1)}"/></clipPath>
+        <clipPath id="${cd}"><rect x="-4" y="${pys}" width="${W+8}" height="${(H-py+20).toFixed(1)}"/></clipPath>
+        <linearGradient id="${gid}u" gradientUnits="userSpaceOnUse" x1="0" y1="${PT}" x2="0" y2="${pys}"><stop offset="0" class="gu1"/><stop offset="1" class="gu2"/></linearGradient>
+        <linearGradient id="${gid}d" gradientUnits="userSpaceOnUse" x1="0" y1="${bot}" x2="0" y2="${pys}"><stop offset="0" class="gd1"/><stop offset="1" class="gd2"/></linearGradient>
+      </defs>
+      <line x1="0" x2="${W}" y1="${bot}" y2="${bot}" class="base"/>
+      <path d="${fillArea}" fill="url(#${gid}u)" clip-path="url(#${cu})" class="ar up"/>
+      <path d="${fillArea}" fill="url(#${gid}d)" clip-path="url(#${cd})" class="ar down"/>
+      ${prevSvg}
+      <path d="${line}" class="ln up" fill="none" clip-path="url(#${cu})"/>
+      <path d="${line}" class="ln down" fill="none" clip-path="url(#${cd})"/>
+      <circle cx="${lx}" cy="${y(last.c).toFixed(1)}" r="2.6" class="dt ${lastCls}"/>`;
+  } else {
+    body = `<defs><linearGradient id="${gid}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" class="gs1"/><stop offset="1" class="gs2"/></linearGradient></defs>
+      <line x1="0" x2="${W}" y1="${PT+ch}" y2="${PT+ch}" class="base"/>
+      <path d="${area}" fill="url(#${gid})" class="ar"/>
+      <path d="${line}" class="ln" fill="none"/>
+      <circle cx="${x(last.t).toFixed(1)}" cy="${y(last.c).toFixed(1)}" r="2.6" class="dt"/>`;
+  }
+  box.innerHTML = `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-label="Intradaggraf ${esc(st.name)}, ${dir==='up'?'opp':dir==='down'?'ned':'uendret'} mot forrige slutt">
+    ${body}
     ${axis}</svg>`;
   box.dataset.day = S.day; box.dataset.prev = prev ?? ''; box.dataset.last = last.c;
 }
