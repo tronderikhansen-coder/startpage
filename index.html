@@ -274,6 +274,9 @@
   .sx-item .l{grid-column:1/-1;font-size:11.5px;color:var(--faint);display:flex;gap:6px;align-items:center;min-width:0}
   .sx-item .l span:last-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   .sx-empty{font-size:13px;color:var(--muted);padding:12px;border-radius:12px;background:var(--icon-bg)}
+  .sx-more{display:flex;align-items:center;justify-content:center;gap:6px;margin:12px 0 0;height:34px;border-radius:11px;border:1px solid var(--border-strong);background:var(--icon-bg);color:var(--text);text-decoration:none;font-size:12.5px;font-weight:600;transition:border-color .15s,color .15s,background .15s}
+  .sx-more:hover,.sx-more:focus-visible{border-color:#f97316;color:#f97316;outline:none}
+  .sx-more span{font-size:13px}
   .sx-src{font-size:11px;color:var(--faint);margin:12px 0 0;line-height:1.4}
   .sx-src a{color:inherit}
   @media (max-width:1359px){ #starship{margin-top:0} .sx-body{align-items:center} }
@@ -375,6 +378,7 @@
       <path class="sx-flame" d="M17 389 C18 404 24 414 30 420 C36 414 42 404 43 389 Z" fill="url(#sxFlame)"/>
     </svg>
     </div>
+    <a class="sx-more" href="https://spacexnow.com/starship" target="_blank" rel="noopener noreferrer">Se på SpaceXNow <span aria-hidden="true">↗</span></a>
     <p class="sx-src">Data: <a href="https://thespacedevs.com/llapi" target="_blank" rel="noopener noreferrer">The Space Devs</a> (Launch Library 2) · oppdateres hvert 45. min · tider i norsk tid</p>
   </aside>
   </div>
