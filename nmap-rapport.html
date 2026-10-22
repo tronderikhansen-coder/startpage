@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="nb">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>nmap-rapport · Startside</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script>
+(function(){try{var t=localStorage.getItem('startside-tema');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t;}catch(e){}})();
+</script>
+<style>
+  :root{
+    --bg:#f4f6fb; --bg2:#e9eef8;
+    --surface:#ffffff; --surface-hover:#ffffff;
+    --border:rgba(15,23,42,.08); --border-strong:rgba(15,23,42,.14);
+    --text:#0f172a; --muted:#64748b; --faint:#94a3b8;
+    --accent:#2563eb; --accent-soft:rgba(37,99,235,.10);
+    --shadow:0 1px 2px rgba(15,23,42,.04),0 4px 14px rgba(15,23,42,.05);
+    --shadow-hover:0 2px 4px rgba(15,23,42,.05),0 14px 32px rgba(15,23,42,.10);
+    --icon-bg:#f1f5f9;
+    --glow1:rgba(37,99,235,.12); --glow2:rgba(16,185,129,.10);
+    --up:#16a34a; --down:#dc2626; --warn:#d97706; --info:#2563eb;
+    --ok-bg:rgba(22,163,74,.12); --bad-bg:rgba(220,38,38,.12); --warn-bg:rgba(217,119,6,.12); --info-bg:rgba(37,99,235,.10);
+  }
+  :root[data-theme="dark"]{
+    --bg:#0b1020; --bg2:#0e1428;
+    --surface:#141b2e; --surface-hover:#18213a;
+    --border:rgba(148,163,184,.10); --border-strong:rgba(148,163,184,.20);
+    --text:#e6eaf3; --muted:#94a3b8; --faint:#64748b;
+    --accent:#60a5fa; --accent-soft:rgba(96,165,250,.14);
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 4px 14px rgba(0,0,0,.2);
+    --shadow-hover:0 2px 4px rgba(0,0,0,.35),0 16px 36px rgba(0,0,0,.40);
+    --icon-bg:#1e2740;
+    --glow1:rgba(96,165,250,.10); --glow2:rgba(52,211,153,.08);
+    --up:#4ade80; --down:#f87171; --warn:#fbbf24; --info:#60a5fa;
+    --ok-bg:rgba(74,222,128,.12); --bad-bg:rgba(248,113,113,.12); --warn-bg:rgba(251,191,36,.12); --info-bg:rgba(96,165,250,.12);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#0b1020; --bg2:#0e1428;
+      --surface:#141b2e; --surface-hover:#18213a;
+      --border:rgba(148,163,184,.10); --border-strong:rgba(148,163,184,.20);
+      --text:#e6eaf3; --muted:#94a3b8; --faint:#64748b;
+      --accent:#60a5fa; --accent-soft:rgba(96,165,250,.14);
+      --shadow:0 1px 2px rgba(0,0,0,.3),0 4px 14px rgba(0,0,0,.2);
+      --shadow-hover:0 2px 4px rgba(0,0,0,.35),0 16px 36px rgba(0,0,0,.40);
+      --icon-bg:#1e2740;
+      --glow1:rgba(96,165,250,.10); --glow2:rgba(52,211,153,.08);
+      --up:#4ade80; --down:#f87171; --warn:#fbbf24; --info:#60a5fa;
+      --ok-bg:rgba(74,222,128,.12); --bad-bg:rgba(248,113,113,.12); --warn-bg:rgba(251,191,36,.12); --info-bg:rgba(96,165,250,.12);
+    }
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{
+    font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+    color:var(--text); background:var(--bg);
+    background-image:
+      radial-gradient(900px 500px at 8% -10%,var(--glow1),transparent 60%),
+      radial-gradient(800px 500px at 100% 0%,var(--glow2),transparent 60%);
+    background-attachment:fixed;
+    min-height:100vh; line-height:1.45;
+  }
+  .wrap{max-width:1100px;margin:0 auto;padding:28px 22px 48px}
+  header{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:24px;padding-bottom:18px;border-bottom:1px solid var(--border)}
+  .brand{display:flex;flex-direction:column;gap:4px;min-width:0}
+  .back{display:inline-flex;align-items:center;gap:6px;color:var(--muted);text-decoration:none;font-size:13px;font-weight:500}
+  .back:hover{color:var(--accent)}
+  h1{margin:0;font-size:22px;font-weight:700;letter-spacing:-.02em}
+  .sub{font-size:13px;color:var(--muted)}
+  .theme-btn{
+    width:42px;height:42px;border-radius:12px;border:1px solid var(--border-strong);
+    background:var(--surface);color:var(--text);cursor:pointer;display:grid;place-items:center;
+    box-shadow:var(--shadow);transition:transform .15s,border-color .15s;
+  }
+  .theme-btn:hover{transform:translateY(-1px)}
+  .theme-btn svg{width:20px;height:20px}
+  .theme-btn .moon{display:none}
+  :root[data-theme="dark"] .theme-btn .sun{display:none}
+  :root[data-theme="dark"] .theme-btn .moon{display:block}
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]) .theme-btn .sun{display:none}
+    :root:not([data-theme="light"]) .theme-btn .moon{display:block}
+  }
+  .panel{
+    background:var(--surface);border:1px solid var(--border);border-radius:16px;
+    box-shadow:var(--shadow);padding:18px 18px 16px;margin-bottom:16px;
+  }
+  .panel h2{margin:0 0 10px;font-size:14px;font-weight:700;letter-spacing:.02em;text-transform:uppercase;color:var(--muted)}
+  .disclaimer{
+    font-size:13px;color:var(--muted);background:var(--warn-bg);border:1px solid rgba(217,119,6,.25);
+    border-radius:12px;padding:10px 12px;margin-bottom:16px;
+  }
+  .disclaimer strong{color:var(--text)}
+  .row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+  .btn{
+    appearance:none;border:1px solid var(--border-strong);background:var(--icon-bg);color:var(--text);
+    border-radius:11px;padding:9px 14px;font:600 13px Inter,system-ui,sans-serif;cursor:pointer;
+    transition:border-color .15s,color .15s,background .15s,transform .15s;
+  }
+  .btn:hover{border-color:var(--accent);color:var(--accent)}
+  .btn:disabled{opacity:.5;cursor:not-allowed}
+  .btn.primary{background:var(--accent);border-color:transparent;color:#fff}
+  .btn.primary:hover{filter:brightness(1.05);color:#fff}
+  .btn.ghost{background:transparent}
+  textarea,input[type="search"],select{
+    width:100%;font:14px/1.4 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    color:var(--text);background:var(--bg2);border:1px solid var(--border-strong);
+    border-radius:12px;padding:12px 14px;outline:none;resize:vertical;min-height:160px;
+  }
+  input[type="search"],select{font-family:Inter,system-ui,sans-serif;min-height:0;height:40px}
+  textarea:focus,input:focus,select:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+  .drop{
+    border:1.5px dashed var(--border-strong);border-radius:14px;padding:18px;text-align:center;
+    color:var(--muted);background:var(--bg2);cursor:pointer;transition:border-color .15s,background .15s;
+  }
+  .drop.over,.drop:hover{border-color:var(--accent);background:var(--accent-soft)}
+  .drop strong{color:var(--text);display:block;margin-bottom:4px}
+  .drop input{display:none}
+  .help details{border:1px solid var(--border);border-radius:12px;padding:10px 12px;background:var(--bg2)}
+  .help summary{cursor:pointer;font-weight:600;font-size:13px;color:var(--text)}
+  .help pre{
+    margin:10px 0 0;padding:12px;border-radius:10px;background:var(--surface);border:1px solid var(--border);
+    overflow:auto;font:12.5px/1.5 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:var(--text);white-space:pre-wrap;
+  }
+  .help p{margin:8px 0 0;font-size:13px;color:var(--muted)}
+  .cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:16px}
+  .card{
+    background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:14px 14px 12px;
+    box-shadow:var(--shadow);min-height:84px;
+  }
+  .card .k{font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.03em}
+  .card .v{margin-top:6px;font-size:26px;font-weight:700;letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+  .card .h{margin-top:2px;font-size:12px;color:var(--faint)}
+  .card.open .v{color:var(--up)} .card.closed .v{color:var(--down)} .card.filtered .v{color:var(--warn)} .card.hosts .v{color:var(--info)}
+  .filters{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+  .filters > *{flex:1 1 160px}
+  .chipbar{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+  .chip{
+    border:1px solid var(--border-strong);background:var(--icon-bg);color:var(--muted);
+    border-radius:999px;padding:5px 10px;font:600 12px Inter,system-ui,sans-serif;cursor:pointer;
+  }
+  .chip.on{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+  .host{
+    background:var(--surface);border:1px solid var(--border);border-radius:16px;box-shadow:var(--shadow);
+    margin-bottom:14px;overflow:hidden;
+  }
+  .host > summary{
+    list-style:none;cursor:pointer;display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;
+    padding:14px 16px;font-weight:600;
+  }
+  .host > summary::-webkit-details-marker{display:none}
+  .host > summary::before{content:"▸";color:var(--faint);margin-right:4px}
+  .host[open] > summary::before{content:"▾"}
+  .host .ip{font-size:15px}
+  .host .name{color:var(--muted);font-weight:500;font-size:13px}
+  .host .meta{margin-left:auto;display:flex;flex-wrap:wrap;gap:6px;font-size:12px;font-weight:600}
+  .pill{display:inline-flex;align-items:center;gap:4px;border-radius:999px;padding:3px 8px;background:var(--icon-bg);color:var(--muted)}
+  .pill.open{background:var(--ok-bg);color:var(--up)}
+  .pill.closed{background:var(--bad-bg);color:var(--down)}
+  .pill.filtered{background:var(--warn-bg);color:var(--warn)}
+  .pill.up{background:var(--ok-bg);color:var(--up)}
+  .pill.down{background:var(--bad-bg);color:var(--down)}
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th,td{padding:9px 12px;border-top:1px solid var(--border);text-align:left;vertical-align:top}
+  th{font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);cursor:pointer;user-select:none;white-space:nowrap;background:var(--bg2)}
+  th:hover{color:var(--accent)}
+  th .sort{opacity:.45;margin-left:4px}
+  th.asc .sort,th.desc .sort{opacity:1;color:var(--accent)}
+  td.port,td.proto{font-variant-numeric:tabular-nums;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+  td.svc{font-weight:500}
+  .empty,.error{
+    text-align:center;padding:36px 16px;color:var(--muted);border:1px dashed var(--border-strong);
+    border-radius:16px;background:var(--surface);
+  }
+  .error{color:var(--down);background:var(--bad-bg);border-style:solid;border-color:rgba(220,38,38,.25)}
+  .toolbar{display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-end;margin:0 0 12px}
+  footer{margin-top:28px;text-align:center;font-size:12px;color:var(--faint)}
+  footer a{color:inherit}
+  @media (max-width:800px){
+    .cards{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .wrap{padding:18px 14px 36px}
+    h1{font-size:19px}
+    .host .meta{margin-left:0;width:100%}
+  }
+  @media (max-width:480px){.cards{grid-template-columns:1fr}}
+  @media print{
+    body{background:#fff;color:#000;background-image:none}
+    .no-print,.theme-btn,.drop,.btn.ghost,[data-role="input"]{display:none!important}
+    .wrap{max-width:none;padding:0}
+    .panel,.host,.card{box-shadow:none;border-color:#ccc;break-inside:avoid}
+    .host{break-inside:avoid;page-break-inside:avoid}
+    a{color:inherit;text-decoration:none}
+    th{background:#eee!important;color:#000}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand">
+      <a class="back" href="./">← Tilbake til startsiden</a>
+      <h1>nmap-rapport</h1>
+      <div class="sub">Vis og eksporter nmap-skanninger · kun rapportvisning, ingen nettverksskanning</div>
+    </div>
+    <button class="theme-btn" id="themeBtn" type="button" aria-label="Bytt mellom lyst og mørkt tema" title="Bytt tema">
+      <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+      <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+    </button>
+  </header>
+
+  <div class="disclaimer no-print">
+    <strong>Viktig:</strong> Denne siden leser kun eksisterende nmap-rapporter i nettleseren din.
+    Skann bare systemer du eier eller har uttrykkelig tillatelse til å skanne. Ingen data sendes til noen server.
+  </div>
+
+  <section class="panel no-print" data-role="input">
+    <h2>Last inn rapport</h2>
+    <label class="drop" id="drop">
+      <strong>Slipp fil her, eller klikk for å velge</strong>
+      <span>Støtter nmap -oN (tekst), -oX (XML) og -oG (greppable)</span>
+      <input type="file" id="file" accept=".xml,.txt,.nmap,.gnmap,.log,text/xml,text/plain">
+    </label>
+    <p style="margin:12px 0 6px;font-size:13px;color:var(--muted)">… eller lim inn innholdet:</p>
+    <textarea id="paste" placeholder="Lim inn nmap -oN / -oX / -oG-utdata her …" spellcheck="false"></textarea>
+    <div class="row" style="margin-top:12px">
+      <button class="btn primary" id="parseBtn" type="button">Vis rapport</button>
+      <button class="btn" id="demoBtn" type="button">Last demodata</button>
+      <button class="btn ghost" id="clearBtn" type="button">Tøm</button>
+    </div>
+  </section>
+
+  <section class="panel help no-print">
+    <details>
+      <summary>Hjelp · eksempelkommandoer (egne systemer)</summary>
+      <p>Kjør nmap lokalt mot systemer du eier/har tillatelse til, og last opp resultatet her. Anbefalte formater:</p>
+<pre># XML (anbefalt – mest komplett)
+nmap -sV -oX scan.xml MÅL
+
+# Vanlig tekst
+nmap -sV -oN scan.txt MÅL
+
+# Greppable
+nmap -sV -oG scan.gnmap MÅL
+
+# Alle tre samtidig
+nmap -sV -oA scan MÅL</pre>
+      <p>Bytt ut <code>MÅL</code> med f.eks. en IP eller et vertsnavn du har lov til å skanne. Denne siden utfører ingen skanning.</p>
+    </details>
+  </section>
+
+  <div id="error" class="error" hidden></div>
+  <div id="empty" class="empty">Ingen rapport lastet ennå. Lim inn nmap-utdata, last opp en fil, eller prøv demodata.</div>
+
+  <div id="report" hidden>
+    <div class="cards" id="cards"></div>
+    <div class="toolbar no-print">
+      <button class="btn" id="csvBtn" type="button">Eksporter CSV</button>
+      <button class="btn" id="printBtn" type="button">Skriv ut / PDF</button>
+    </div>
+    <div class="filters no-print">
+      <select id="hostFilter" aria-label="Filtrer etter vert"><option value="">Alle verter</option></select>
+      <input type="search" id="search" placeholder="Søk port, tjeneste, versjon …" aria-label="Søk">
+    </div>
+    <div class="chipbar no-print" id="stateChips" role="group" aria-label="Filtrer etter tilstand">
+      <button type="button" class="chip on" data-state="">Alle</button>
+      <button type="button" class="chip" data-state="open">Åpen</button>
+      <button type="button" class="chip" data-state="closed">Lukket</button>
+      <button type="button" class="chip" data-state="filtered">Filtrert</button>
+    </div>
+    <div id="hosts"></div>
+  </div>
+
+  <footer>Startside for Trond Erik · <a href="./">Til startsiden</a> · Rapportvisning for nmap</footer>
+</div>
+
+<script>
+const SAMPLE_XML = `<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE nmaprun>
+<nmaprun scanner="nmap" args="nmap -sV -oX sample.xml 192.168.1.10 192.168.1.20" start="1729584000" startstr="Wed Oct 22 07:00:00 2026" version="7.95" xmloutputversion="1.05">
+<scaninfo type="syn" protocol="tcp" numservices="1000" services="1-1000"/>
+<host starttime="1729584001" endtime="1729584018"><status state="up" reason="arp-response"/>
+<address addr="192.168.1.10" addrtype="ipv4"/>
+<hostnames><hostname name="gw.home.lan" type="PTR"/></hostnames>
+<ports>
+<port protocol="tcp" portid="22"><state state="open" reason="syn-ack"/><service name="ssh" product="OpenSSH" version="9.6p1" method="probed" conf="10"/></port>
+<port protocol="tcp" portid="53"><state state="open" reason="syn-ack"/><service name="domain" product="dnsmasq" version="2.90" method="probed" conf="10"/></port>
+<port protocol="tcp" portid="80"><state state="open" reason="syn-ack"/><service name="http" product="nginx" version="1.24.0" method="probed" conf="10"/></port>
+<port protocol="tcp" portid="443"><state state="open" reason="syn-ack"/><service name="https" product="nginx" version="1.24.0" method="probed" conf="10"/></port>
+<port protocol="tcp" portid="445"><state state="filtered" reason="no-response"/><service name="microsoft-ds" method="table" conf="3"/></port>
+<port protocol="tcp" portid="8080"><state state="closed" reason="reset"/><service name="http-proxy" method="table" conf="3"/></port>
+</ports>
+<times srtt="812" rttvar="120" to="100000"/>
+</host>
+<host starttime="1729584019" endtime="1729584035"><status state="up" reason="arp-response"/>
+<address addr="192.168.1.20" addrtype="ipv4"/>
+<hostnames><hostname name="nas.home.lan" type="PTR"/></hostnames>
+<ports>
+<port protocol="tcp" portid="22"><state state="open" reason="syn-ack"/><service name="ssh" product="OpenSSH" version="8.9p1" method="probed" conf="10"/></port>
+<port protocol="tcp" portid="139"><state state="open" reason="syn-ack"/><service name="netbios-ssn" method="table" conf="3"/></port>
+<port protocol="tcp" portid="445"><state state="open" reason="syn-ack"/><service name="microsoft-ds" product="Samba smbd" version="4.17.12" method="probed" conf="10"/></port>
+<port protocol="tcp" portid="548"><state state="open" reason="syn-ack"/><service name="afp" method="table" conf="3"/></port>
+<port protocol="tcp" portid="2049"><state state="filtered" reason="no-response"/><service name="nfs" method="table" conf="3"/></port>
+</ports>
+</host>
+<host starttime="1729584036" endtime="1729584037"><status state="down" reason="no-response"/>
+<address addr="192.168.1.30" addrtype="ipv4"/>
+</host>
+<runstats><finished time="1729584038" timestr="Wed Oct 22 07:00:38 2026" elapsed="38.12" summary="Nmap done at Wed Oct 22 07:00:38 2026; 3 IP addresses (2 hosts up) scanned in 38.12 seconds" exit="success"/>
+<hosts up="2" down="1" total="3"/>
+</runstats>
+</nmaprun>`;
+
+const themeBtn = document.getElementById('themeBtn');
+themeBtn.addEventListener('click', () => {
+  const cur = document.documentElement.dataset.theme || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+  const next = cur === 'dark' ? 'light' : 'dark';
+  document.documentElement.dataset.theme = next;
+  try { localStorage.setItem('startside-tema', next); } catch (e) {}
+});
+
+const paste = document.getElementById('paste');
+const fileInput = document.getElementById('file');
+const drop = document.getElementById('drop');
+const parseBtn = document.getElementById('parseBtn');
+const demoBtn = document.getElementById('demoBtn');
+const clearBtn = document.getElementById('clearBtn');
+const errorEl = document.getElementById('error');
+const emptyEl = document.getElementById('empty');
+const reportEl = document.getElementById('report');
+const cardsEl = document.getElementById('cards');
+const hostsEl = document.getElementById('hosts');
+const hostFilter = document.getElementById('hostFilter');
+const searchEl = document.getElementById('search');
+const stateChips = document.getElementById('stateChips');
+
+let report = null;
+let sortKey = 'port';
+let sortDir = 'asc';
+let stateFilter = '';
+
+function esc(s){
+  return String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function showError(msg){
+  errorEl.hidden = !msg;
+  errorEl.textContent = msg || '';
+  if (msg){ reportEl.hidden = true; emptyEl.hidden = true; }
+}
+function setBusy(b){ parseBtn.disabled = b; demoBtn.disabled = b; }
+
+drop.addEventListener('dragover', e => { e.preventDefault(); drop.classList.add('over'); });
+drop.addEventListener('dragleave', () => drop.classList.remove('over'));
+drop.addEventListener('drop', e => {
+  e.preventDefault(); drop.classList.remove('over');
+  const f = e.dataTransfer.files && e.dataTransfer.files[0];
+  if (f) readFile(f);
+});
+fileInput.addEventListener('change', () => {
+  const f = fileInput.files && fileInput.files[0];
+  if (f) readFile(f);
+});
+function readFile(f){
+  const r = new FileReader();
+  r.onload = () => { paste.value = String(r.result || ''); runParse(); };
+  r.onerror = () => showError('Kunne ikke lese filen.');
+  r.readAsText(f);
+}
+
+parseBtn.addEventListener('click', runParse);
+demoBtn.addEventListener('click', () => { paste.value = SAMPLE_XML; runParse(); });
+clearBtn.addEventListener('click', () => {
+  paste.value = ''; fileInput.value = ''; report = null;
+  reportEl.hidden = true; emptyEl.hidden = false; showError('');
+});
+document.getElementById('csvBtn').addEventListener('click', exportCsv);
+document.getElementById('printBtn').addEventListener('click', () => window.print());
+hostFilter.addEventListener('change', renderHosts);
+searchEl.addEventListener('input', renderHosts);
+stateChips.addEventListener('click', e => {
+  const b = e.target.closest('.chip'); if (!b) return;
+  stateFilter = b.dataset.state || '';
+  stateChips.querySelectorAll('.chip').forEach(c => c.classList.toggle('on', c === b));
+  renderHosts();
+});
+
+function runParse(){
+  const raw = paste.value.trim();
+  if (!raw){ showError('Lim inn nmap-utdata eller last opp en fil først.'); return; }
+  setBusy(true);
+  try {
+    const parsed = detectAndParse(raw);
+    if (!parsed || !parsed.hosts.length){
+      showError('Fant ikke gyldig nmap-utdata. Støtter -oN (tekst), -oX (XML) og -oG (greppable).');
+      report = null; return;
+    }
+    report = parsed;
+    showError('');
+    emptyEl.hidden = true;
+    reportEl.hidden = false;
+    renderSummary();
+    fillHostFilter();
+    renderHosts();
+  } catch (err){
+    console.error(err);
+    showError('Kunne ikke tolke innholdet som nmap-rapport. Sjekk at filen er -oN, -oX eller -oG.');
+    report = null;
+  } finally { setBusy(false); }
+}
+
+function detectAndParse(raw){
+  const t = raw.trim();
+  if (t.startsWith('<?xml') || t.includes('<nmaprun') || (t.startsWith('<') && t.includes('nmaprun'))){
+    return parseXml(t);
+  }
+  if (/Host:\s+\S+/.test(t) && (/Ports:|Status:/.test(t) || /# Nmap/.test(t))){
+    return parseGreppable(t);
+  }
+  if (/^#\s*Nmap/m.test(t) || /Nmap scan report for/i.test(t) || /PORT\s+STATE\s+SERVICE/i.test(t)){
+    return parseNormal(t);
+  }
+  // last resort: try XML then greppable then normal
+  if (t.includes('<host') && t.includes('<port')) return parseXml(t);
+  if (/Host:\s+/.test(t)) return parseGreppable(t);
+  if (/Nmap scan report/i.test(t) || /^\d+\/(?:tcp|udp)\s+/m.test(t)) return parseNormal(t);
+  return null;
+}
+
+function parseXml(raw){
+  const doc = new DOMParser().parseFromString(raw, 'application/xml');
+  if (doc.querySelector('parsererror')) throw new Error('xml');
+  const root = doc.querySelector('nmaprun');
+  if (!root) throw new Error('no-nmaprun');
+  const hosts = [];
+  root.querySelectorAll(':scope > host').forEach(h => {
+    const status = (h.querySelector(':scope > status')?.getAttribute('state') || 'unknown').toLowerCase();
+    const addrs = [...h.querySelectorAll(':scope > address')].map(a => ({
+      addr: a.getAttribute('addr') || '',
+      type: a.getAttribute('addrtype') || ''
+    }));
+    const ip = (addrs.find(a => a.type === 'ipv4') || addrs.find(a => a.type === 'ipv6') || addrs[0] || {}).addr || '';
+    const names = [...h.querySelectorAll('hostnames > hostname')].map(n => n.getAttribute('name')).filter(Boolean);
+    const ports = [];
+    h.querySelectorAll('ports > port').forEach(p => {
+      const svc = p.querySelector('service');
+      const product = svc?.getAttribute('product') || '';
+      const version = svc?.getAttribute('version') || '';
+      const extrainfo = svc?.getAttribute('extrainfo') || '';
+      const verParts = [product, version, extrainfo ? `(${extrainfo})` : ''].filter(Boolean).join(' ');
+      ports.push({
+        port: Number(p.getAttribute('portid')) || 0,
+        proto: (p.getAttribute('protocol') || 'tcp').toLowerCase(),
+        state: (p.querySelector('state')?.getAttribute('state') || 'unknown').toLowerCase(),
+        reason: p.querySelector('state')?.getAttribute('reason') || '',
+        service: svc?.getAttribute('name') || '',
+        version: verParts
+      });
+    });
+    hosts.push({ ip, hostnames: names, status, ports, start: h.getAttribute('starttime'), end: h.getAttribute('endtime') });
+  });
+  const fin = root.querySelector('runstats > finished');
+  const hs = root.querySelector('runstats > hosts');
+  return {
+    format: 'xml',
+    scanner: root.getAttribute('scanner') || 'nmap',
+    args: root.getAttribute('args') || '',
+    version: root.getAttribute('version') || '',
+    startstr: root.getAttribute('startstr') || '',
+    elapsed: fin?.getAttribute('elapsed') || '',
+    summary: fin?.getAttribute('summary') || '',
+    counts: {
+      up: Number(hs?.getAttribute('up') || hosts.filter(h => h.status === 'up').length),
+      down: Number(hs?.getAttribute('down') || hosts.filter(h => h.status === 'down').length),
+      total: Number(hs?.getAttribute('total') || hosts.length)
+    },
+    hosts
+  };
+}
+
+function parseGreppable(raw){
+  const byIp = new Map();
+  let args = '', startstr = '', elapsed = '';
+  for (const line of raw.split(/\r?\n/)){
+    if (line.startsWith('# Nmap')){
+      const a = line.match(/as:\s*(.+)$/);
+      if (a) args = a[1].trim();
+      const t = line.match(/at\s+(.+?)\s+as:/);
+      if (t) startstr = t[1].trim();
+    }
+    if (line.startsWith('# Nmap done')){
+      const e = line.match(/scanned in\s+([\d.]+)\s+seconds/i);
+      if (e) elapsed = e[1];
+    }
+    if (!line.startsWith('Host:')) continue;
+    const ipM = line.match(/^Host:\s+(\S+)(?:\s+\(([^)]*)\))?/);
+    if (!ipM) continue;
+    const ip = ipM[1];
+    const hostnames = ipM[2] ? ipM[2].split(',').map(s => s.trim()).filter(Boolean) : [];
+    let h = byIp.get(ip);
+    if (!h){ h = { ip, hostnames: [], status: 'up', ports: [] }; byIp.set(ip, h); }
+    for (const n of hostnames) if (!h.hostnames.includes(n)) h.hostnames.push(n);
+    const st = line.match(/Status:\s*(\w+)/i);
+    if (st) h.status = st[1].toLowerCase();
+    const pm = line.match(/Ports:\s*(.+?)(?:\s+Ignored|\s+Seq Index|\s+OS:|\s*$)/);
+    if (pm){
+      for (const part of pm[1].split(',')){
+        const bits = part.trim().split('/');
+        if (bits.length < 3) continue;
+        const port = Number(bits[0]); if (!port) continue;
+        h.ports.push({
+          port, proto: (bits[2] || 'tcp').toLowerCase(),
+          state: (bits[1] || 'unknown').toLowerCase(),
+          reason: '', service: bits[4] || '', version: bits[6] && bits[6] !== '' ? bits.slice(6).filter(Boolean).join(' ') : ''
+        });
+      }
+    }
+  }
+  const hosts = [...byIp.values()];
+  if (!hosts.length) return null;
+  return {
+    format: 'greppable', scanner: 'nmap', args, version: '', startstr, elapsed, summary: '',
+    counts: {
+      up: hosts.filter(h => h.status === 'up').length,
+      down: hosts.filter(h => h.status === 'down').length,
+      total: hosts.length
+    },
+    hosts
+  };
+}
+
+function parseNormal(raw){
+  const hosts = [];
+  let args = '', startstr = '', elapsed = '', version = '';
+  const lines = raw.split(/\r?\n/);
+  let cur = null;
+  let inPorts = false;
+  for (let i = 0; i < lines.length; i++){
+    const line = lines[i];
+    const startM = line.match(/^#\s*Nmap\s+([\d.]+)\s+scan initiated\s+(.+?)\s+as:\s*(.+)$/i)
+      || line.match(/^Nmap\s+([\d.]+)\s+\(.+?\)\s+at\s+(.+)$/i);
+    if (startM){
+      version = startM[1] || version;
+      startstr = startM[2] || startstr;
+      if (startM[3]) args = startM[3];
+    }
+    const doneM = line.match(/Nmap done:.+scanned in\s+([\d.]+)\s+seconds/i);
+    if (doneM) elapsed = doneM[1];
+    const hostM = line.match(/^Nmap scan report for\s+(?:(.+?)\s+\()?((?:\d{1,3}\.){3}\d{1,3}|[0-9a-fA-F:]+)\)?\s*$/);
+    if (hostM){
+      if (cur) hosts.push(cur);
+      const name = hostM[1] ? hostM[1].replace(/\($/,'').trim() : '';
+      const ip = hostM[2];
+      cur = { ip, hostnames: name && name !== ip ? [name] : [], status: 'up', ports: [] };
+      inPorts = false;
+      continue;
+    }
+    if (/Host is up/i.test(line) && cur) cur.status = 'up';
+    if (/Host seems down|Note: Host seems down/i.test(line) && cur) cur.status = 'down';
+    if (/^PORT\s+STATE\s+SERVICE/i.test(line)){ inPorts = true; continue; }
+    if (inPorts && cur){
+      const pm = line.match(/^(\d+)\/(tcp|udp|sctp)\s+(\S+)\s+(\S+)(?:\s+(.*))?$/i);
+      if (pm){
+        cur.ports.push({
+          port: Number(pm[1]), proto: pm[2].toLowerCase(),
+          state: pm[3].toLowerCase(), reason: '',
+          service: pm[4] === 'unknown' ? '' : pm[4],
+          version: (pm[5] || '').trim()
+        });
+        continue;
+      }
+      if (line.trim() === '' || /^(Nmap scan report|Nmap done|# )/.test(line)){
+        inPorts = false;
+        if (/^Nmap scan report/.test(line)){ i--; continue; }
+      }
+    }
+  }
+  if (cur) hosts.push(cur);
+  if (!hosts.length) return null;
+  return {
+    format: 'normal', scanner: 'nmap', args, version, startstr, elapsed, summary: '',
+    counts: {
+      up: hosts.filter(h => h.status === 'up').length,
+      down: hosts.filter(h => h.status === 'down').length,
+      total: hosts.length
+    },
+    hosts
+  };
+}
+
+function portStats(hosts){
+  let open = 0, closed = 0, filtered = 0, other = 0;
+  for (const h of hosts) for (const p of h.ports){
+    if (p.state === 'open' || p.state.startsWith('open|')) open++;
+    else if (p.state === 'closed') closed++;
+    else if (p.state.includes('filtered')) filtered++;
+    else other++;
+  }
+  return { open, closed, filtered, other };
+}
+
+function renderSummary(){
+  const ps = portStats(report.hosts);
+  const elapsed = report.elapsed ? `${Number(report.elapsed).toLocaleString('nb-NO')} s` : '—';
+  const when = report.startstr || '—';
+  cardsEl.innerHTML = `
+    <div class="card hosts"><div class="k">Verter oppe</div><div class="v">${report.counts.up}</div><div class="h">${report.counts.down} nede · ${report.counts.total} totalt</div></div>
+    <div class="card open"><div class="k">Åpne porter</div><div class="v">${ps.open}</div><div class="h">synlige tjenester</div></div>
+    <div class="card closed"><div class="k">Lukkede porter</div><div class="v">${ps.closed}</div><div class="h">avvist / lukket</div></div>
+    <div class="card filtered"><div class="k">Filtrerte porter</div><div class="v">${ps.filtered}</div><div class="h">ingen svar / filtrert</div></div>
+    <div class="card" style="grid-column:1/-1"><div class="k">Skanning</div><div class="v" style="font-size:15px;font-weight:600">${esc(when)}</div><div class="h">Varighet: ${esc(elapsed)}${report.args ? ' · ' + esc(report.args) : ''}${report.format ? ' · format: ' + esc(report.format) : ''}</div></div>`;
+}
+
+function fillHostFilter(){
+  const cur = hostFilter.value;
+  hostFilter.innerHTML = '<option value="">Alle verter</option>' +
+    report.hosts.map(h => `<option value="${esc(h.ip)}">${esc(h.ip)}${h.hostnames[0] ? ' · ' + esc(h.hostnames[0]) : ''}</option>`).join('');
+  if ([...hostFilter.options].some(o => o.value === cur)) hostFilter.value = cur;
+}
+
+function stateClass(state){
+  if (!state) return '';
+  if (state === 'open' || state.startsWith('open|')) return 'open';
+  if (state === 'closed') return 'closed';
+  if (state.includes('filtered')) return 'filtered';
+  return '';
+}
+function stateLabel(state){
+  if (state === 'open') return 'åpen';
+  if (state === 'closed') return 'lukket';
+  if (state === 'filtered') return 'filtrert';
+  if (state === 'open|filtered') return 'åpen|filtrert';
+  if (state === 'closed|filtered') return 'lukket|filtrert';
+  return state || 'ukjent';
+}
+
+function filteredPorts(host){
+  const q = searchEl.value.trim().toLowerCase();
+  let ports = host.ports.slice();
+  if (stateFilter){
+    ports = ports.filter(p => {
+      if (stateFilter === 'open') return p.state === 'open' || p.state.startsWith('open|');
+      if (stateFilter === 'closed') return p.state === 'closed';
+      if (stateFilter === 'filtered') return p.state.includes('filtered');
+      return true;
+    });
+  }
+  if (q){
+    ports = ports.filter(p =>
+      String(p.port).includes(q) ||
+      (p.proto || '').includes(q) ||
+      (p.state || '').includes(q) ||
+      (p.service || '').toLowerCase().includes(q) ||
+      (p.version || '').toLowerCase().includes(q) ||
+      (p.reason || '').toLowerCase().includes(q)
+    );
+  }
+  ports.sort((a, b) => {
+    let av = a[sortKey], bv = b[sortKey];
+    if (sortKey === 'port'){ av = Number(av); bv = Number(bv); }
+    else { av = String(av || '').toLowerCase(); bv = String(bv || '').toLowerCase(); }
+    if (av < bv) return sortDir === 'asc' ? -1 : 1;
+    if (av > bv) return sortDir === 'asc' ? 1 : -1;
+    return a.port - b.port;
+  });
+  return ports;
+}
+
+function renderHosts(){
+  if (!report) return;
+  const wantHost = hostFilter.value;
+  const list = report.hosts.filter(h => !wantHost || h.ip === wantHost);
+  if (!list.length){
+    hostsEl.innerHTML = '<div class="empty">Ingen verter matcher filteret.</div>';
+    return;
+  }
+  hostsEl.innerHTML = list.map((h, idx) => {
+    const ports = filteredPorts(h);
+    const ps = portStats([h]);
+    const openAll = h.ports.filter(p => p.state === 'open' || p.state.startsWith('open|')).length;
+    const rows = ports.length ? ports.map(p => {
+      const sc = stateClass(p.state);
+      return `<tr>
+        <td class="port">${p.port}</td>
+        <td class="proto">${esc(p.proto)}</td>
+        <td><span class="pill ${sc}">${esc(stateLabel(p.state))}</span></td>
+        <td class="svc">${esc(p.service || '—')}</td>
+        <td>${esc(p.version || '—')}</td>
+        <td style="color:var(--faint)">${esc(p.reason || '—')}</td>
+      </tr>`;
+    }).join('') : `<tr><td colspan="6" style="color:var(--muted);text-align:center">Ingen porter matcher filteret${h.ports.length ? '' : ' (ingen porter i rapporten)'}.</td></tr>`;
+    const th = (key, label) => {
+      const cls = sortKey === key ? (sortDir === 'asc' ? 'asc' : 'desc') : '';
+      const arrow = sortKey === key ? (sortDir === 'asc' ? '▲' : '▼') : '◇';
+      return `<th class="${cls}" data-key="${key}">${label}<span class="sort">${arrow}</span></th>`;
+    };
+    return `<details class="host" ${idx < 3 ? 'open' : ''}>
+      <summary>
+        <span class="ip">${esc(h.ip)}</span>
+        ${h.hostnames.length ? `<span class="name">${esc(h.hostnames.join(', '))}</span>` : ''}
+        <span class="meta">
+          <span class="pill ${h.status === 'up' ? 'up' : 'down'}">${h.status === 'up' ? 'oppe' : h.status === 'down' ? 'nede' : esc(h.status)}</span>
+          <span class="pill open">${openAll} åpen</span>
+          <span class="pill closed">${ps.closed} lukket</span>
+          <span class="pill filtered">${ps.filtered} filtrert</span>
+        </span>
+      </summary>
+      <div style="overflow:auto">
+        <table>
+          <thead><tr>
+            ${th('port','Port')}${th('proto','Proto')}${th('state','Tilstand')}${th('service','Tjeneste')}${th('version','Versjon')}${th('reason','Årsak')}
+          </tr></thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>
+    </details>`;
+  }).join('');
+  hostsEl.querySelectorAll('th[data-key]').forEach(th => {
+    th.addEventListener('click', () => {
+      const key = th.dataset.key;
+      if (sortKey === key) sortDir = sortDir === 'asc' ? 'desc' : 'asc';
+      else { sortKey = key; sortDir = key === 'port' ? 'asc' : 'asc'; }
+      renderHosts();
+    });
+  });
+}
+
+function exportCsv(){
+  if (!report) return;
+  const rows = [['host','hostname','host_status','port','protocol','state','service','version','reason']];
+  for (const h of report.hosts){
+    const hn = h.hostnames.join(' ');
+    if (!h.ports.length){
+      rows.push([h.ip, hn, h.status, '', '', '', '', '', '']);
+      continue;
+    }
+    for (const p of h.ports){
+      rows.push([h.ip, hn, h.status, p.port, p.proto, p.state, p.service, p.version, p.reason]);
+    }
+  }
+  const csv = rows.map(r => r.map(cell => {
+    const s = String(cell ?? '');
+    return /["\n,;]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+  }).join(',')).join('\n');
+  const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'nmap-rapport.csv';
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+}
+
+// Auto-demo via ?demo=1 for verification
+if (new URLSearchParams(location.search).has('demo')){
+  paste.value = SAMPLE_XML;
+  runParse();
+}
+</script>
+</body>
+</html>

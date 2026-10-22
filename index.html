@@ -430,6 +430,9 @@ const SECTIONS = [
   { title:"Sosialt", color:"#64748b", cls:"half", links:[
     ["X","https://twitter.com/","x.com"],
   ]},
+  { title:"Verktøy", color:"#6366f1", cls:"half", links:[
+    ["nmap-rapport","./nmap-rapport.html","lokal · rapportvisning"],
+  ]},
   { title:"Motorsykler", color:"#a855f7", links:[
     ["Yamaha Ténéré 700","https://sites.google.com/view/hwgt27/yamaha-tenere-700","sites.google.com"],
     ["KTM Duke II LC4 2007","https://sites.google.com/view/hwgt27/ktm-duke-ii-lc4-2007","sites.google.com"],
@@ -449,10 +452,15 @@ for (const s of SECTIONS){
   sec.style.setProperty('--c', s.color);
   let html = `<h2><span class="dot"></span>${esc(s.title)}<span class="line"></span></h2><div class="grid">`;
   for (const [name,url,shown] of s.links){
-    const d = shown || domainOf(url);
-    html += `<a class="card" href="${esc(url)}" target="_blank" rel="noopener noreferrer" title="${esc(name)} – ${esc(d)}">
-      <span class="ico"><img src="https://www.google.com/s2/favicons?domain=${encodeURIComponent(d)}&sz=64" alt="" loading="lazy"
-        onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'fb',textContent:'${esc(name[0])}'}))"></span>
+    const local = !/^https?:/i.test(url);
+    const d = shown || (local ? 'lokal' : domainOf(url));
+    const ico = local
+      ? `<span class="fb">${esc(name[0])}</span>`
+      : `<img src="https://www.google.com/s2/favicons?domain=${encodeURIComponent(d)}&sz=64" alt="" loading="lazy"
+        onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'fb',textContent:'${esc(name[0])}'}))">`;
+    const tgt = local ? '' : ' target="_blank" rel="noopener noreferrer"';
+    html += `<a class="card" href="${esc(url)}"${tgt} title="${esc(name)} – ${esc(d)}">
+      <span class="ico">${ico}</span>
       <span class="txt"><div class="name">${esc(name)}</div><div class="dom">${esc(d)}</div></span></a>`;
   }
   sec.innerHTML = html + '</div>';
