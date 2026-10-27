@@ -235,13 +235,14 @@
   .toast button:hover{color:var(--text);background:var(--border-strong)}
   @keyframes tin{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 
-  /* Layout med Starship-panel */
+  /* Layout med Starship- + Falcon-paneler */
   .layout{display:block}
-  #starship{grid-column:1/-1;margin-top:0}
+  .side{display:flex;flex-direction:column;gap:16px;margin-top:0}
+  #starship,#falcon{margin-top:0}
   @media (min-width:1360px){
     .wrap{max-width:1500px}
     .layout{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:28px;align-items:start}
-    #starship{position:sticky;top:20px;grid-column:auto}
+    .side{position:sticky;top:20px}
   }
   .sx{position:relative;background:var(--surface);border:1px solid var(--border);border-radius:20px;box-shadow:var(--shadow);padding:18px 18px 14px;overflow:hidden}
   .sx::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(260px 200px at 100% 100%,rgba(249,115,22,.10),transparent 70%),radial-gradient(240px 180px at 0 0,var(--glow1),transparent 70%)}
@@ -279,13 +280,18 @@
   .sx-more span{font-size:13px}
   .sx-src{font-size:11px;color:var(--faint);margin:12px 0 0;line-height:1.4}
   .sx-src a{color:inherit}
-  @media (max-width:1359px){ #starship{margin-top:0} .sx-body{align-items:center} }
+  @media (max-width:1359px){ .side{margin-top:0} .sx-body{align-items:center} }
   @media (min-width:721px) and (max-width:1359px){
     .sx-body{grid-template-columns:minmax(0,1fr) 40px;gap:20px}
     .sx-content{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px;align-items:start}
     .sx-ship{width:auto;height:210px}
     .sx-body{grid-template-columns:minmax(0,1fr) auto}
+    .sx.falcon .sx-ship{height:180px}
   }
+  .sx.falcon .sx-ship{width:42px}
+  .sx.falcon .sx-kick{color:#3b82f6}
+  .sx.falcon .sx-more:hover,.sx.falcon .sx-more:focus-visible{border-color:#3b82f6;color:#3b82f6}
+  .sx.falcon::before{background:radial-gradient(260px 200px at 100% 100%,rgba(59,130,246,.12),transparent 70%),radial-gradient(240px 180px at 0 0,var(--glow1),transparent 70%)}
 
   footer{margin-top:40px;text-align:center;font-size:12px;color:var(--faint)}
   footer a{color:inherit}
@@ -339,6 +345,7 @@
 
   <div class="layout">
   <main id="sections"></main>
+  <div class="side" id="sideCol">
   <aside class="sx" id="starship" aria-labelledby="sxTitle">
     <a class="sx-brand" href="https://www.spacex.com/vehicles/starship/" target="_blank" rel="noopener noreferrer" title="SpaceX Starship"><svg class="sx-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 50" role="img" aria-label="SpaceX" fill="currentColor"><g class="letter_s"><path d="M37.5 30.5H10.9v-6.6h34.3c-.9-2.8-3.8-5.4-8.9-5.4H11.4c-5.7 0-9 2.1-9 6.7v4.9c0 4 3.4 6.3 8.4 6.3h26.9v7H1.5c.9 3.8 3.8 5.8 9 5.8h27.1c5.7 0 8.5-2.2 8.5-6.9v-4.9c0-4.3-3.3-6.6-8.6-6.9z"/></g><g class="letter_p"><path d="M91.8 18.6H59v30.7h9.3V37.5h24.2c6.7 0 10.4-2.3 10.4-7.7v-3.4c-.1-5-4.3-7.8-11.1-7.8zm3 9.8c0 2.2-.4 3.4-4 3.4H68.3l.1-8h22c4 0 4.5 1.2 4.5 3.3v1.3z"/></g><g class="letter_a"><polygon points="129.9,17.3 124.3,24.2 133.8,37.3 114,37.3 109.1,42.5 137.7,42.5 142.6,49.3 153.6,49.3"/></g><g class="letter_c"><path d="M171.4 23.9h34.8c-.9-3.6-4.4-5.4-9.4-5.4h-26c-4.5 0-8.8 1.8-8.8 6.7v17.2c0 4.9 4.3 6.7 8.8 6.7h26.3c6 0 8.1-1.7 9.1-5.8h-34.8V23.9z"/></g><g class="letter_e"><polygon points="228.3,43.5 228.3,34.1 247,34.1 247,28.9 218.9,28.9 218.9,49.3 260.4,49.3 260.4,43.5"/><rect width="41.9" height="5.4" x="219.9" y="18.6"/></g><g class="letter_x"><path d="M287.6 18.6H273l17.2 12.6c2.5-1.7 5.4-3.5 8-5l-10.6-7.6zm21.2 15.7c-2.5 1.7-5 3.6-7.4 5.4l13 9.5h14.7l-20.3-14.9z"/></g><g class="letter_swoosh"><path d="M399 .7c-80 4.6-117 38.8-125.3 46.9l-1.7 1.6h14.8C326.8 9.1 384.3 2 399 .7z"/></g></svg></a>
     <h2 id="sxTitle" class="sx-title">Kommende Starship-oppskytinger</h2>
@@ -381,6 +388,46 @@
     <a class="sx-more" href="https://spacexnow.com/starship" target="_blank" rel="noopener noreferrer">Se på SpaceXNow <span aria-hidden="true">↗</span></a>
     <p class="sx-src">Data: <a href="https://thespacedevs.com/llapi" target="_blank" rel="noopener noreferrer">The Space Devs</a> (Launch Library 2) · oppdateres hvert 45. min · tider i norsk tid</p>
   </aside>
+  <aside class="sx falcon" id="falcon" aria-labelledby="f9Title">
+    <a class="sx-brand" href="https://www.spacex.com/vehicles/falcon-9/" target="_blank" rel="noopener noreferrer" title="SpaceX Falcon 9"><svg class="sx-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 50" role="img" aria-label="SpaceX" fill="currentColor"><g class="letter_s"><path d="M37.5 30.5H10.9v-6.6h34.3c-.9-2.8-3.8-5.4-8.9-5.4H11.4c-5.7 0-9 2.1-9 6.7v4.9c0 4 3.4 6.3 8.4 6.3h26.9v7H1.5c.9 3.8 3.8 5.8 9 5.8h27.1c5.7 0 8.5-2.2 8.5-6.9v-4.9c0-4.3-3.3-6.6-8.6-6.9z"/></g><g class="letter_p"><path d="M91.8 18.6H59v30.7h9.3V37.5h24.2c6.7 0 10.4-2.3 10.4-7.7v-3.4c-.1-5-4.3-7.8-11.1-7.8zm3 9.8c0 2.2-.4 3.4-4 3.4H68.3l.1-8h22c4 0 4.5 1.2 4.5 3.3v1.3z"/></g><g class="letter_a"><polygon points="129.9,17.3 124.3,24.2 133.8,37.3 114,37.3 109.1,42.5 137.7,42.5 142.6,49.3 153.6,49.3"/></g><g class="letter_c"><path d="M171.4 23.9h34.8c-.9-3.6-4.4-5.4-9.4-5.4h-26c-4.5 0-8.8 1.8-8.8 6.7v17.2c0 4.9 4.3 6.7 8.8 6.7h26.3c6 0 8.1-1.7 9.1-5.8h-34.8V23.9z"/></g><g class="letter_e"><polygon points="228.3,43.5 228.3,34.1 247,34.1 247,28.9 218.9,28.9 218.9,49.3 260.4,49.3 260.4,43.5"/><rect width="41.9" height="5.4" x="219.9" y="18.6"/></g><g class="letter_x"><path d="M287.6 18.6H273l17.2 12.6c2.5-1.7 5.4-3.5 8-5l-10.6-7.6zm21.2 15.7c-2.5 1.7-5 3.6-7.4 5.4l13 9.5h14.7l-20.3-14.9z"/></g><g class="letter_swoosh"><path d="M399 .7c-80 4.6-117 38.8-125.3 46.9l-1.7 1.6h14.8C326.8 9.1 384.3 2 399 .7z"/></g></svg></a>
+    <h2 id="f9Title" class="sx-title">Kommende Falcon-oppskytinger</h2>
+    <div class="sx-body">
+      <div class="sx-content" id="f9Content"><div class="sx-empty">Henter oppskytinger …</div></div>
+      <svg class="sx-ship" viewBox="0 0 56 360" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="f9Steel" x1="0" x2="1"><stop offset="0" stop-color="#6b7280"/><stop offset=".25" stop-color="#e5e7eb"/><stop offset=".5" stop-color="#f9fafb"/><stop offset=".75" stop-color="#9ca3af"/><stop offset="1" stop-color="#4b5563"/></linearGradient>
+        <linearGradient id="f9Dark" x1="0" x2="1"><stop offset="0" stop-color="#111827"/><stop offset=".5" stop-color="#1f2937"/><stop offset="1" stop-color="#0b0f19"/></linearGradient>
+        <linearGradient id="f9Flame" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff7ed"/><stop offset=".3" stop-color="#60a5fa"/><stop offset=".7" stop-color="#2563eb" stop-opacity=".55"/><stop offset="1" stop-color="#2563eb" stop-opacity="0"/></linearGradient>
+      </defs>
+      <!-- fairing -->
+      <path d="M20 48 C20 22 25 6 28 2 C31 6 36 22 36 48 Z" fill="url(#f9Steel)"/>
+      <path d="M28 2 C31 6 36 22 36 48 L32 48 C32 26 30 10 28 2Z" fill="url(#f9Dark)" opacity=".7"/>
+      <!-- S2 -->
+      <rect x="20" y="48" width="16" height="70" fill="url(#f9Steel)"/>
+      <rect x="32" y="48" width="4" height="70" fill="url(#f9Dark)" opacity=".55"/>
+      <g stroke="#9ca3af" stroke-width=".5" opacity=".5"><path d="M20 65h16M20 82h16M20 99h16"/></g>
+      <!-- interstage -->
+      <rect x="19" y="118" width="18" height="10" fill="#4b5563"/>
+      <g fill="#111827"><rect x="21" y="120" width="2.5" height="6"/><rect x="25" y="120" width="2.5" height="6"/><rect x="29" y="120" width="2.5" height="6"/><rect x="33" y="120" width="2" height="6"/></g>
+      <!-- S1 -->
+      <rect x="19" y="128" width="18" height="180" fill="url(#f9Steel)"/>
+      <rect x="31" y="128" width="6" height="180" fill="url(#f9Dark)" opacity=".45"/>
+      <g stroke="#9ca3af" stroke-width=".5" opacity=".45"><path d="M19 150h18M19 175h18M19 200h18M19 225h18M19 250h18M19 275h18"/></g>
+      <!-- grid fins -->
+      <g fill="#374151"><rect x="11" y="134" width="8" height="11" rx="1"/><rect x="37" y="134" width="8" height="11" rx="1"/></g>
+      <g stroke="#9ca3af" stroke-width=".45"><path d="M11 138h8M11 142h8M37 138h8M37 142h8M13.5 134v11M16.5 134v11M39.5 134v11M42.5 134v11"/></g>
+      <!-- legs hint -->
+      <path d="M19 280 L15 308 L19 308Z M37 280 L41 308 L37 308Z" fill="#6b7280"/>
+      <!-- engines -->
+      <path d="M17 308 H39 L37 322 H19 Z" fill="#374151"/>
+      <g fill="#1f2937"><circle cx="22" cy="326" r="3"/><circle cx="28" cy="326" r="3.2"/><circle cx="34" cy="326" r="3"/></g>
+      <path class="sx-flame" d="M18 328 C19 340 24 350 28 356 C32 350 37 340 38 328 Z" fill="url(#f9Flame)"/>
+    </svg>
+    </div>
+    <a class="sx-more" href="https://spacexnow.com/" target="_blank" rel="noopener noreferrer">Se på SpaceXNow <span aria-hidden="true">↗</span></a>
+    <p class="sx-src">Data: <a href="https://thespacedevs.com/llapi" target="_blank" rel="noopener noreferrer">The Space Devs</a> (Launch Library 2) · Falcon 9 &amp; Heavy · oppdateres hvert 45. min · tider i norsk tid</p>
+  </aside>
+  </div>
   </div>
 
   <footer>Startside for Trond Erik · Vær fra <a href="https://open-meteo.com/" target="_blank" rel="noopener noreferrer">Open-Meteo</a></footer>
@@ -975,15 +1022,90 @@ async function loadStarship(force=false){
   }catch(e){ if (!sxData) sxData = null; }
   renderStarship();
 }
-/* Plasser panelet: høyre kolonne på brede skjermer, ellers rett etter aksjene */
-function placeStarship(){
-  const aside = document.getElementById('starship'), layout = document.querySelector('.layout'), aksjer = document.getElementById('aksjer');
-  if (matchMedia('(min-width:1360px)').matches){ if (aside.parentElement !== layout) layout.appendChild(aside); }
-  else if (aksjer && aside.previousElementSibling !== aksjer){ aksjer.after(aside); }
+/* Plasser sidekolonnen: høyre på brede skjermer, ellers rett etter aksjene */
+function placeSide(){
+  const side = document.getElementById('sideCol'), layout = document.querySelector('.layout'), aksjer = document.getElementById('aksjer');
+  if (!side) return;
+  if (matchMedia('(min-width:1360px)').matches){ if (side.parentElement !== layout) layout.appendChild(side); }
+  else if (aksjer && side.previousElementSibling !== aksjer){ aksjer.after(side); }
 }
-placeStarship(); matchMedia('(min-width:1360px)').addEventListener('change', placeStarship);
+placeSide(); matchMedia('(min-width:1360px)').addEventListener('change', placeSide);
 loadStarship(); setInterval(()=>{ if (!document.hidden) loadStarship(); }, 5*60*1000);
 setInterval(tickStarship, 1000);
+
+/* Falcon 9 / Falcon Heavy (samme Launch Library 2-kilde og cache-mønster som Starship) */
+const F9_URLS = [
+  'https://ll.thespacedevs.com/2.3.0/launches/upcoming/?rocket__configuration__name=Falcon%209&limit=8&mode=normal&hide_recent_previous=true',
+  'https://ll.thespacedevs.com/2.3.0/launches/upcoming/?rocket__configuration__name=Falcon%20Heavy&limit=4&mode=normal&hide_recent_previous=true'
+];
+const F9_KEY = 'startside-falcon-v1', F9_MAX_AGE = 45*60*1000;
+const f9Name = l => (l.name||'').replace(/^Falcon\s+(?:9(?:\s+Block\s+\d+)?|Heavy)\s*\|\s*/i,'');
+let f9Data = null, f9NextTarget = null;
+function slimLaunch(l){
+  return { name:l.name, slug:l.slug, net:l.net,
+    net_precision:l.net_precision && {name:l.net_precision.name},
+    status:l.status && {abbrev:l.status.abbrev, name:l.status.name},
+    pad:l.pad && {name:l.pad.name, location:{name:l.pad.location && l.pad.location.name}},
+    rocket:(l.rocket && l.rocket.configuration && (l.rocket.configuration.full_name || l.rocket.configuration.name)) || '' };
+}
+function renderFalcon(){
+  const box = document.getElementById('f9Content');
+  if (!box) return;
+  const list = (f9Data || []).filter(l => new Date(l.net).getTime() > Date.now() - 3*3600e3);
+  if (!f9Data){ box.innerHTML = '<div class="sx-empty">Klarte ikke å hente oppskytinger akkurat nå. Prøver igjen senere 🚀</div>'; return; }
+  if (!list.length){ box.innerHTML = '<div class="sx-empty">Ingen kommende Falcon-oppskytinger er meldt akkurat nå. Følg med! 🚀</div>'; return; }
+  const [n, ...rest] = list;
+  const [stT, stC] = sxStatus(n);
+  const precise = SX_PRECISE.has(n.net_precision && n.net_precision.name);
+  f9NextTarget = precise ? new Date(n.net).getTime() : null;
+  const rocketTag = /heavy/i.test(n.rocket||n.name||'') ? 'Falcon Heavy' : 'Falcon 9';
+  let h = `<a class="sx-next" href="${sxLink(n)}" target="_blank" rel="noopener noreferrer" title="Åpne ${esc(f9Name(n))}">
+      <div class="sx-kick">Neste oppskyting · ${esc(rocketTag)}</div>
+      <div class="sx-name">${esc(f9Name(n))}</div>
+      <div class="sx-when">${precise?'':'Tidligst '}${esc(sxWhen(n))}</div>
+      <div class="sx-cd" id="f9Cd">${precise ? '' : '<small>Nedtelling starter når tidspunktet er fastsatt</small>'}</div>
+      <div class="sx-meta"><span class="sx-st ${stC}">${esc(stT)}</span><span>${esc(sxSite(n))}</span></div></a>`;
+  if (rest.length){
+    h += '<div class="sx-list">' + rest.slice(0,4).map(l=>{ const [t,c]=sxStatus(l); const pr = SX_PRECISE.has(l.net_precision && l.net_precision.name);
+      const tag = /heavy/i.test(l.rocket||l.name||'') ? 'FH' : 'F9';
+      return `<a class="sx-item" href="${sxLink(l)}" target="_blank" rel="noopener noreferrer"><span class="n">${esc(f9Name(l))}</span><span class="d">${pr?'':'NET '}${esc(sxWhen(l))}</span>
+        <span class="l"><span class="sx-st ${c}">${esc(t.split(' ')[0])}</span><span>${esc(tag)} · ${esc(sxSite(l))}</span></span></a>`; }).join('') + '</div>';
+  }
+  box.innerHTML = h;
+  tickFalcon();
+}
+function tickFalcon(){
+  const el = document.getElementById('f9Cd'); if (!el || f9NextTarget == null) return;
+  let ms = f9NextTarget - Date.now(); const neg = ms < 0; ms = Math.abs(ms);
+  const d = Math.floor(ms/864e5), hh = Math.floor(ms/36e5)%24, mm = Math.floor(ms/6e4)%60, ss = Math.floor(ms/1e3)%60;
+  const p2 = v => String(v).padStart(2,'0');
+  el.textContent = `T${neg?'+':'−'} ${d ? d+'d ' : ''}${p2(hh)}:${p2(mm)}:${p2(ss)}`;
+}
+async function loadFalcon(force=false){
+  let cache = null; try{ cache = JSON.parse(localStorage.getItem(F9_KEY)); }catch(e){}
+  if (cache && cache.data){ f9Data = cache.data; renderFalcon(); }
+  if (!force && cache && Date.now() - cache.ts < F9_MAX_AGE) return;
+  try{
+    const responses = await Promise.all(F9_URLS.map(u => fetch(u, { headers:{ 'Accept':'application/json' } })));
+    for (const r of responses) if (!r.ok) throw new Error(r.status);
+    const jsons = await Promise.all(responses.map(r => r.json()));
+    const merged = [];
+    const seen = new Set();
+    for (const j of jsons){
+      for (const l of (j.results || [])){
+        if (seen.has(l.id || l.slug || l.name)) continue;
+        seen.add(l.id || l.slug || l.name);
+        merged.push(slimLaunch(l));
+      }
+    }
+    merged.sort((a,b) => new Date(a.net) - new Date(b.net));
+    f9Data = merged.slice(0, 8);
+    try{ localStorage.setItem(F9_KEY, JSON.stringify({ ts:Date.now(), data:f9Data })); }catch(e){}
+  }catch(e){ if (!f9Data) f9Data = null; }
+  renderFalcon();
+}
+loadFalcon(); setInterval(()=>{ if (!document.hidden) loadFalcon(); }, 5*60*1000);
+setInterval(tickFalcon, 1000);
 
 </script>
 </body>
