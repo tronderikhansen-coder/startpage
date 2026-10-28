@@ -556,7 +556,7 @@ function buildStocksSection(){
     <p class="hint">Varsler sendes bare mens startsiden er åpen i en nettleserfane, og høyst én gang per aksje, retning og nivå per handelsdag. Kursene er ca. 15 min forsinket.</p>
   </div>`;
   for (const g of STOCK_GROUPS){
-    h += `<div class="sgroup"><h3 class="sgt">${esc(g.title)}</h3><div class="stocks ${g.cls}">`;
+    h += `<div class="sgroup" data-market="${g.cls}"><h3 class="sgt">${esc(g.title)}</h3><div class="stocks ${g.cls}">`;
     for (const st of g.stocks){
       const url = `https://www.tradingview.com/symbols/${st.tv.replace(':','-')}/`;
       h += `<div class="stock" data-sym="${st.tv}"><div class="tv" data-symbol="${st.tv}">
@@ -838,8 +838,29 @@ function renderChart(card, st){
   box.dataset.day = S.day; box.dataset.prev = prev ?? ''; box.dataset.last = last.c;
 }
 function renderAllCharts(){ document.querySelectorAll('#aksjer .stock').forEach(c=>{ const st = STOCKS.find(s=>s.tv===c.dataset.sym); if (st) renderChart(c, st); }); }
+
+/* Oslo Børs øverst 06:00–16:00 Europe/Oslo, ellers USA – kun omorganiser DOM, ingen re-render */
+function osloMinutesNow(d=new Date()){
+  const parts = new Intl.DateTimeFormat('en-GB',{timeZone:'Europe/Oslo',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).formatToParts(d);
+  const h = +parts.find(p=>p.type==='hour').value, m = +parts.find(p=>p.type==='minute').value;
+  return h*60 + m;
+}
+function orderStockRows(now=new Date()){
+  const sec = document.getElementById('aksjer'); if (!sec) return;
+  const oslo = sec.querySelector('.sgroup[data-market="oslo"]');
+  const usa = sec.querySelector('.sgroup[data-market="usa"]');
+  if (!oslo || !usa) return;
+  const mins = osloMinutesNow(now);
+  const osloFirst = mins >= 6*60 && mins < 16*60; // [06:00, 16:00)
+  const first = osloFirst ? oslo : usa, second = osloFirst ? usa : oslo;
+  if (first.nextElementSibling === second) return;
+  const anchor = sec.querySelector('.stocks-note');
+  sec.insertBefore(first, anchor || null);
+  sec.insertBefore(second, anchor || null);
+}
 async function refreshStocks(){
   stocksTheme = effectiveTheme();
+  orderStockRows();
   const gen = ++stockGen;
   lastStockRefresh = Date.now();
   const [ok] = await Promise.all([loadStockStats(), loadCharts()]);
@@ -861,6 +882,7 @@ function renderStockWidgets(){            // temabytte: SVG-en bruker CSS-variab
 {
   const stocksSec = buildStocksSection();
   main.prepend(stocksSec);
+  orderStockRows();
   setupAlarmUI();
   refreshStocks(); scheduleStocks();
   let rzT = null; addEventListener('resize', ()=>{ clearTimeout(rzT); rzT = setTimeout(renderAllCharts, 150); });
