@@ -1,14 +1,14 @@
 <!doctype html>
-<html lang="nb">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Start · Trond Erik</title>
+<title>Start</title>
 <meta name="color-scheme" content="light dark">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%232563eb'/%3E%3Ctext x='32' y='43' font-family='Arial' font-weight='700' font-size='30' fill='white' text-anchor='middle'%3ETE%3C/text%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%232563eb'/%3E%3Ctext x='32' y='43' font-family='Arial' font-weight='700' font-size='30' fill='white' text-anchor='middle'%3ES%3C/text%3E%3C/svg%3E">
 <script>
   // Apply saved theme before paint to avoid flashing
   (function(){try{var t=localStorage.getItem('startside-tema');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t;}catch(e){}})();
@@ -65,7 +65,8 @@
 
   /* Header */
   header{display:grid;grid-template-columns:1fr auto;gap:24px;align-items:center;margin-bottom:32px;padding-bottom:24px;border-bottom:1px solid var(--border)}
-  .greeting{font-size:15px;font-weight:500;color:var(--muted);margin:0 0 4px;letter-spacing:.01em}
+  .greeting{font-size:15px;font-weight:500;color:var(--muted);margin:0 0 2px;letter-spacing:.01em}
+  .welcome-fact{font-size:13px;font-weight:400;color:var(--faint);margin:0 0 6px;letter-spacing:.01em;max-width:38em;line-height:1.4}
   .clock{font-size:56px;font-weight:700;letter-spacing:-.03em;line-height:1;font-variant-numeric:tabular-nums;margin:0}
   .clock .sec{font-size:22px;font-weight:500;color:var(--faint);margin-left:6px;letter-spacing:0}
   .date{margin-top:8px;font-size:16px;color:var(--muted);font-weight:500}
@@ -125,7 +126,7 @@
   .dom{font-size:12px;color:var(--faint);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
 
-  /* Aksjer */
+  /* Stocks */
   .stocks{display:grid;gap:12px}
   .stocks.oslo{grid-template-columns:repeat(3,minmax(0,1fr))}
   .stocks.usa{grid-template-columns:repeat(5,minmax(0,1fr))}
@@ -322,20 +323,21 @@
 <div class="wrap">
   <header>
     <div>
-      <p class="greeting" id="greeting">Hei, Trond Erik</p>
+      <p class="greeting" id="greeting">Welcome!</p>
+      <p class="welcome-fact" id="welcomeFact"></p>
       <h1 class="clock" id="clock">--:--<span class="sec">--</span></h1>
       <div class="date" id="date"></div>
     </div>
     <div class="right">
-      <a class="weather" id="weather" href="https://www.yr.no/nb/v%C3%A6rvarsel/daglig-tabell/1-23221/Norge/Vestfold%20og%20Telemark/Larvik/Stavern" target="_blank" rel="noopener noreferrer" title="Været i Stavern på Yr">
+      <a class="weather" id="weather" href="https://www.yr.no/nb/v%C3%A6rvarsel/daglig-tabell/1-23221/Norge/Vestfold%20og%20Telemark/Larvik/Stavern" target="_blank" rel="noopener noreferrer" title="Weather in Stavern on Yr">
         <span id="w-icon"></span>
         <div>
           <div class="w-temp" id="w-temp">–°</div>
-          <div class="w-desc" id="w-desc">Henter vær …</div>
+          <div class="w-desc" id="w-desc">Fetching weather …</div>
           <div class="w-meta" id="w-meta">Stavern</div>
         </div>
       </a>
-      <button class="theme-btn" id="themeBtn" type="button" aria-label="Bytt mellom lyst og mørkt tema" title="Bytt tema">
+      <button class="theme-btn" id="themeBtn" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">
         <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
         <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
       </button>
@@ -348,9 +350,9 @@
   <div class="side" id="sideCol">
   <aside class="sx" id="starship" aria-labelledby="sxTitle">
     <a class="sx-brand" href="https://www.spacex.com/vehicles/starship/" target="_blank" rel="noopener noreferrer" title="SpaceX Starship"><svg class="sx-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 50" role="img" aria-label="SpaceX" fill="currentColor"><g class="letter_s"><path d="M37.5 30.5H10.9v-6.6h34.3c-.9-2.8-3.8-5.4-8.9-5.4H11.4c-5.7 0-9 2.1-9 6.7v4.9c0 4 3.4 6.3 8.4 6.3h26.9v7H1.5c.9 3.8 3.8 5.8 9 5.8h27.1c5.7 0 8.5-2.2 8.5-6.9v-4.9c0-4.3-3.3-6.6-8.6-6.9z"/></g><g class="letter_p"><path d="M91.8 18.6H59v30.7h9.3V37.5h24.2c6.7 0 10.4-2.3 10.4-7.7v-3.4c-.1-5-4.3-7.8-11.1-7.8zm3 9.8c0 2.2-.4 3.4-4 3.4H68.3l.1-8h22c4 0 4.5 1.2 4.5 3.3v1.3z"/></g><g class="letter_a"><polygon points="129.9,17.3 124.3,24.2 133.8,37.3 114,37.3 109.1,42.5 137.7,42.5 142.6,49.3 153.6,49.3"/></g><g class="letter_c"><path d="M171.4 23.9h34.8c-.9-3.6-4.4-5.4-9.4-5.4h-26c-4.5 0-8.8 1.8-8.8 6.7v17.2c0 4.9 4.3 6.7 8.8 6.7h26.3c6 0 8.1-1.7 9.1-5.8h-34.8V23.9z"/></g><g class="letter_e"><polygon points="228.3,43.5 228.3,34.1 247,34.1 247,28.9 218.9,28.9 218.9,49.3 260.4,49.3 260.4,43.5"/><rect width="41.9" height="5.4" x="219.9" y="18.6"/></g><g class="letter_x"><path d="M287.6 18.6H273l17.2 12.6c2.5-1.7 5.4-3.5 8-5l-10.6-7.6zm21.2 15.7c-2.5 1.7-5 3.6-7.4 5.4l13 9.5h14.7l-20.3-14.9z"/></g><g class="letter_swoosh"><path d="M399 .7c-80 4.6-117 38.8-125.3 46.9l-1.7 1.6h14.8C326.8 9.1 384.3 2 399 .7z"/></g></svg></a>
-    <h2 id="sxTitle" class="sx-title">Kommende Starship-oppskytinger</h2>
+    <h2 id="sxTitle" class="sx-title">Upcoming Starship launches</h2>
     <div class="sx-body">
-      <div class="sx-content" id="sxContent"><div class="sx-empty">Henter oppskytinger …</div></div>
+      <div class="sx-content" id="sxContent"><div class="sx-empty">Fetching launches …</div></div>
       <svg class="sx-ship" viewBox="0 0 60 420" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <linearGradient id="sxSteel" x1="0" x2="1"><stop offset="0" stop-color="#6b7280"/><stop offset=".22" stop-color="#d1d5db"/><stop offset=".45" stop-color="#f3f4f6"/><stop offset=".7" stop-color="#9ca3af"/><stop offset="1" stop-color="#4b5563"/></linearGradient>
@@ -385,14 +387,14 @@
       <path class="sx-flame" d="M17 389 C18 404 24 414 30 420 C36 414 42 404 43 389 Z" fill="url(#sxFlame)"/>
     </svg>
     </div>
-    <a class="sx-more" href="https://spacexnow.com/starship" target="_blank" rel="noopener noreferrer">Se på SpaceXNow <span aria-hidden="true">↗</span></a>
-    <p class="sx-src">Data: <a href="https://thespacedevs.com/llapi" target="_blank" rel="noopener noreferrer">The Space Devs</a> (Launch Library 2) · oppdateres hvert 45. min · tider i norsk tid</p>
+    <a class="sx-more" href="https://spacexnow.com/starship" target="_blank" rel="noopener noreferrer">View on SpaceXNow <span aria-hidden="true">↗</span></a>
+    <p class="sx-src">Data: <a href="https://thespacedevs.com/llapi" target="_blank" rel="noopener noreferrer">The Space Devs</a> (Launch Library 2) · updates every 45 min · times in Norway time</p>
   </aside>
   <aside class="sx falcon" id="falcon" aria-labelledby="f9Title">
     <a class="sx-brand" href="https://www.spacex.com/vehicles/falcon-9/" target="_blank" rel="noopener noreferrer" title="SpaceX Falcon 9"><svg class="sx-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 50" role="img" aria-label="SpaceX" fill="currentColor"><g class="letter_s"><path d="M37.5 30.5H10.9v-6.6h34.3c-.9-2.8-3.8-5.4-8.9-5.4H11.4c-5.7 0-9 2.1-9 6.7v4.9c0 4 3.4 6.3 8.4 6.3h26.9v7H1.5c.9 3.8 3.8 5.8 9 5.8h27.1c5.7 0 8.5-2.2 8.5-6.9v-4.9c0-4.3-3.3-6.6-8.6-6.9z"/></g><g class="letter_p"><path d="M91.8 18.6H59v30.7h9.3V37.5h24.2c6.7 0 10.4-2.3 10.4-7.7v-3.4c-.1-5-4.3-7.8-11.1-7.8zm3 9.8c0 2.2-.4 3.4-4 3.4H68.3l.1-8h22c4 0 4.5 1.2 4.5 3.3v1.3z"/></g><g class="letter_a"><polygon points="129.9,17.3 124.3,24.2 133.8,37.3 114,37.3 109.1,42.5 137.7,42.5 142.6,49.3 153.6,49.3"/></g><g class="letter_c"><path d="M171.4 23.9h34.8c-.9-3.6-4.4-5.4-9.4-5.4h-26c-4.5 0-8.8 1.8-8.8 6.7v17.2c0 4.9 4.3 6.7 8.8 6.7h26.3c6 0 8.1-1.7 9.1-5.8h-34.8V23.9z"/></g><g class="letter_e"><polygon points="228.3,43.5 228.3,34.1 247,34.1 247,28.9 218.9,28.9 218.9,49.3 260.4,49.3 260.4,43.5"/><rect width="41.9" height="5.4" x="219.9" y="18.6"/></g><g class="letter_x"><path d="M287.6 18.6H273l17.2 12.6c2.5-1.7 5.4-3.5 8-5l-10.6-7.6zm21.2 15.7c-2.5 1.7-5 3.6-7.4 5.4l13 9.5h14.7l-20.3-14.9z"/></g><g class="letter_swoosh"><path d="M399 .7c-80 4.6-117 38.8-125.3 46.9l-1.7 1.6h14.8C326.8 9.1 384.3 2 399 .7z"/></g></svg></a>
-    <h2 id="f9Title" class="sx-title">Kommende Falcon-oppskytinger</h2>
+    <h2 id="f9Title" class="sx-title">Upcoming Falcon launches</h2>
     <div class="sx-body">
-      <div class="sx-content" id="f9Content"><div class="sx-empty">Henter oppskytinger …</div></div>
+      <div class="sx-content" id="f9Content"><div class="sx-empty">Fetching launches …</div></div>
       <svg class="sx-ship" viewBox="0 0 56 360" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <linearGradient id="f9Steel" x1="0" x2="1"><stop offset="0" stop-color="#6b7280"/><stop offset=".25" stop-color="#e5e7eb"/><stop offset=".5" stop-color="#f9fafb"/><stop offset=".75" stop-color="#9ca3af"/><stop offset="1" stop-color="#4b5563"/></linearGradient>
@@ -424,18 +426,18 @@
       <path class="sx-flame" d="M18 328 C19 340 24 350 28 356 C32 350 37 340 38 328 Z" fill="url(#f9Flame)"/>
     </svg>
     </div>
-    <a class="sx-more" href="https://spacexnow.com/" target="_blank" rel="noopener noreferrer">Se på SpaceXNow <span aria-hidden="true">↗</span></a>
-    <p class="sx-src">Data: <a href="https://thespacedevs.com/llapi" target="_blank" rel="noopener noreferrer">The Space Devs</a> (Launch Library 2) · Falcon 9 &amp; Heavy · oppdateres hvert 45. min · tider i norsk tid</p>
+    <a class="sx-more" href="https://spacexnow.com/" target="_blank" rel="noopener noreferrer">View on SpaceXNow <span aria-hidden="true">↗</span></a>
+    <p class="sx-src">Data: <a href="https://thespacedevs.com/llapi" target="_blank" rel="noopener noreferrer">The Space Devs</a> (Launch Library 2) · Falcon 9 &amp; Heavy · updates every 45 min · times in Norway time</p>
   </aside>
   </div>
   </div>
 
-  <footer>Startside for Trond Erik · Vær fra <a href="https://open-meteo.com/" target="_blank" rel="noopener noreferrer">Open-Meteo</a></footer>
+  <footer>Weather from <a href="https://open-meteo.com/" target="_blank" rel="noopener noreferrer">Open-Meteo</a></footer>
 </div>
 
 <script>
 const SECTIONS = [
-  { title:"Nyheter", color:"#ef4444", links:[
+  { title:"News", color:"#ef4444", links:[
     ["NRK","https://www.nrk.no/"],
     ["VG","https://vg.no"],
     ["Dagbladet","https://www.dagbladet.no","dagbladet.no"],
@@ -447,45 +449,43 @@ const SECTIONS = [
     ["Klassekampen","https://klassekampen.no/"],
     ["Morgenbladet","https://www.morgenbladet.no/"],
   ]},
-  { title:"Lokalt", color:"#10b981", cls:"half", links:[
+  { title:"Local", color:"#10b981", cls:"half", links:[
     ["Østlandsposten","http://www.op.no/","op.no"],
     ["Tønsbergs Blad","https://www.tb.no/"],
     ["Sandefjords Blad","https://www.sb.no/"],
     ["Varden","https://www.varden.no/"],
   ]},
-  { title:"Regionalt", color:"#06b6d4", cls:"half", links:[
+  { title:"Regional", color:"#06b6d4", cls:"half", links:[
     ["Bergens Tidende","https://www.bt.no/"],
     ["Stavanger Aftenblad","https://www.aftenbladet.no/"],
     ["Adresseavisen","https://www.adressa.no/"],
   ]},
-  { title:"Økonomi", color:"#f59e0b", cls:"half", links:[
+  { title:"Economy", color:"#f59e0b", cls:"half", links:[
     ["E24","http://www.e24.no/","e24.no"],
     ["Dagens Næringsliv","https://www.dn.no/"],
     ["Finansavisen","https://www.finansavisen.no/"],
     ["TSLA","https://www.msn.com/en-gb/money/watchlist?id=a24kar&noti=InstitutionalHolding&ownr=1&ocid=msedgntp&duration=1D","msn.com"],
   ]},
-  { title:"Bank og investering", color:"#22c55e", cls:"half", links:[
+  { title:"Banking & investing", color:"#22c55e", cls:"half", links:[
     ["DNB","https://www.dnb.no"],
     ["Nordnet","https://nordnet.no"],
   ]},
-  { title:"Hjem og vær", color:"#3b82f6", cls:"half", links:[
-    ["Været i Stavern","https://www.yr.no/nb/v%C3%A6rvarsel/daglig-tabell/1-23221/Norge/Vestfold%20og%20Telemark/Larvik/Stavern","yr.no"],
+  { title:"Home & weather", color:"#3b82f6", cls:"half", links:[
+    ["Weather in Stavern","https://www.yr.no/nb/v%C3%A6rvarsel/daglig-tabell/1-23221/Norge/Vestfold%20og%20Telemark/Larvik/Stavern","yr.no"],
     ["HWGT27 Netatmo","https://my.netatmo.com/app/station","netatmo.com"],
-    ["KDA anywhere","https://kdaoffice.kongsberg.com/vpn/index.html","kongsberg.com"],
-    ["KM citrix","https://citrix.km.kongsberg.com/vpn/index.html","kongsberg.com"],
   ]},
-  { title:"Sosialt", color:"#64748b", cls:"half", links:[
+  { title:"Social", color:"#64748b", cls:"half", links:[
     ["X","https://twitter.com/","x.com"],
   ]},
-  { title:"Verktøy", color:"#6366f1", cls:"half", links:[
-    ["nmap-rapport","./nmap-rapport.html","lokal · rapportvisning"],
+  { title:"Tools", color:"#6366f1", cls:"half", links:[
+    ["nmap report","./nmap-rapport.html","local · report viewer"],
   ]},
-  { title:"Motorsykler", color:"#a855f7", links:[
+  { title:"Motorcycles", color:"#a855f7", links:[
     ["Yamaha Ténéré 700","https://sites.google.com/view/hwgt27/yamaha-tenere-700","sites.google.com"],
     ["KTM Duke II LC4 2007","https://sites.google.com/view/hwgt27/ktm-duke-ii-lc4-2007","sites.google.com"],
     ["Honda VT 600","https://sites.google.com/view/hwgt27/honda-vt-600","sites.google.com"],
     ["Suzuki GSX-R750","https://sites.google.com/view/hwgt27/suzuki-gsxr750","sites.google.com"],
-    ["Gamle startside","https://sites.google.com/view/hwgt27/home","sites.google.com"],
+    ["Old start page","https://sites.google.com/view/hwgt27/home","sites.google.com"],
   ]},
 ];
 
@@ -500,7 +500,7 @@ for (const s of SECTIONS){
   let html = `<h2><span class="dot"></span>${esc(s.title)}<span class="line"></span></h2><div class="grid">`;
   for (const [name,url,shown] of s.links){
     const local = !/^https?:/i.test(url);
-    const d = shown || (local ? 'lokal' : domainOf(url));
+    const d = shown || (local ? 'local' : domainOf(url));
     const ico = local
       ? `<span class="fb">${esc(name[0])}</span>`
       : `<img src="https://www.google.com/s2/favicons?domain=${encodeURIComponent(d)}&sz=64" alt="" loading="lazy"
@@ -515,12 +515,12 @@ for (const s of SECTIONS){
 }
 
 
-/* Aksjer – TradingView mini symbol overview widgets (gratis, ingen nøkkel) + nøkkeltall fra TradingViews åpne scanner-API */
+/* Stocks – TradingView + CNBC charts */
 const STOCK_GROUPS = [
-  { title:"Oslo Børs", cls:"oslo", tz:"Europe/Oslo", stocks:[
-    { name:"Kongsberg Gruppen",  tv:"OSL:KOG",  ex:"Oslo Børs", cur:"NOK" },
-    { name:"Kongsberg Maritime", tv:"OSL:KMAR", ex:"Oslo Børs", cur:"NOK" },
-    { name:"Hunter Group",       tv:"OSL:HUNT", ex:"Oslo Børs", cur:"NOK" },
+  { title:"Oslo Stock Exchange", cls:"oslo", tz:"Europe/Oslo", stocks:[
+    { name:"Kongsberg Gruppen",  tv:"OSL:KOG",  ex:"Oslo Stock Exchange", cur:"NOK" },
+    { name:"Kongsberg Maritime", tv:"OSL:KMAR", ex:"Oslo Stock Exchange", cur:"NOK" },
+    { name:"Hunter Group",       tv:"OSL:HUNT", ex:"Oslo Stock Exchange", cur:"NOK" },
   ]},
   { title:"USA", cls:"usa", tz:"America/New_York", stocks:[
     { name:"Tesla",             tv:"NASDAQ:TSLA",  ex:"Nasdaq", cur:"USD" },
@@ -535,25 +535,25 @@ function effectiveTheme(){ return document.documentElement.dataset.theme || (mat
 function statsSkeleton(){
   const cell = (k,l) => `<div class="st"><span class="k">${l}</span><span class="v" data-f="${k}">–</span></div>`;
   return `<div class="stats" aria-live="off">
-    <div class="day"><span class="when"><span data-f="when">Henter nøkkeltall …</span> <span class="chg" data-f="chg"></span></span><span class="abadge" data-f="badge"></span><span class="sess" data-f="sess"></span></div>
-    <div class="range"><div class="rl"><span class="k">Dagens spenn</span><span class="v" data-f="dayr">–</span></div><div class="bar"><i data-f="dayp"></i></div></div>
-    <div class="grid2">${cell('open','Åpning')}${cell('prev','Forrige slutt')}${cell('vol','Volum')}${cell('cap','Markedsverdi')}</div>
-    <div class="range"><div class="rl"><span class="k">52 uker</span><span class="v" data-f="wkr">–</span></div><div class="bar"><i data-f="wkp"></i></div></div>
+    <div class="day"><span class="when"><span data-f="when">Fetching key stats …</span> <span class="chg" data-f="chg"></span></span><span class="abadge" data-f="badge"></span><span class="sess" data-f="sess"></span></div>
+    <div class="range"><div class="rl"><span class="k">Day's range</span><span class="v" data-f="dayr">–</span></div><div class="bar"><i data-f="dayp"></i></div></div>
+    <div class="grid2">${cell('open','Open')}${cell('prev','Prev close')}${cell('vol','Volume')}${cell('cap','Market cap')}</div>
+    <div class="range"><div class="rl"><span class="k">52 weeks</span><span class="v" data-f="wkr">–</span></div><div class="bar"><i data-f="wkp"></i></div></div>
   </div>`;
 }
 function buildStocksSection(){
   const sec = document.createElement('section');
   sec.id = 'aksjer';
   sec.style.setProperty('--c', '#14b8a6');
-  let h = `<h2><span class="dot"></span>Aksjer<span class="line"></span><time class="upd" id="stocksUpdated" aria-live="polite">Henter kurser …</time><button type="button" class="abtn" id="alarmBtn" aria-haspopup="true" aria-expanded="false" title="Kursvarsler"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg><span id="alarmBtnTxt">Varsler</span></button></h2>
+  let h = `<h2><span class="dot"></span>Stocks<span class="line"></span><time class="upd" id="stocksUpdated" aria-live="polite">Fetching quotes …</time><button type="button" class="abtn" id="alarmBtn" aria-haspopup="true" aria-expanded="false" title="Price alerts"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg><span id="alarmBtnTxt">Alerts</span></button></h2>
   <div class="apanel" id="alarmPanel" hidden>
-    <h4>Kursvarsler</h4>
+    <h4>Price alerts</h4>
     <p class="pstat" id="alarmPerm"></p>
-    <button type="button" class="perm" id="alarmPermBtn">Slå på varsler</button>
-    <label>Varsle ved ±3 % <input type="checkbox" id="alarm3"></label>
-    <label>Varsle ved ±5 % <input type="checkbox" id="alarm5"></label>
-    <label>Lyd <input type="checkbox" id="alarmSound"></label>
-    <p class="hint">Varsler sendes bare mens startsiden er åpen i en nettleserfane, og høyst én gang per aksje, retning og nivå per handelsdag. Kursene er ca. 15 min forsinket.</p>
+    <button type="button" class="perm" id="alarmPermBtn">Enable alerts</button>
+    <label>Alert at ±3 % <input type="checkbox" id="alarm3"></label>
+    <label>Alert at ±5 % <input type="checkbox" id="alarm5"></label>
+    <label>Sound <input type="checkbox" id="alarmSound"></label>
+    <p class="hint">Alerts fire only while this start page is open in a browser tab, and at most once per stock, direction and level per trading day. Quotes are delayed by about 15 minutes.</p>
   </div>`;
   for (const g of STOCK_GROUPS){
     h += `<div class="sgroup" data-market="${g.cls}"><h3 class="sgt">${esc(g.title)}</h3><div class="stocks ${g.cls}">`;
@@ -562,26 +562,26 @@ function buildStocksSection(){
       h += `<div class="stock" data-sym="${st.tv}"><div class="tv" data-symbol="${st.tv}">
           <div class="qhead"><span class="qlogo" data-f="logo">${esc(st.tv.split(':')[1][0])}</span><span class="qid"><span class="qtk">${esc(st.tv.split(':')[1])}</span><span class="qnm" data-f="desc">${esc(st.name)}</span></span></div>
           <div class="qprice"><span class="qp" data-f="price">–</span><span class="qcur">${st.cur}</span><span class="qch" data-f="qchg"></span></div>
-          <div class="chart" data-f="chart"><div class="loading">Henter graf …</div></div>
+          <div class="chart" data-f="chart"><div class="loading">Fetching chart …</div></div>
         </div>
         ${statsSkeleton()}
-        <a class="foot" href="${url}" target="_blank" rel="noopener noreferrer" title="Se ${esc(st.name)} på TradingView">
+        <a class="foot" href="${url}" target="_blank" rel="noopener noreferrer" title="View ${esc(st.name)} on TradingView">
           <span class="meta"><span class="who">${esc(st.name)}</span><span class="sub">${st.ex} · ${st.cur}</span></span>
           <span class="arrow" aria-hidden="true">↗</span></a></div>`;
     }
     h += `</div></div>`;
   }
-  h += `<p class="stocks-note">Kurser og nøkkeltall fra <a href="https://www.tradingview.com/" target="_blank" rel="noopener noreferrer">TradingView</a>, intradaggraf (1 min, i dag eller siste handelsdag) fra <a href="https://www.cnbc.com/markets/" target="_blank" rel="noopener noreferrer">CNBC</a>. Grønn/rød graf = opp/ned mot forrige sluttkurs (stiplet linje). Kursene er ca. 15 minutter forsinket (gjelder både Nasdaq og Oslo Børs), og grafen vises med samme forsinkelse; siden henter alt på nytt hvert minutt.</p>`;
+  h += `<p class="stocks-note">Quotes and key stats from <a href="https://www.tradingview.com/" target="_blank" rel="noopener noreferrer">TradingView</a>, intraday chart (1 min, today or last trading day) from <a href="https://www.cnbc.com/markets/" target="_blank" rel="noopener noreferrer">CNBC</a>. Green/red chart = up/down vs previous close (dashed line). Quotes are delayed by about 15 minutes (Nasdaq and Oslo Stock Exchange), and the chart uses the same delay; the page refreshes everything every minute.</p>`;
   sec.innerHTML = h;
   return sec;
 }
-/* Nøkkeltall: én samlet forespørsel for alle aksjene */
+/* Key stats: one batch request for all stocks */
 const STAT_COLS = ["open","high","low","close","change_abs","change","volume","price_52_week_high","price_52_week_low","total_shares_outstanding_current","time","current_session","currency","logoid","description"];
 const STAT_DATA = {};
-const nbNum = (v,d=2) => v==null||!isFinite(v) ? '–' : v.toLocaleString('nb-NO',{minimumFractionDigits:d,maximumFractionDigits:d});
-const nbCompact = v => v==null||!isFinite(v) ? '–' : v < 1e6 ? Math.round(v).toLocaleString('nb-NO') : new Intl.NumberFormat('nb-NO',{notation:'compact',maximumFractionDigits:v>=1e12?2:1}).format(v);
+const nbNum = (v,d=2) => v==null||!isFinite(v) ? '–' : v.toLocaleString('en-GB',{minimumFractionDigits:d,maximumFractionDigits:d});
+const nbCompact = v => v==null||!isFinite(v) ? '–' : v < 1e6 ? Math.round(v).toLocaleString('en-GB') : new Intl.NumberFormat('en-GB',{notation:'compact',maximumFractionDigits:v>=1e12?2:1}).format(v);
 const pct = (x,lo,hi) => (hi>lo && x!=null) ? Math.max(0,Math.min(100,(x-lo)/(hi-lo)*100)) : null;
-const SESS = { market:['Åpen','open'], pre_market:['Før åpning','pre'], post_market:['Etterhandel','pre'], out_of_session:['Stengt','closed'] };
+const SESS = { market:['Open','open'], pre_market:['Pre-market','pre'], post_market:['After hours','pre'], out_of_session:['Closed','closed'] };
 let statsLoadedOnce = false;
 async function loadStockStats(){
   try{
@@ -601,12 +601,12 @@ async function loadStockStats(){
       const bar = (f,p) => { const el = card.querySelector(`[data-f="${f}"]`); if (el){ el.style.left = p==null ? '50%' : p+'%'; el.style.opacity = p==null ? 0 : 1; } };
       const cur = d.currency || st.cur;
       // Er dagslinjen fra i dag (i børsens tidssone) eller fra siste handelsdag?
-      const dfmt = new Intl.DateTimeFormat('nb-NO',{timeZone:st.tz,year:'numeric',month:'2-digit',day:'2-digit'});
+      const dfmt = new Intl.DateTimeFormat('en-GB',{timeZone:st.tz,year:'numeric',month:'2-digit',day:'2-digit'});
       const barDay = d.time ? dfmt.format(new Date(d.time*1000)) : null;
       const today = dfmt.format(new Date());
       const isToday = barDay && barDay === today;
-      const dayLabel = d.time ? new Intl.DateTimeFormat('nb-NO',{timeZone:st.tz,weekday:'short',day:'numeric',month:'short'}).format(new Date(d.time*1000)) : '';
-      set('when', isToday ? 'I dag' : `Siste handelsdag · ${dayLabel}`);
+      const dayLabel = d.time ? new Intl.DateTimeFormat('en-GB',{timeZone:st.tz,weekday:'short',day:'numeric',month:'short'}).format(new Date(d.time*1000)) : '';
+      set('when', isToday ? 'Today' : `Last trading day · ${dayLabel}`);
       const chEl = card.querySelector('[data-f="chg"]');
       if (d.change!=null){
         const sign = d.change>0 ? '+' : d.change<0 ? '−' : '';
@@ -634,7 +634,7 @@ async function loadStockStats(){
     statsLoadedOnce = true;
     return true;
   }catch(e){
-    if (!statsLoadedOnce) document.querySelectorAll('#aksjer [data-f="when"]').forEach(el=>el.textContent='Nøkkeltall utilgjengelig');
+    if (!statsLoadedOnce) document.querySelectorAll('#aksjer [data-f="when"]').forEach(el=>el.textContent='Key stats unavailable');
     return false;
   }
 }
@@ -667,10 +667,10 @@ function toast(title, msg, color){
   let box = document.querySelector('.toasts');
   if (!box){ box = document.createElement('div'); box.className='toasts'; box.setAttribute('role','status'); box.setAttribute('aria-live','polite'); document.body.appendChild(box); }
   const t = document.createElement('div'); t.className='toast'; t.style.setProperty('--tc', color);
-  t.innerHTML = `<div><b>${esc(title)}</b>${esc(msg)}</div><button type="button" aria-label="Lukk">×</button>`;
+  t.innerHTML = `<div><b>${esc(title)}</b>${esc(msg)}</div><button type="button" aria-label="Close">×</button>`;
   t.querySelector('button').onclick = e=>{ e.stopPropagation(); t.remove(); };
   box.appendChild(t);
-  t.title = 'Klikk for å lukke';
+  t.title = 'Click to dismiss';
   t.onclick = ()=>t.remove();
   while (box.children.length > ALARM_MAX_TOASTS) box.firstElementChild.remove();   // eldste ut
   box.scrollTop = box.scrollHeight;
@@ -686,7 +686,7 @@ function checkAlarm(st, d, isToday, barDay, card, cur){
   if (lvl){                                    // merket vises alltid, også for siste handelsdag
     card.classList.add(lvl===5 ? (up?'a5up':'a5down') : 'a3');
     badge.textContent = `${up?'▲':'▼'} ${lvl} %`;
-    badge.title = `${up?'Opp':'Ned'} ${nbNum(mag,1)} % ${isToday?'i dag':'siste handelsdag'}`;
+    badge.title = `${up?'Up':'Down'} ${nbNum(mag,1)} % ${isToday?'today':'last trading day'}`;
   }
   if (!isToday || !barDay) return;             // varsle aldri på gammel data
   const want = mag >= 5 && alarmCfg.t5 ? 5 : mag >= 3 && alarmCfg.t3 ? 3 : 0;
@@ -697,8 +697,8 @@ function checkAlarm(st, d, isToday, barDay, card, cur){
   if (want === 5 ? day.includes(k5) : (day.includes(k3) || day.includes(k5))) return;
   day.push(want===5 ? k5 : k3); if (want===5 && !day.includes(k3)) day.push(k3);   // 5 % rett på: bare 5 %-varsel, og 3 % regnes som brukt
   firedSave(log);
-  const msg = `${st.name} har ${up?'steget':'falt'} ${nbNum(mag,1)} % i dag (${nbNum(d.close)} ${cur})`;
-  const title = `Kursvarsel ${up?'▲':'▼'} ${want} %`;
+  const msg = `${st.name} has ${up?'risen':'fallen'} ${nbNum(mag,1)} % today (${nbNum(d.close)} ${cur})`;
+  const title = `Price alert ${up?'▲':'▼'} ${want} %`;
   const color = want===5 ? (up?'#16a34a':'#dc2626') : '#f59e0b';
   toast(title, msg, color);
   beep(want===5);
@@ -716,10 +716,10 @@ function setupAlarmUI(){
   c3.checked = alarmCfg.t3; c5.checked = alarmCfg.t5; cs.checked = alarmCfg.sound;
   const upd = () => {
     const has = 'Notification' in window, p = has ? Notification.permission : 'unsupported';
-    permTxt.textContent = p==='granted' ? 'Nettleservarsler er på.' : p==='denied' ? 'Varsler er blokkert i nettleseren – endre det i nettstedsinnstillingene.' : p==='unsupported' ? 'Nettleseren støtter ikke varsler – du får varsel på siden.' : 'Nettleservarsler er av. Du får fortsatt varsel på siden.';
+    permTxt.textContent = p==='granted' ? 'Browser notifications are on.' : p==='denied' ? 'Notifications are blocked in the browser – change that in site settings.' : p==='unsupported' ? 'This browser does not support notifications – you will still get on-page alerts.' : 'Browser notifications are off. You will still get on-page alerts.';
     permBtn.hidden = p !== 'default';
     btn.classList.toggle('on', p==='granted');
-    document.getElementById('alarmBtnTxt').textContent = (p==='granted' ? 'Varsler på' : 'Varsler') + (ALARM_TEST ? ' · TEST' : '');
+    document.getElementById('alarmBtnTxt').textContent = (p==='granted' ? 'Alerts on' : 'Alerts') + (ALARM_TEST ? ' · TEST' : '');
   };
   upd();
   btn.addEventListener('click', e => { e.stopPropagation(); unlockAudio(); panel.hidden = !panel.hidden; btn.setAttribute('aria-expanded', String(!panel.hidden)); });
@@ -737,8 +737,8 @@ const SESSIONS = { "Europe/Oslo":{ open:[9,0], close:[16,25] }, "America/New_Yor
 let stocksTheme = null, stockTimer = null, stockGen = 0, lastStockRefresh = 0;
 const CHART_BARS = {};
 const SPLIT_TEST = new URLSearchParams(location.search).get('testsplit') === '1';
-const fmtUpd = new Intl.DateTimeFormat('nb-NO',{hour:'2-digit',minute:'2-digit',timeZone:'Europe/Oslo'});
-const fmtAxis = new Intl.DateTimeFormat('nb-NO',{hour:'2-digit',minute:'2-digit',timeZone:'Europe/Oslo'});
+const fmtUpd = new Intl.DateTimeFormat('en-GB',{hour:'2-digit',minute:'2-digit',timeZone:'Europe/Oslo'});
+const fmtAxis = new Intl.DateTimeFormat('en-GB',{hour:'2-digit',minute:'2-digit',timeZone:'Europe/Oslo'});
 const cnbcSym = tv => { const [ex,t] = tv.split(':'); return ex==='OSL' ? `${t}-NO` : t; };
 function tzOffsetMin(tz, ms){
   const p = Object.fromEntries(new Intl.DateTimeFormat('en-US',{timeZone:tz,hourCycle:'h23',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit'}).formatToParts(new Date(ms)).map(x=>[x.type,x.value]));
@@ -772,7 +772,7 @@ function renderChart(card, st){
   const box = card.querySelector('[data-f="chart"]');
   const bars = CHART_BARS[st.tv], d = STAT_DATA[st.tv];
   const S = bars && pickSession(st, bars);
-  if (!S){ if (!box.querySelector('svg')) box.innerHTML = `<div class="loading">${bars ? 'Ingen handel å vise' : 'Graf utilgjengelig'}</div>`; return; }
+  if (!S){ if (!box.querySelector('svg')) box.innerHTML = `<div class="loading">${bars ? 'No trading to show' : 'Chart unavailable'}</div>`; return; }
   const W = Math.max(120, Math.round(box.clientWidth)), H = Math.round(box.clientHeight) || 104, AX = 16, PT = 6, PB = 4;
   const statDay = d && d.time ? dayKey(st.tz, d.time*1000) : null;
   let prev = (d && statDay === S.day && d.close!=null && d.change_abs!=null) ? d.close - d.change_abs : null;
@@ -800,7 +800,7 @@ function renderChart(card, st){
   let prevSvg = '';
   if (prev!=null){
     const py = y(prev).toFixed(1); const isToday = S.day === dayKey(st.tz, Date.now());
-    const label = `${isToday ? 'I går' : 'Forrige slutt'}: ${nbNum(prev)}`;
+    const label = `${isToday ? 'Yesterday' : 'Prev close'}: ${nbNum(prev)}`;
     const ty = (+py < PT + 12) ? +py + 11 : +py - 4;
     prevSvg = `<line x1="0" x2="${W}" y1="${py}" y2="${py}" class="pc" data-prev="${prev}"/><text x="4" y="${ty.toFixed(1)}" class="pcl">${label}</text>`;
   }
@@ -832,14 +832,14 @@ function renderChart(card, st){
       <path d="${line}" class="ln" fill="none"/>
       <circle cx="${x(last.t).toFixed(1)}" cy="${y(last.c).toFixed(1)}" r="2.6" class="dt"/>`;
   }
-  box.innerHTML = `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-label="Intradaggraf ${esc(st.name)}, ${dir==='up'?'opp':dir==='down'?'ned':'uendret'} mot forrige slutt">
+  box.innerHTML = `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-label="Intraday chart ${esc(st.name)}, ${dir==='up'?'up':dir==='down'?'down':'unchanged'} vs previous close">
     ${body}
     ${axis}</svg>`;
   box.dataset.day = S.day; box.dataset.prev = prev ?? ''; box.dataset.last = last.c;
 }
 function renderAllCharts(){ document.querySelectorAll('#aksjer .stock').forEach(c=>{ const st = STOCKS.find(s=>s.tv===c.dataset.sym); if (st) renderChart(c, st); }); }
 
-/* Oslo Børs øverst 06:00–16:00 Europe/Oslo, ellers USA – kun omorganiser DOM, ingen re-render */
+/* Oslo Stock Exchange first 06:00–16:00 Europe/Oslo, else USA – DOM reorder only */
 function osloMinutesNow(d=new Date()){
   const parts = new Intl.DateTimeFormat('en-GB',{timeZone:'Europe/Oslo',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).formatToParts(d);
   const h = +parts.find(p=>p.type==='hour').value, m = +parts.find(p=>p.type==='minute').value;
@@ -868,7 +868,7 @@ async function refreshStocks(){
   renderAllCharts();
   if (ok){
     const el = document.getElementById('stocksUpdated');
-    el.textContent = `Oppdatert ${fmtUpd.format(new Date()).replace('.',':')}`;
+    el.textContent = `Updated ${fmtUpd.format(new Date()).replace('.',':')}`;
     el.dateTime = new Date().toISOString();
   }
 }
@@ -893,19 +893,379 @@ function renderStockWidgets(){            // temabytte: SVG-en bruker CSS-variab
   });
 }
 
+
+/* Visitor welcome – geo-IP (session cache only), playful line about place */
+const GEO_CACHE_KEY = 'start-geo-v1';
+const PLACE_LINES = {
+  // Norway + cities
+  'norway|stavern': [
+    'Coastal calm, salty air, and a summer that feels longer than the calendar says.',
+    'Stavern vibes: wooden boats, soft evenings, and the North Sea humming nearby.',
+    'Home of quiet harbours — perfect weather for a strong coffee and a look at the charts.'
+  ],
+  'norway|oslo': [
+    'Fjord city energy — fjords, forests, and a capital that still feels walkable.',
+    'Oslo called: museums by day, northern light ambitions by night.',
+    'From the Opera roof to the forest edge — short distances, big horizons.'
+  ],
+  'norway|larvik': [
+    'Larvik: beech forests, Bevøya sunsets, and that Vestfold coast glow.',
+    'Where the fjord meets the town — and the coffee is always a good idea.'
+  ],
+  'norway|bergen': [
+    'Bergen weather is a personality trait — umbrella optional, attitude required.',
+    'Seven mountains, one harbour, endless excuses for another kanelbolle.'
+  ],
+  'norway|trondheim': [
+    'Trondheim: tech, history, and Nidelva reflections at golden hour.',
+    'Nidaros vibes and northern curiosity — welcome from mid-Norway.'
+  ],
+  'norway|stavanger': [
+    'Oil, fjords, and Preikestolen bragging rights — Stavanger keeps it dramatic.',
+    'West-coast grit with a side of seafood and sea spray.'
+  ],
+  'norway': [
+    'Land of fjords, brown cheese debates, and daylight that refuses to behave.',
+    'From polar nights to midnight sun — Norway does seasons with commitment.',
+    'Welcome from the land where “koselig” is a weather strategy.',
+    'Oil, salmon, and a quiet flex about how well everything just… works.',
+    'You are connecting from a country that treats nature like a national sport.'
+  ],
+  'sweden': [
+    'Fika is not a break — it is a lifestyle. Lagom amount of cool.',
+    'Forests, archipelagos, and design that somehow makes IKEA look accidental.',
+    'From ABBA to northern lights — Sweden keeps the playlist interesting.'
+  ],
+  'denmark': [
+    'Hygge levels: maximum. Bicycles: everywhere. Pastries: non-negotiable.',
+    'Flat lands, tall vibes — Denmark makes cozy look like a competitive sport.',
+    'Copenhagen cool with a side of smørrebrød diplomacy.'
+  ],
+  'finland': [
+    'Sauna logic: heat, cold plunge, repeat — and somehow that fixes everything.',
+    'Lakes, forests, and a quiet superpower called sisu.',
+    'Home of heavy metal, soft snow, and coffee that could wake a hibernating bear.'
+  ],
+  'iceland': [
+    'Fire, ice, and landscapes that look Photoshopped even when they are not.',
+    'Geysers, glaciers, and a soundtrack of wind that means business.',
+    'Small population, oversized scenery — Iceland always overdelivers.'
+  ],
+  'united kingdom': [
+    'Tea, dry humour, and weather that changes its mind mid-sentence.',
+    'From tube maps to highland mist — the UK keeps life narratively rich.',
+    'Queuing expertise: world-class. Umbrella skills: similarly elite.'
+  ],
+  'ireland': [
+    'Green hills, quick wit, and music that somehow finds you in every pub.',
+    'Forty shades of green — and at least as many good stories.',
+    'Welcome from the land where rain is basically a national mascot.'
+  ],
+  'united states': [
+    'Big skies, bigger coffee cups, and ambition measured in time zones.',
+    'From coast to coast — the land of road trips and late-night neon.',
+    'Stars, stripes, and a knack for turning almost anything into a start-up.',
+    'Welcome, visitor from the country that invented “just one more episode”.'
+  ],
+  'canada': [
+    'Maple syrup diplomacy and politeness that could power a small city.',
+    'Mountains, lakes, and winters that build character (and parkas).',
+    'Home of hockey debates and landscapes that refuse to be subtle.'
+  ],
+  'germany': [
+    'Precision, pastry, and Autobahn dreams — efficiency with personality.',
+    'Castles, cars, and a deep respect for a well-planned timetable.',
+    'From Bach to Bauhaus — Germany keeps culture and engineering in stereo.'
+  ],
+  'france': [
+    'Art, bread, and the gentle art of taking lunch seriously.',
+    'Café terraces, museum queues, and a language that makes grocery lists sound poetic.',
+    'Welcome from the land where “bon appétit” is basically a national greeting.'
+  ],
+  'spain': [
+    'Late dinners, early sunsets, and plazas that never really sleep.',
+    'Tapas logic: many small joys beat one big rush.',
+    'Siesta optional, passion mandatory.'
+  ],
+  'portugal': [
+    'Azulejos, Atlantic light, and pastel de nata that ruin other desserts for you.',
+    'Fado in the air, surf on the coast, and cities that glow at golden hour.',
+    'Small country, huge hospitality — and coffee that means business.'
+  ],
+  'italy': [
+    'Pasta diplomacy and espresso that doubles as a personality test.',
+    'Art in the streets, history under every cobblestone, gelato in every plan.',
+    'Welcome from the land where “just a quick coffee” is never quick — or small.'
+  ],
+  'netherlands': [
+    'Bikes outnumber excuses, canals outnumber traffic jams (almost).',
+    'Tulips, tech, and a talent for making flat land look interesting.',
+    'Direct talk, excellent cheese, and windmills that still steal the show.'
+  ],
+  'belgium': [
+    'Chocolate, chips, and comics — a cultural trifecta worth celebrating.',
+    'Where “beer culture” is a serious academic field.',
+    'Small country, dense deliciousness.'
+  ],
+  'switzerland': [
+    'Mountains that look like screensavers and trains that arrive on principle.',
+    'Chocolate, precision, and alpine air that feels like a premium subscription.',
+    'Four languages, one shared love of punctual peaks.'
+  ],
+  'austria': [
+    'Waltzes, alpine trails, and coffee houses that treat time as optional.',
+    'From Mozart to mountains — Austria keeps the drama elegant.',
+    'Welcome from the land of schnitzel diplomacy and postcard valleys.'
+  ],
+  'poland': [
+    'Resilient history, vibrant cities, and pierogi that win arguments.',
+    'From Baltic breeze to mountain trails — Poland spans moods beautifully.',
+    'Solid coffee, solid hospitality, and a knack for reinventing city centres.'
+  ],
+  'czech republic': [
+    'Castle skylines, beer that could be a national monument, and old-town charm on demand.',
+    'Prague roofs and Bohemian forests — fairy-tale with Wi‑Fi.',
+    'Where history and nightlife share the same cobblestones.'
+  ],
+  'greece': [
+    'Islands, olive light, and sunsets that feel personally commissioned.',
+    'Ancient stones, modern mezze, and the Aegean as a lifestyle.',
+    'Welcome from the cradle of democracy — and excellent tomatoes.'
+  ],
+  'turkey': [
+    'Where continents shake hands over tea glasses that never stay empty.',
+    'Bazaars, bosporus breezes, and breakfast spreads that mean business.',
+    'History stacked in layers — and baklava that ends debates.'
+  ],
+  'thailand': [
+    'Street food that rewires your taste buds and smiles that travel well.',
+    'Temples, tuk-tuks, and tropical evenings with a side of lime and chili.',
+    'Land of smiles — and pad thai that ruins takeaway forever.'
+  ],
+  'japan': [
+    'Precision meets poetry: trains, temples, and vending machines with opinions.',
+    'Cherry blossoms, neon canyons, and hospitality refined to an art.',
+    'Where even a convenience store feels like a masterclass.'
+  ],
+  'south korea': [
+    'K-everything energy, late-night food culture, and cities that never fully sleep.',
+    'From hanok calm to neon rush — Seoul range in one country.',
+    'Tech-forward, kimchi-powered, and endlessly scrollable.'
+  ],
+  'china': [
+    'Ancient rhythms and futuristic skylines sharing the same skyline photo.',
+    'Dumplings, dynasties, and megacities that redefine “busy”.',
+    'Welcome from a civilisation that invented both paper and next-level high-speed rail.'
+  ],
+  'india': [
+    'Colour, spice, and festivals that can outshine the calendar.',
+    'From Himalayan hush to coastal monsoon — India is many worlds at once.',
+    'Chai breaks, cricket debates, and hospitality that feels like a second home.'
+  ],
+  'australia': [
+    'Sunburnt country energy: beaches, barbecues, and wildlife with main-character vibes.',
+    'Wide skies, good coffee, and a talent for making “no worries” an operating system.',
+    'From reef to outback — distance is just part of the plot.'
+  ],
+  'new zealand': [
+    'Middle-earth views without the CGI budget — pure landscape flex.',
+    'Kiwi calm, alpine drama, and hobbit-adjacent hills that steal hearts.',
+    'Where adventure sports and sheep photography coexist peacefully.'
+  ],
+  'brazil': [
+    'Carnival spirit, football poetry, and beaches that redefine “weekend”.',
+    'Amazon scale meets city rhythm — Brazil does not do small.',
+    'Welcome from the land of caipirinhas and cosmic football debates.'
+  ],
+  'argentina': [
+    'Tango intensity, steak diplomacy, and cities that feel cinematic after dark.',
+    'Patagonia drama and Buenos Aires swagger in one passport stamp.',
+    'Mate in hand, opinions ready — Argentina keeps conversations lively.'
+  ],
+  'mexico': [
+    'Colour, craft, and cuisine that made the world rethink tacos forever.',
+    'Ancient pyramids, modern murals, and mariachi energy on standby.',
+    'Welcome from the land where every meal can become a celebration.'
+  ],
+  'south africa': [
+    'Rainbow Nation energy: mountains, oceans, and stories with deep roots.',
+    'Safari sunrises and city skylines sharing the same continent vibe.',
+    'From Cape Town drama to Highveld light — South Africa does contrast well.'
+  ],
+  'egypt': [
+    'Pyramids that still win the skyline contest after millennia.',
+    'Nile rhythm, desert gold, and history measured in dynasties.',
+    'Welcome from where “ancient” is just Tuesday.'
+  ],
+  'united arab emirates': [
+    'Desert meet megacity — ambition built in glass and gold light.',
+    'From dunes to downtown in one skyline glance.',
+    'Hospitality dialed up, temperatures likewise.'
+  ],
+  'singapore': [
+    'Garden city precision: clean streets, bold skyline, hawker-centre heaven.',
+    'Four languages, endless food courts, and efficiency as a love language.',
+    'Small island, outsized future — and chili crab calling your name.'
+  ],
+  'israel': [
+    'Ancient stones and start-up speed sharing the same time zone.',
+    'Hummus diplomacy and Mediterranean light that flatters every photo.',
+    'History dense enough to need footnotes — and beaches for the epilogue.'
+  ],
+  'russia': [
+    'Vast horizons, deep winters, and literature that goes the distance.',
+    'Onion domes, ballet legacy, and tea that means a long conversation.',
+    'From Baltic breeze to Pacific edge — scale is the point.'
+  ],
+  'ukraine': [
+    'Sunflower fields, resilient spirit, and cities full of art and grit.',
+    'Welcome from a land of borscht debates and unbreakable hospitality.',
+    'History in motion — and courage that needs no translation.'
+  ],
+  'romania': [
+    'Carpathian drama, castle lore, and cities reinventing themselves with style.',
+    'From Black Sea evenings to mountain trails — Romania keeps options open.',
+    'Welcome from the land where legends and Wi‑Fi coexist nicely.'
+  ],
+  'hungary': [
+    'Thermal baths, paprika confidence, and Danube views that linger.',
+    'Budapest by night is basically a postcard with tram lines.',
+    'Ruin pubs, grand avenues, and cakes that deserve their own museum.'
+  ],
+  'croatia': [
+    'Adriatic blues, stone towns, and Game-of-Thrones tourism done tastefully-ish.',
+    'Islands like pearls — and seafood that needs no hard sell.',
+    'Welcome from a coastline that makes calendars jealous.'
+  ],
+  'philippines': [
+    'Seven thousand islands of beach logic and warm welcomes.',
+    'Mango season energy and jeepney colours that refuse to whisper.',
+    'From rice terraces to reef life — the Philippines does variety well.'
+  ],
+  'indonesia': [
+    'Volcanoes, temples, and islands that redefine “weekend getaway”.',
+    'From Bali sunsets to Jakarta hustle — Indonesia spans tempos.',
+    'Spice route heritage with modern skyline ambition.'
+  ],
+  'vietnam': [
+    'Pho mornings, scooter symphonies, and lantern-lit evenings.',
+    'From Ha Long drama to Mekong calm — Vietnam paints in contrasts.',
+    'Coffee with condensed milk and hospitality without hesitation.'
+  ],
+  'malaysia': [
+    'Rainforest meets megacity, with food courts that could unify nations.',
+    'Twin towers flex and street food that wins quietly then completely.',
+    'Multicultural by default — and delicious because of it.'
+  ],
+  'saudi arabia': [
+    'Desert vastness meeting Vision-speed cities — a country in fast-forward.',
+    'Hospitality traditions with futuristic skylines on the horizon.',
+    'Welcome from a land rewriting its skyline while keeping the coffee strong.'
+  ],
+  'chile': [
+    'Skinny country, huge range — desert to glaciers in one long map.',
+    'Andes drama and Pacific patience sharing a border.',
+    'Wine valleys and star-filled skies that astronomers brag about.'
+  ],
+  'colombia': [
+    'Coffee that fuels mornings and rhythms that fuel nights.',
+    'From Caribbean colour to Andean cool — Colombia switches climates like outfits.',
+    'Welcome from a country where “buena vibra” is infrastructure.'
+  ],
+};
+const GENERIC_LINES = [
+  city => `Somewhere called ${city} just got a little more interesting — thanks for dropping by.`,
+  city => `${city} on the map, curiosity in the tab — welcome aboard.`,
+  (city, country) => `Greetings from the wider web to ${city}, ${country}. Nice neighbourhood.`,
+  (city, country) => `${country} represent! ${city} visitors get bonus style points today.`,
+  (city) => `Plot twist: a visitor from ${city} just made this start page cooler.`,
+  (city, country) => `If ${city} had a welcome mat, it would say hello in ${country} — so consider this that.`,
+];
+
+function pick(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+function norm(s){ return (s||'').toString().trim().toLowerCase(); }
+function funLine(city, country){
+  const c = norm(city), co = norm(country);
+  const keys = [];
+  if (c && co) keys.push(`${co}|${c}`);
+  if (co) keys.push(co);
+  // country name aliases
+  const aliases = {
+    'united states of america':'united states', 'usa':'united states', 'us':'united states',
+    'uk':'united kingdom', 'great britain':'united kingdom', 'england':'united kingdom',
+    'norge':'norway', 'sverige':'sweden', 'danmark':'denmark', 'deutschland':'germany',
+    'republic of korea':'south korea', 'korea, republic of':'south korea',
+    'russian federation':'russia', 'czechia':'czech republic',
+  };
+  const co2 = aliases[co] || co;
+  if (co2 !== co){ if (c) keys.push(`${co2}|${c}`); keys.push(co2); }
+  for (const k of keys){
+    if (PLACE_LINES[k] && PLACE_LINES[k].length) return pick(PLACE_LINES[k]);
+  }
+  const g = pick(GENERIC_LINES);
+  return g(city || 'your city', country || 'your country');
+}
+function showWelcome(city, country){
+  const g = document.getElementById('greeting');
+  const f = document.getElementById('welcomeFact');
+  if (!g) return;
+  if (city && country){
+    g.textContent = `Welcome, visitor from ${city}, ${country}!`;
+    if (f) f.textContent = funLine(city, country);
+  } else {
+    g.textContent = 'Welcome!';
+    if (f) f.textContent = pick([
+      'Glad you are here — make yourself at home.',
+      'A friendly hello from this little start page.',
+      'Coffee optional. Curiosity recommended.',
+      'Wherever you are, you found a good tab.'
+    ]);
+  }
+}
+async function fetchGeo(){
+  try{
+    const cached = sessionStorage.getItem(GEO_CACHE_KEY);
+    if (cached){ const o = JSON.parse(cached); if (o && (o.city || o.country)) return o; }
+  }catch(e){}
+  const endpoints = [
+    { url:'https://ipapi.co/json/', map:j=>({ city:j.city, country:j.country_name || j.country }) },
+    { url:'https://get.geojs.io/v1/ip/geo.json', map:j=>({ city:j.city, country:j.country }) },
+  ];
+  for (const ep of endpoints){
+    try{
+      const ctrl = new AbortController();
+      const t = setTimeout(()=>ctrl.abort(), 4500);
+      const r = await fetch(ep.url, { signal: ctrl.signal, headers:{ 'Accept':'application/json' } });
+      clearTimeout(t);
+      if (!r.ok) throw new Error(r.status);
+      const j = await r.json();
+      const o = ep.map(j);
+      if (o.city || o.country){
+        try{ sessionStorage.setItem(GEO_CACHE_KEY, JSON.stringify(o)); }catch(e){}
+        return o;
+      }
+    }catch(e){ /* try next */ }
+  }
+  return null;
+}
+async function initWelcome(){
+  showWelcome(null, null); // friendly placeholder while lookup runs
+  const geo = await fetchGeo();
+  if (geo && (geo.city || geo.country)) showWelcome(geo.city || 'somewhere', geo.country || 'Earth');
+  else showWelcome(null, null);
+}
+initWelcome();
+
 /* Clock, date, greeting */
-const fmtTime = new Intl.DateTimeFormat('nb-NO',{hour:'2-digit',minute:'2-digit',timeZone:'Europe/Oslo'});
-const fmtSec  = new Intl.DateTimeFormat('nb-NO',{second:'2-digit',timeZone:'Europe/Oslo'});
-const fmtDate = new Intl.DateTimeFormat('nb-NO',{weekday:'long',day:'numeric',month:'long',year:'numeric',timeZone:'Europe/Oslo'});
-const fmtHour = new Intl.DateTimeFormat('nb-NO',{hour:'numeric',hourCycle:'h23',timeZone:'Europe/Oslo'});
+const fmtTime = new Intl.DateTimeFormat('en-GB',{hour:'2-digit',minute:'2-digit',timeZone:'Europe/Oslo'});
+const fmtSec  = new Intl.DateTimeFormat('en-GB',{second:'2-digit',timeZone:'Europe/Oslo'});
+const fmtDate = new Intl.DateTimeFormat('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric',timeZone:'Europe/Oslo'});
+const fmtHour = new Intl.DateTimeFormat('en-GB',{hour:'numeric',hourCycle:'h23',timeZone:'Europe/Oslo'});
 function weekNo(d){ const t=new Date(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())); const day=t.getUTCDay()||7; t.setUTCDate(t.getUTCDate()+4-day); const y=new Date(Date.UTC(t.getUTCFullYear(),0,1)); return Math.ceil(((t-y)/864e5+1)/7); }
 function tick(){
   const now = new Date();
-  const h = parseInt(fmtHour.format(now),10);
-  const greet = h>=5&&h<10 ? 'God morgen' : h>=10&&h<12 ? 'God formiddag' : h>=12&&h<18 ? 'God ettermiddag' : h>=18&&h<23 ? 'God kveld' : 'God natt';
-  document.getElementById('greeting').textContent = `${greet}, Trond Erik`;
   document.getElementById('clock').innerHTML = `${fmtTime.format(now).replace('.',':')}<span class="sec">${fmtSec.format(now).padStart(2,'0')}</span>`;
-  document.getElementById('date').textContent = `${fmtDate.format(now)} · uke ${weekNo(now)}`;
+  document.getElementById('date').textContent = `${fmtDate.format(now)} · week ${weekNo(now)}`;
 }
 tick(); setInterval(tick, 1000);
 
@@ -921,14 +1281,14 @@ document.getElementById('themeBtn').addEventListener('click', ()=>{
 
 /* Weather (Open-Meteo, no key) */
 const WMO = {
-  0:['Klarvær','clear'],1:['Lettskyet','partly'],2:['Delvis skyet','partly'],3:['Overskyet','cloud'],
-  45:['Tåke','fog'],48:['Rimtåke','fog'],
-  51:['Lett yr','drizzle'],53:['Yr','drizzle'],55:['Kraftig yr','drizzle'],56:['Underkjølt yr','drizzle'],57:['Underkjølt yr','drizzle'],
-  61:['Lett regn','rain'],63:['Regn','rain'],65:['Kraftig regn','rain'],66:['Underkjølt regn','rain'],67:['Underkjølt regn','rain'],
-  71:['Lett snø','snow'],73:['Snø','snow'],75:['Kraftig snø','snow'],77:['Snøkorn','snow'],
-  80:['Regnbyger','rain'],81:['Regnbyger','rain'],82:['Kraftige regnbyger','rain'],
-  85:['Snøbyger','snow'],86:['Kraftige snøbyger','snow'],
-  95:['Tordenvær','thunder'],96:['Torden med hagl','thunder'],99:['Torden med hagl','thunder'],
+  0:['Clear','clear'],1:['Mainly clear','partly'],2:['Partly cloudy','partly'],3:['Overcast','cloud'],
+  45:['Fog','fog'],48:['Depositing rime fog','fog'],
+  51:['Light drizzle','drizzle'],53:['Drizzle','drizzle'],55:['Dense drizzle','drizzle'],56:['Freezing drizzle','drizzle'],57:['Freezing drizzle','drizzle'],
+  61:['Slight rain','rain'],63:['Rain','rain'],65:['Heavy rain','rain'],66:['Freezing rain','rain'],67:['Freezing rain','rain'],
+  71:['Slight snow','snow'],73:['Snow','snow'],75:['Heavy snow','snow'],77:['Snow grains','snow'],
+  80:['Rain showers','rain'],81:['Rain showers','rain'],82:['Heavy rain showers','rain'],
+  85:['Snow showers','snow'],86:['Heavy snow showers','snow'],
+  95:['Thunderstorm','thunder'],96:['Thunderstorm with hail','thunder'],99:['Thunderstorm with hail','thunder'],
 };
 function icon(kind, day){
   const sun = `<circle cx="24" cy="24" r="8" fill="#fbbf24"/><g stroke="#fbbf24" stroke-width="2.5" stroke-linecap="round"><path d="M24 7v4M24 37v4M7 24h4M37 24h4M12 12l2.8 2.8M33.2 33.2 36 36M12 36l2.8-2.8M33.2 14.8 36 12"/></g>`;
@@ -954,47 +1314,47 @@ async function loadWeather(attempt=1){
   try{
     const r = await fetch(url); if(!r.ok) throw new Error(r.status);
     const j = await r.json(); const c = j.current;
-    const [desc,kind] = WMO[c.weather_code] || ['Ukjent','cloud'];
+    const [desc,kind] = WMO[c.weather_code] || ['Unknown','cloud'];
     const n = v => Math.round(v).toString().replace('-','−');
     document.getElementById('w-icon').innerHTML = icon(kind, c.is_day===1);
     document.getElementById('w-temp').textContent = `${n(c.temperature_2m)}°`;
-    document.getElementById('w-desc').textContent = `${desc} · føles som ${n(c.apparent_temperature)}°`;
-    const wind = c.wind_speed_10m.toLocaleString('nb-NO',{maximumFractionDigits:0});
+    document.getElementById('w-desc').textContent = `${desc} · feels like ${n(c.apparent_temperature)}°`;
+    const wind = c.wind_speed_10m.toLocaleString('en-GB',{maximumFractionDigits:0});
     document.getElementById('w-meta').textContent = `Stavern · ${n(j.daily.temperature_2m_min[0])}°/${n(j.daily.temperature_2m_max[0])}° · ${wind} m/s`;
   }catch(e){
     if (attempt < 3){ setTimeout(()=>loadWeather(attempt+1), 4000*attempt); return; }
     document.getElementById('w-icon').innerHTML = icon('cloud', true);
-    document.getElementById('w-desc').textContent = 'Vær utilgjengelig';
+    document.getElementById('w-desc').textContent = 'Weather unavailable';
   }
 }
 loadWeather(); setInterval(()=>loadWeather(), 15*60*1000);
 
-/* Starship-oppskytinger (The Space Devs Launch Library 2, gratis uten nøkkel; ~15 kall/time → mellomlagres i localStorage) */
+/* Starship launches (Launch Library 2, cached in localStorage) */
 const SX_URL = 'https://ll.thespacedevs.com/2.3.0/launches/upcoming/?rocket__configuration__name=Starship&limit=5&mode=normal';
 const SX_KEY = 'startside-starship-v1', SX_MAX_AGE = 45*60*1000;
 const SX_PRECISE = new Set(['Second','Minute','Hour']);
-const fmtSxFull = new Intl.DateTimeFormat('nb-NO',{weekday:'short',day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit',timeZone:'Europe/Oslo'});
-const fmtSxDay = new Intl.DateTimeFormat('nb-NO',{weekday:'short',day:'numeric',month:'short',year:'numeric',timeZone:'Europe/Oslo'});
-const fmtSxMonth = new Intl.DateTimeFormat('nb-NO',{month:'long',year:'numeric',timeZone:'Europe/Oslo'});
+const fmtSxFull = new Intl.DateTimeFormat('en-GB',{weekday:'short',day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit',timeZone:'Europe/Oslo'});
+const fmtSxDay = new Intl.DateTimeFormat('en-GB',{weekday:'short',day:'numeric',month:'short',year:'numeric',timeZone:'Europe/Oslo'});
+const fmtSxMonth = new Intl.DateTimeFormat('en-GB',{month:'long',year:'numeric',timeZone:'Europe/Oslo'});
 function sxWhen(l){
   const d = new Date(l.net), p = l.net_precision && l.net_precision.name;
   const ymUTC = new Date(l.net); const q = Math.floor(ymUTC.getUTCMonth()/3)+1, y = ymUTC.getUTCFullYear();
   switch(p){
     case 'Second': case 'Minute': case 'Hour': return fmtSxFull.format(d).replace(/(\d{2})\.(\d{2})$/,'$1:$2');
-    case 'Morning': return fmtSxDay.format(d)+' (morgen)';
-    case 'Afternoon': return fmtSxDay.format(d)+' (ettermiddag)';
+    case 'Morning': return fmtSxDay.format(d)+' (morning)';
+    case 'Afternoon': return fmtSxDay.format(d)+' (afternoon)';
     case 'Day': return fmtSxDay.format(d);
-    case 'Week': return 'uke ' + weekNo(d) + ' ' + y;
+    case 'Week': return 'week ' + weekNo(d) + ' ' + y;
     case 'Month': return fmtSxMonth.format(d);
-    case 'Quarter 1': case 'Quarter 2': case 'Quarter 3': case 'Quarter 4': return `${q}. kvartal ${y}`;
-    case 'Half 1': case 'Half 2': return `${p.endsWith('1')?'1.':'2.'} halvår ${y}`;
+    case 'Quarter 1': case 'Quarter 2': case 'Quarter 3': case 'Quarter 4': return `Q${q} ${y}`;
+    case 'Half 1': case 'Half 2': return `${p.endsWith('1')?'H1':'H2'} ${y}`;
     case 'Year': return String(y);
     default: return fmtSxFull.format(d);
   }
 }
 function sxStatus(l){
   const a = (l.status && l.status.abbrev) || 'TBD';
-  const map = { Go:['Go','go'], TBC:['TBC – ikke bekreftet','tbc'], TBD:['TBD – dato ikke satt','tbd'], Hold:['Hold','tbc'], 'In Flight':['I lufta','go'], Success:['Vellykket','go'] };
+  const map = { Go:['Go','go'], TBC:['TBC – unconfirmed','tbc'], TBD:['TBD – date not set','tbd'], Hold:['Hold','tbc'], 'In Flight':['In flight','go'], Success:['Success','go'] };
   return map[a] || [a,'tbd'];
 }
 const sxName = l => (l.name||'').replace(/^Starship\s*\|\s*/,'');
@@ -1004,17 +1364,17 @@ let sxData = null, sxNextTarget = null;
 function renderStarship(){
   const box = document.getElementById('sxContent');
   const list = (sxData || []).filter(l => new Date(l.net).getTime() > Date.now() - 3*3600e3);
-  if (!sxData){ box.innerHTML = '<div class="sx-empty">Klarte ikke å hente oppskytinger akkurat nå. Prøver igjen senere 🚀</div>'; return; }
-  if (!list.length){ box.innerHTML = '<div class="sx-empty">Ingen kommende Starship-oppskytinger er meldt akkurat nå. Følg med! 🚀</div>'; return; }
+  if (!sxData){ box.innerHTML = '<div class="sx-empty">Could not fetch launches right now. Trying again later 🚀</div>'; return; }
+  if (!list.length){ box.innerHTML = '<div class="sx-empty">No upcoming Starship launches listed right now. Stay tuned! 🚀</div>'; return; }
   const [n, ...rest] = list;
   const [stT, stC] = sxStatus(n);
   const precise = SX_PRECISE.has(n.net_precision && n.net_precision.name);
   sxNextTarget = precise ? new Date(n.net).getTime() : null;
-  let h = `<a class="sx-next" href="${sxLink(n)}" target="_blank" rel="noopener noreferrer" title="Åpne ${esc(sxName(n))}">
-      <div class="sx-kick">Neste oppskyting</div>
+  let h = `<a class="sx-next" href="${sxLink(n)}" target="_blank" rel="noopener noreferrer" title="Open ${esc(sxName(n))}">
+      <div class="sx-kick">Next launch</div>
       <div class="sx-name">${esc(sxName(n))}</div>
-      <div class="sx-when">${precise?'':'Tidligst '}${esc(sxWhen(n))}</div>
-      <div class="sx-cd" id="sxCd">${precise ? '' : '<small>Nedtelling starter når tidspunktet er fastsatt</small>'}</div>
+      <div class="sx-when">${precise?'':'NET earliest '}${esc(sxWhen(n))}</div>
+      <div class="sx-cd" id="sxCd">${precise ? '' : '<small>Countdown starts when the time is confirmed</small>'}</div>
       <div class="sx-meta"><span class="sx-st ${stC}">${esc(stT)}</span><span>${esc(sxSite(n))}</span></div></a>`;
   if (rest.length){
     h += '<div class="sx-list">' + rest.slice(0,4).map(l=>{ const [t,c]=sxStatus(l); const pr = SX_PRECISE.has(l.net_precision && l.net_precision.name);
@@ -1044,7 +1404,7 @@ async function loadStarship(force=false){
   }catch(e){ if (!sxData) sxData = null; }
   renderStarship();
 }
-/* Plasser sidekolonnen: høyre på brede skjermer, ellers rett etter aksjene */
+/* Place side column: right on wide screens, else right after stocks */
 function placeSide(){
   const side = document.getElementById('sideCol'), layout = document.querySelector('.layout'), aksjer = document.getElementById('aksjer');
   if (!side) return;
@@ -1055,7 +1415,7 @@ placeSide(); matchMedia('(min-width:1360px)').addEventListener('change', placeSi
 loadStarship(); setInterval(()=>{ if (!document.hidden) loadStarship(); }, 5*60*1000);
 setInterval(tickStarship, 1000);
 
-/* Falcon 9 / Falcon Heavy (samme Launch Library 2-kilde og cache-mønster som Starship) */
+/* Falcon 9 / Falcon Heavy (same Launch Library 2 source/cache pattern as Starship) */
 const F9_URLS = [
   'https://ll.thespacedevs.com/2.3.0/launches/upcoming/?rocket__configuration__name=Falcon%209&limit=8&mode=normal&hide_recent_previous=true',
   'https://ll.thespacedevs.com/2.3.0/launches/upcoming/?rocket__configuration__name=Falcon%20Heavy&limit=4&mode=normal&hide_recent_previous=true'
@@ -1074,18 +1434,18 @@ function renderFalcon(){
   const box = document.getElementById('f9Content');
   if (!box) return;
   const list = (f9Data || []).filter(l => new Date(l.net).getTime() > Date.now() - 3*3600e3);
-  if (!f9Data){ box.innerHTML = '<div class="sx-empty">Klarte ikke å hente oppskytinger akkurat nå. Prøver igjen senere 🚀</div>'; return; }
-  if (!list.length){ box.innerHTML = '<div class="sx-empty">Ingen kommende Falcon-oppskytinger er meldt akkurat nå. Følg med! 🚀</div>'; return; }
+  if (!f9Data){ box.innerHTML = '<div class="sx-empty">Could not fetch launches right now. Trying again later 🚀</div>'; return; }
+  if (!list.length){ box.innerHTML = '<div class="sx-empty">No upcoming Falcon launches listed right now. Stay tuned! 🚀</div>'; return; }
   const [n, ...rest] = list;
   const [stT, stC] = sxStatus(n);
   const precise = SX_PRECISE.has(n.net_precision && n.net_precision.name);
   f9NextTarget = precise ? new Date(n.net).getTime() : null;
   const rocketTag = /heavy/i.test(n.rocket||n.name||'') ? 'Falcon Heavy' : 'Falcon 9';
-  let h = `<a class="sx-next" href="${sxLink(n)}" target="_blank" rel="noopener noreferrer" title="Åpne ${esc(f9Name(n))}">
-      <div class="sx-kick">Neste oppskyting · ${esc(rocketTag)}</div>
+  let h = `<a class="sx-next" href="${sxLink(n)}" target="_blank" rel="noopener noreferrer" title="Open ${esc(f9Name(n))}">
+      <div class="sx-kick">Next launch · ${esc(rocketTag)}</div>
       <div class="sx-name">${esc(f9Name(n))}</div>
-      <div class="sx-when">${precise?'':'Tidligst '}${esc(sxWhen(n))}</div>
-      <div class="sx-cd" id="f9Cd">${precise ? '' : '<small>Nedtelling starter når tidspunktet er fastsatt</small>'}</div>
+      <div class="sx-when">${precise?'':'NET earliest '}${esc(sxWhen(n))}</div>
+      <div class="sx-cd" id="f9Cd">${precise ? '' : '<small>Countdown starts when the time is confirmed</small>'}</div>
       <div class="sx-meta"><span class="sx-st ${stC}">${esc(stT)}</span><span>${esc(sxSite(n))}</span></div></a>`;
   if (rest.length){
     h += '<div class="sx-list">' + rest.slice(0,4).map(l=>{ const [t,c]=sxStatus(l); const pr = SX_PRECISE.has(l.net_precision && l.net_precision.name);
