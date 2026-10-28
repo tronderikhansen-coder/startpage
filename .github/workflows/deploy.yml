@@ -1,0 +1,23 @@
+name: Deploy to signalen
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USER }}
+          key: ${{ secrets.DEPLOY_KEY }}
+          script: |
+            set -e
+            cd /var/www/startpage
+            git fetch --depth 1 origin main
+            git reset --hard origin/main
+            echo "Deployed $(git rev-parse --short HEAD)"
