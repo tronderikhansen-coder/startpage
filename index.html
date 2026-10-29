@@ -481,8 +481,8 @@ const SECTIONS = [
     ["nmap report","./nmap-rapport.html","local · report viewer"],
   ]},
   { title:"Private", color:"#7c3aed", links:[
-    ["Portfolio","https://signalen.duckdns.org/portfolio/","signalen.duckdns.org"],
-    ["Dashboard","https://signalen.duckdns.org/dashboard/","signalen.duckdns.org"],
+    ["Portfolio","https://signalen.duckdns.org/portfolio/","signalen.duckdns.org","coinbase.com"],
+    ["Dashboard","https://signalen.duckdns.org/dashboard/","signalen.duckdns.org","letter"],
   ]},
   { title:"Motorcycles", color:"#a855f7", links:[
     ["Yamaha Ténéré 700","https://sites.google.com/view/hwgt27/yamaha-tenere-700","sites.google.com"],
@@ -502,12 +502,14 @@ for (const s of SECTIONS){
   if (s.cls) sec.className = s.cls;
   sec.style.setProperty('--c', s.color);
   let html = `<h2><span class="dot"></span>${esc(s.title)}<span class="line"></span></h2><div class="grid">`;
-  for (const [name,url,shown] of s.links){
+  for (const [name,url,shown,icon] of s.links){
     const local = !/^https?:/i.test(url);
     const d = shown || (local ? 'local' : domainOf(url));
-    const ico = local
+    const useLetter = local || icon === 'letter';
+    const fav = (icon && icon !== 'letter') ? icon : d;
+    const ico = useLetter
       ? `<span class="fb">${esc(name[0])}</span>`
-      : `<img src="https://www.google.com/s2/favicons?domain=${encodeURIComponent(d)}&sz=64" alt="" loading="lazy"
+      : `<img src="https://www.google.com/s2/favicons?domain=${encodeURIComponent(fav)}&sz=64" alt="" loading="lazy"
         onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'fb',textContent:'${esc(name[0])}'}))">`;
     const tgt = local ? '' : ' target="_blank" rel="noopener noreferrer"';
     html += `<a class="card" href="${esc(url)}"${tgt} title="${esc(name)} – ${esc(d)}">
