@@ -240,6 +240,12 @@
   .layout{display:block}
   .side{display:flex;flex-direction:column;gap:16px;margin-top:0}
   #starship,#falcon{margin-top:0}
+  #sections > .side{grid-column:1/-1;width:100%}
+  @media (min-width:900px) and (max-width:1359px){
+    .side{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;align-items:stretch}
+    .side .sx-body{grid-template-columns:minmax(0,1fr) 40px}
+    .side .sx-content{display:block}
+  }
   @media (min-width:1360px){
     .wrap{max-width:1500px}
     .layout{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:28px;align-items:start}
