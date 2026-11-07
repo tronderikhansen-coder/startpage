@@ -246,6 +246,18 @@
     .side .sx-body{grid-template-columns:minmax(0,1fr) 40px}
     .side .sx-content{display:block}
   }
+
+  .sx-brand{display:flex!important;flex-direction:column;gap:6px;width:auto!important;max-width:170px}
+  .sx-brand .sx-logo{order:1;width:150px}
+  .sx-veh{order:2;display:inline-block;align-self:flex-start;font-weight:800;letter-spacing:.32em;font-size:13px;padding:4px 10px;border-radius:999px;border:1.5px solid currentColor}
+  .sx-veh-ss{color:#f97316}.sx-veh-f9{color:#3b82f6}.sx-veh-bo{color:#0ea5a4}
+  .sx.blue .sx-kick{color:#0ea5a4}
+  .sx.blue .sx-more:hover,.sx.blue .sx-more:focus-visible{border-color:#0ea5a4;color:#0ea5a4}
+  .sx.blue::before{background:radial-gradient(260px 200px at 100% 100%,rgba(14,165,164,.13),transparent 70%),radial-gradient(240px 180px at 0 0,var(--glow1),transparent 70%)}
+  .bo-word{order:1;font-weight:700;font-size:24px;letter-spacing:.02em;line-height:1;display:flex;align-items:center;gap:8px}
+  .bo-word svg{width:26px;height:26px}
+  #starship,#falcon,#blue{margin-top:0}
+  @media (min-width:900px) and (max-width:1359px){ .side{grid-template-columns:repeat(auto-fit,minmax(280px,1fr))} }
   @media (min-width:1360px){
     .wrap{max-width:1500px}
     .layout{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:28px;align-items:start}
@@ -355,7 +367,7 @@
   <main id="sections"></main>
   <div class="side" id="sideCol">
   <aside class="sx" id="starship" aria-labelledby="sxTitle">
-    <a class="sx-brand" href="https://www.spacex.com/vehicles/starship/" target="_blank" rel="noopener noreferrer" title="SpaceX Starship"><svg class="sx-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 50" role="img" aria-label="SpaceX" fill="currentColor"><g class="letter_s"><path d="M37.5 30.5H10.9v-6.6h34.3c-.9-2.8-3.8-5.4-8.9-5.4H11.4c-5.7 0-9 2.1-9 6.7v4.9c0 4 3.4 6.3 8.4 6.3h26.9v7H1.5c.9 3.8 3.8 5.8 9 5.8h27.1c5.7 0 8.5-2.2 8.5-6.9v-4.9c0-4.3-3.3-6.6-8.6-6.9z"/></g><g class="letter_p"><path d="M91.8 18.6H59v30.7h9.3V37.5h24.2c6.7 0 10.4-2.3 10.4-7.7v-3.4c-.1-5-4.3-7.8-11.1-7.8zm3 9.8c0 2.2-.4 3.4-4 3.4H68.3l.1-8h22c4 0 4.5 1.2 4.5 3.3v1.3z"/></g><g class="letter_a"><polygon points="129.9,17.3 124.3,24.2 133.8,37.3 114,37.3 109.1,42.5 137.7,42.5 142.6,49.3 153.6,49.3"/></g><g class="letter_c"><path d="M171.4 23.9h34.8c-.9-3.6-4.4-5.4-9.4-5.4h-26c-4.5 0-8.8 1.8-8.8 6.7v17.2c0 4.9 4.3 6.7 8.8 6.7h26.3c6 0 8.1-1.7 9.1-5.8h-34.8V23.9z"/></g><g class="letter_e"><polygon points="228.3,43.5 228.3,34.1 247,34.1 247,28.9 218.9,28.9 218.9,49.3 260.4,49.3 260.4,43.5"/><rect width="41.9" height="5.4" x="219.9" y="18.6"/></g><g class="letter_x"><path d="M287.6 18.6H273l17.2 12.6c2.5-1.7 5.4-3.5 8-5l-10.6-7.6zm21.2 15.7c-2.5 1.7-5 3.6-7.4 5.4l13 9.5h14.7l-20.3-14.9z"/></g><g class="letter_swoosh"><path d="M399 .7c-80 4.6-117 38.8-125.3 46.9l-1.7 1.6h14.8C326.8 9.1 384.3 2 399 .7z"/></g></svg></a>
+    <a class="sx-brand" href="https://www.spacex.com/vehicles/starship/" target="_blank" rel="noopener noreferrer" title="SpaceX Starship"><span class="sx-veh sx-veh-ss">STARSHIP</span><svg class="sx-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 50" role="img" aria-label="SpaceX" fill="currentColor"><g class="letter_s"><path d="M37.5 30.5H10.9v-6.6h34.3c-.9-2.8-3.8-5.4-8.9-5.4H11.4c-5.7 0-9 2.1-9 6.7v4.9c0 4 3.4 6.3 8.4 6.3h26.9v7H1.5c.9 3.8 3.8 5.8 9 5.8h27.1c5.7 0 8.5-2.2 8.5-6.9v-4.9c0-4.3-3.3-6.6-8.6-6.9z"/></g><g class="letter_p"><path d="M91.8 18.6H59v30.7h9.3V37.5h24.2c6.7 0 10.4-2.3 10.4-7.7v-3.4c-.1-5-4.3-7.8-11.1-7.8zm3 9.8c0 2.2-.4 3.4-4 3.4H68.3l.1-8h22c4 0 4.5 1.2 4.5 3.3v1.3z"/></g><g class="letter_a"><polygon points="129.9,17.3 124.3,24.2 133.8,37.3 114,37.3 109.1,42.5 137.7,42.5 142.6,49.3 153.6,49.3"/></g><g class="letter_c"><path d="M171.4 23.9h34.8c-.9-3.6-4.4-5.4-9.4-5.4h-26c-4.5 0-8.8 1.8-8.8 6.7v17.2c0 4.9 4.3 6.7 8.8 6.7h26.3c6 0 8.1-1.7 9.1-5.8h-34.8V23.9z"/></g><g class="letter_e"><polygon points="228.3,43.5 228.3,34.1 247,34.1 247,28.9 218.9,28.9 218.9,49.3 260.4,49.3 260.4,43.5"/><rect width="41.9" height="5.4" x="219.9" y="18.6"/></g><g class="letter_x"><path d="M287.6 18.6H273l17.2 12.6c2.5-1.7 5.4-3.5 8-5l-10.6-7.6zm21.2 15.7c-2.5 1.7-5 3.6-7.4 5.4l13 9.5h14.7l-20.3-14.9z"/></g><g class="letter_swoosh"><path d="M399 .7c-80 4.6-117 38.8-125.3 46.9l-1.7 1.6h14.8C326.8 9.1 384.3 2 399 .7z"/></g></svg></a>
     <h2 id="sxTitle" class="sx-title">Upcoming Starship launches</h2>
     <div class="sx-body">
       <div class="sx-content" id="sxContent"><div class="sx-empty">Fetching launches …</div></div>
@@ -397,7 +409,7 @@
     <p class="sx-src">Data: <a href="https://thespacedevs.com/llapi" target="_blank" rel="noopener noreferrer">The Space Devs</a> (Launch Library 2) · updates every 45 min · times in Norway time</p>
   </aside>
   <aside class="sx falcon" id="falcon" aria-labelledby="f9Title">
-    <a class="sx-brand" href="https://www.spacex.com/vehicles/falcon-9/" target="_blank" rel="noopener noreferrer" title="SpaceX Falcon 9"><svg class="sx-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 50" role="img" aria-label="SpaceX" fill="currentColor"><g class="letter_s"><path d="M37.5 30.5H10.9v-6.6h34.3c-.9-2.8-3.8-5.4-8.9-5.4H11.4c-5.7 0-9 2.1-9 6.7v4.9c0 4 3.4 6.3 8.4 6.3h26.9v7H1.5c.9 3.8 3.8 5.8 9 5.8h27.1c5.7 0 8.5-2.2 8.5-6.9v-4.9c0-4.3-3.3-6.6-8.6-6.9z"/></g><g class="letter_p"><path d="M91.8 18.6H59v30.7h9.3V37.5h24.2c6.7 0 10.4-2.3 10.4-7.7v-3.4c-.1-5-4.3-7.8-11.1-7.8zm3 9.8c0 2.2-.4 3.4-4 3.4H68.3l.1-8h22c4 0 4.5 1.2 4.5 3.3v1.3z"/></g><g class="letter_a"><polygon points="129.9,17.3 124.3,24.2 133.8,37.3 114,37.3 109.1,42.5 137.7,42.5 142.6,49.3 153.6,49.3"/></g><g class="letter_c"><path d="M171.4 23.9h34.8c-.9-3.6-4.4-5.4-9.4-5.4h-26c-4.5 0-8.8 1.8-8.8 6.7v17.2c0 4.9 4.3 6.7 8.8 6.7h26.3c6 0 8.1-1.7 9.1-5.8h-34.8V23.9z"/></g><g class="letter_e"><polygon points="228.3,43.5 228.3,34.1 247,34.1 247,28.9 218.9,28.9 218.9,49.3 260.4,49.3 260.4,43.5"/><rect width="41.9" height="5.4" x="219.9" y="18.6"/></g><g class="letter_x"><path d="M287.6 18.6H273l17.2 12.6c2.5-1.7 5.4-3.5 8-5l-10.6-7.6zm21.2 15.7c-2.5 1.7-5 3.6-7.4 5.4l13 9.5h14.7l-20.3-14.9z"/></g><g class="letter_swoosh"><path d="M399 .7c-80 4.6-117 38.8-125.3 46.9l-1.7 1.6h14.8C326.8 9.1 384.3 2 399 .7z"/></g></svg></a>
+    <a class="sx-brand" href="https://www.spacex.com/vehicles/falcon-9/" target="_blank" rel="noopener noreferrer" title="SpaceX Falcon 9"><span class="sx-veh sx-veh-f9">FALCON 9</span><svg class="sx-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 50" role="img" aria-label="SpaceX" fill="currentColor"><g class="letter_s"><path d="M37.5 30.5H10.9v-6.6h34.3c-.9-2.8-3.8-5.4-8.9-5.4H11.4c-5.7 0-9 2.1-9 6.7v4.9c0 4 3.4 6.3 8.4 6.3h26.9v7H1.5c.9 3.8 3.8 5.8 9 5.8h27.1c5.7 0 8.5-2.2 8.5-6.9v-4.9c0-4.3-3.3-6.6-8.6-6.9z"/></g><g class="letter_p"><path d="M91.8 18.6H59v30.7h9.3V37.5h24.2c6.7 0 10.4-2.3 10.4-7.7v-3.4c-.1-5-4.3-7.8-11.1-7.8zm3 9.8c0 2.2-.4 3.4-4 3.4H68.3l.1-8h22c4 0 4.5 1.2 4.5 3.3v1.3z"/></g><g class="letter_a"><polygon points="129.9,17.3 124.3,24.2 133.8,37.3 114,37.3 109.1,42.5 137.7,42.5 142.6,49.3 153.6,49.3"/></g><g class="letter_c"><path d="M171.4 23.9h34.8c-.9-3.6-4.4-5.4-9.4-5.4h-26c-4.5 0-8.8 1.8-8.8 6.7v17.2c0 4.9 4.3 6.7 8.8 6.7h26.3c6 0 8.1-1.7 9.1-5.8h-34.8V23.9z"/></g><g class="letter_e"><polygon points="228.3,43.5 228.3,34.1 247,34.1 247,28.9 218.9,28.9 218.9,49.3 260.4,49.3 260.4,43.5"/><rect width="41.9" height="5.4" x="219.9" y="18.6"/></g><g class="letter_x"><path d="M287.6 18.6H273l17.2 12.6c2.5-1.7 5.4-3.5 8-5l-10.6-7.6zm21.2 15.7c-2.5 1.7-5 3.6-7.4 5.4l13 9.5h14.7l-20.3-14.9z"/></g><g class="letter_swoosh"><path d="M399 .7c-80 4.6-117 38.8-125.3 46.9l-1.7 1.6h14.8C326.8 9.1 384.3 2 399 .7z"/></g></svg></a>
     <h2 id="f9Title" class="sx-title">Upcoming Falcon launches</h2>
     <div class="sx-body">
       <div class="sx-content" id="f9Content"><div class="sx-empty">Fetching launches …</div></div>
@@ -434,6 +446,15 @@
     </div>
     <a class="sx-more" href="https://spacexnow.com/" target="_blank" rel="noopener noreferrer">View on SpaceXNow <span aria-hidden="true">↗</span></a>
     <p class="sx-src">Data: <a href="https://thespacedevs.com/llapi" target="_blank" rel="noopener noreferrer">The Space Devs</a> (Launch Library 2) · Falcon 9 &amp; Heavy · updates every 45 min · times in Norway time</p>
+  </aside>
+  <aside class="sx blue" id="blue" aria-labelledby="boTitle">
+    <a class="sx-brand" href="https://www.blueorigin.com/" target="_blank" rel="noopener noreferrer" title="Blue Origin"><span class="bo-word"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 2c5 6 8 13 8 20a8 8 0 0 1-16 0c0-7 3-14 8-20z" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M16 9v19M16 14l-4 3M16 19l4-3M16 23l-4 3" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg>BLUE ORIGIN</span><span class="sx-veh sx-veh-bo">NEW GLENN</span></a>
+    <h2 id="boTitle" class="sx-title">Upcoming Blue Origin launches</h2>
+    <div class="sx-body" style="grid-template-columns:minmax(0,1fr)">
+      <div class="sx-content" id="boContent"><div class="sx-empty">Fetching launches …</div></div>
+    </div>
+    <a class="sx-more" href="https://www.blueorigin.com/news" target="_blank" rel="noopener noreferrer">View on Blue Origin <span aria-hidden="true">↗</span></a>
+    <p class="sx-src">Data: <a href="https://thespacedevs.com/llapi" target="_blank" rel="noopener noreferrer">The Space Devs</a> (Launch Library 2) · New Glenn &amp; New Shepard · updates every 45 min · times in Norway time</p>
   </aside>
   </div>
   </div>
@@ -1504,6 +1525,49 @@ async function loadFalcon(force=false){
 }
 loadFalcon(); setInterval(()=>{ if (!document.hidden) loadFalcon(); }, 5*60*1000);
 setInterval(tickFalcon, 1000);
+/* Blue Origin (same source/cache pattern) */
+const BO_URL='https://ll.thespacedevs.com/2.3.0/launches/upcoming/?lsp__name=Blue%20Origin&limit=6&mode=normal&hide_recent_previous=true';
+const BO_KEY='startside-blue-v1', BO_MAX_AGE=45*60*1000;
+let boData, boNextTarget=null;
+const boName=l=>(l.name||'').replace(/^New\s+(Glenn|Shepard)\s*\|\s*/i,'');
+function renderBlue(){
+  const box=document.getElementById('boContent'); if(!box) return;
+  if(!boData){ box.innerHTML='<div class="sx-empty">Could not fetch launches right now. Trying again later 🚀</div>'; return; }
+  const list=boData.filter(l=>new Date(l.net).getTime()>Date.now()-3*3600e3);
+  if(!list.length){ box.innerHTML='<div class="sx-empty">Ingen planlagt oppskyting akkurat nå 🚀</div>'; return; }
+  const [n,...rest]=list; const [stT,stC]=sxStatus(n);
+  const precise=SX_PRECISE.has(n.net_precision&&n.net_precision.name);
+  boNextTarget=precise?new Date(n.net).getTime():null;
+  const tag=/shepard/i.test(n.rocket||n.name||'')?'New Shepard':'New Glenn';
+  let h=`<a class="sx-next" href="${sxLink(n)}" target="_blank" rel="noopener noreferrer">
+      <div class="sx-kick">Next launch · ${esc(tag)}</div>
+      <div class="sx-name">${esc(boName(n))}</div>
+      <div class="sx-when">${precise?'':'NET earliest '}${esc(sxWhen(n))}</div>
+      <div class="sx-cd" id="boCd">${precise?'':'<small>Countdown starts when the time is confirmed</small>'}</div>
+      <div class="sx-meta"><span class="sx-st ${stC}">${esc(stT)}</span><span>${esc(sxSite(n))}</span></div></a>`;
+  if(rest.length){ h+='<div class="sx-list">'+rest.slice(0,4).map(l=>{const [t,c]=sxStatus(l);const pr=SX_PRECISE.has(l.net_precision&&l.net_precision.name);const tg=/shepard/i.test(l.rocket||l.name||'')?'NS':'NG';
+    return `<a class="sx-item" href="${sxLink(l)}" target="_blank" rel="noopener noreferrer"><span class="n">${esc(boName(l))}</span><span class="d">${pr?'':'NET '}${esc(sxWhen(l))}</span><span class="l"><span class="sx-st ${c}">${esc(t.split(' ')[0])}</span><span>${esc(tg)} · ${esc(sxSite(l))}</span></span></a>`;}).join('')+'</div>'; }
+  box.innerHTML=h; tickBlue();
+}
+function tickBlue(){
+  const el=document.getElementById('boCd'); if(!el||boNextTarget==null) return;
+  let ms=boNextTarget-Date.now(); const neg=ms<0; ms=Math.abs(ms);
+  const d=Math.floor(ms/864e5),hh=Math.floor(ms/36e5)%24,mm=Math.floor(ms/6e4)%60,ss=Math.floor(ms/1e3)%60,p2=v=>String(v).padStart(2,'0');
+  el.textContent=`T${neg?'+':'−'} ${d?d+'d ':''}${p2(hh)}:${p2(mm)}:${p2(ss)}`;
+}
+async function loadBlue(force=false){
+  let cache=null; try{cache=JSON.parse(localStorage.getItem(BO_KEY));}catch(e){}
+  if(cache&&cache.data){boData=cache.data;renderBlue();}
+  if(!force&&cache&&Date.now()-cache.ts<BO_MAX_AGE) return;
+  try{ const r=await fetch(BO_URL,{headers:{'Accept':'application/json'}}); if(!r.ok) throw new Error(r.status);
+    const j=await r.json(); boData=(j.results||[]).map(slimLaunch).sort((a,b)=>new Date(a.net)-new Date(b.net));
+    try{localStorage.setItem(BO_KEY,JSON.stringify({ts:Date.now(),data:boData}));}catch(e){}
+  }catch(e){ if(!boData) boData=null; }
+  renderBlue();
+}
+loadBlue(); setInterval(()=>{ if(!document.hidden) loadBlue(); },5*60*1000);
+setInterval(tickBlue,1000);
+
 
 </script>
 </body>
