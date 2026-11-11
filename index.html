@@ -336,7 +336,7 @@
   }
   @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 
-  /* Winter snow (Nov–Mar, Europe/Oslo) */
+  /* Snowflakes only when Stavern forecast has snow (now or coming hours) */
   #snow-layer{
     position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;
   }
@@ -1411,8 +1411,23 @@ function icon(kind, day){
   }
   return `<svg viewBox="0 0 48 48" aria-hidden="true">${b}</svg>`;
 }
+function isSnowWeatherCode(code){
+  return (WMO[code]||[])[1] === 'snow';
+}
+function stavernSnowSoon(j, hoursAhead=12){
+  if (j && j.current && isSnowWeatherCode(j.current.weather_code)) return true;
+  const codes = j && j.hourly && j.hourly.weather_code;
+  const times = j && j.hourly && j.hourly.time;
+  if (!codes || !times) return false;
+  const now = Date.now(), until = now + hoursAhead*3600*1000;
+  for (let i=0;i<times.length;i++){
+    const t = new Date(times[i]).getTime();
+    if (t >= now - 30*60*1000 && t <= until && isSnowWeatherCode(codes[i])) return true;
+  }
+  return false;
+}
 async function loadWeather(attempt=1){
-  const url = 'https://api.open-meteo.com/v1/forecast?latitude=59.00&longitude=10.03&current=temperature_2m,apparent_temperature,weather_code,wind_speed_10m,is_day&daily=temperature_2m_max,temperature_2m_min&wind_speed_unit=ms&timezone=Europe%2FOslo&forecast_days=1';
+  const url = 'https://api.open-meteo.com/v1/forecast?latitude=59.00&longitude=10.03&current=temperature_2m,apparent_temperature,weather_code,wind_speed_10m,is_day&hourly=weather_code&daily=temperature_2m_max,temperature_2m_min&wind_speed_unit=ms&timezone=Europe%2FOslo&forecast_days=2';
   try{
     const r = await fetch(url); if(!r.ok) throw new Error(r.status);
     const j = await r.json(); const c = j.current;
@@ -1423,13 +1438,14 @@ async function loadWeather(attempt=1){
     document.getElementById('w-desc').textContent = `${desc} · feels like ${n(c.apparent_temperature)}°`;
     const wind = c.wind_speed_10m.toLocaleString('en-GB',{maximumFractionDigits:0});
     document.getElementById('w-meta').textContent = `Stavern · ${n(j.daily.temperature_2m_min[0])}°/${n(j.daily.temperature_2m_max[0])}° · ${wind} m/s`;
+    const rootEl = document.documentElement;
     if (!window.__stavernSkyApplied){
       window.__stavernSkyApplied = true;
-      const rootEl = document.documentElement;
       rootEl.dataset.sky = kind;
       rootEl.dataset.skyDay = c.is_day===1 ? '1' : '0';
-      if (typeof window.__snowRefresh === 'function') window.__snowRefresh();
     }
+    rootEl.dataset.snowing = stavernSnowSoon(j) ? '1' : '0';
+    if (typeof window.__snowRefresh === 'function') window.__snowRefresh();
   }catch(e){
     if (attempt < 3){ setTimeout(()=>loadWeather(attempt+1), 4000*attempt); return; }
     document.getElementById('w-icon').innerHTML = icon('cloud', true);
@@ -1651,25 +1667,17 @@ setInterval(tickBlue,1000);
   const KEY = 'startside-sno';
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
 
-  function monthOslo(){
-    return Number(new Intl.DateTimeFormat('en-GB',{month:'numeric',timeZone:'Europe/Oslo'}).format(new Date()));
-  }
-  function inSeason(){
-    const m = monthOslo();
-    return m >= 11 || m <= 3;
-  }
   function preferOff(){
     try{ return localStorage.getItem(KEY) === 'av'; }catch(e){ return false; }
   }
   function setPref(off){
     try{ localStorage.setItem(KEY, off ? 'av' : 'på'); }catch(e){}
   }
-  function weatherAllowsSnow(){
-    const k = document.documentElement.dataset.sky;
-    return k !== 'rain' && k !== 'drizzle' && k !== 'thunder';
+  function forecastHasSnow(){
+    return document.documentElement.dataset.snowing === '1';
   }
   function allowed(){
-    return inSeason() && !reduce.matches && weatherAllowsSnow();
+    return !reduce.matches && forecastHasSnow();
   }
 
   function buildFlakes(){
@@ -1710,7 +1718,7 @@ setInterval(tickBlue,1000);
     } else {
       layer.hidden = true;
     }
-    if (inSeason() && !reduce.matches && weatherAllowsSnow()){
+    if (!reduce.matches && forecastHasSnow()){
       btn.hidden = false;
       btn.textContent = show ? 'Snø av' : 'Snø på';
       btn.setAttribute('aria-pressed', show ? 'true' : 'false');
