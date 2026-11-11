@@ -61,7 +61,7 @@
     min-height:100vh; -webkit-font-smoothing:antialiased;
     transition:background-color .25s,color .25s;
   }
-  .wrap{max-width:1180px;margin:0 auto;padding:36px 28px 56px}
+  .wrap{position:relative;z-index:1;max-width:1180px;margin:0 auto;padding:36px 28px 56px}
 
   /* Header */
   header{display:grid;grid-template-columns:1fr auto;gap:24px;align-items:center;margin-bottom:32px;padding-bottom:24px;border-bottom:1px solid var(--border)}
@@ -338,30 +338,34 @@
 
   /* Winter snow (Nov–Mar, Europe/Oslo) */
   #snow-layer{
-    position:fixed;inset:0;z-index:50;pointer-events:none;overflow:hidden;
+    position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;
   }
   #snow-layer[hidden]{display:none!important}
   #snow-layer .flake{
-    position:absolute;left:var(--x);top:-10px;border-radius:50%;
-    background:var(--flake);opacity:var(--op);
-    box-shadow:0 0 4px 1px var(--flake-glow);
+    position:absolute;left:var(--x);top:-1.2em;margin:0;padding:0;
+    border:0;border-radius:0;background:none;box-shadow:none;
+    color:var(--flake);opacity:var(--op);
+    font-family:"Segoe UI Symbol","Apple Symbols","Noto Sans Symbols","DejaVu Sans",serif;
+    font-size:var(--sz);font-weight:400;line-height:1;
+    text-shadow:0 0 6px var(--flake-glow);
     animation:snow-fall var(--dur) linear var(--delay) infinite;
-    will-change:transform;
+    will-change:transform;user-select:none;pointer-events:none;
   }
   :root{--flake:rgba(255,255,255,.92);--flake-glow:rgba(148,163,184,.35)}
-  :root[data-theme="dark"]{--flake:rgba(255,255,255,.82);--flake-glow:rgba(255,255,255,.28)}
+  :root[data-theme="dark"]{--flake:rgba(255,255,255,.86);--flake-glow:rgba(255,255,255,.28)}
   @media (prefers-color-scheme: dark){
-    :root:not([data-theme="light"]){--flake:rgba(255,255,255,.82);--flake-glow:rgba(255,255,255,.28)}
+    :root:not([data-theme="light"]){--flake:rgba(255,255,255,.86);--flake-glow:rgba(255,255,255,.28)}
   }
   @keyframes snow-fall{
-    from{transform:translate3d(0,-8vh,0)}
-    to{transform:translate3d(var(--dx),110vh,0)}
+    from{transform:translate3d(0,-8vh,0) rotate(var(--rot0))}
+    to{transform:translate3d(var(--dx),110vh,0) rotate(var(--rot1))}
   }
   #snow-layer.paused .flake{animation-play-state:paused}
   @media (prefers-reduced-motion:reduce){
     #snow-layer{display:none!important}
     #snow-layer .flake{animation:none!important}
   }
+  header,.layout,footer,.card,.stock,.weather,.sx{position:relative;z-index:1}
   .snow-toggle{
     margin-left:10px;background:none;border:0;padding:0;font:inherit;font-size:12px;
     color:var(--faint);cursor:pointer;vertical-align:baseline;
@@ -1622,20 +1626,25 @@ setInterval(tickBlue,1000);
 
   function buildFlakes(){
     if (layer.childElementCount) return;
+    const glyphs = ['\u2744\uFE0E','\u2745\uFE0E','\u2746\uFE0E'];
     const frag = document.createDocumentFragment();
     const n = 50;
     for (let i = 0; i < n; i++){
       const s = document.createElement('span');
       s.className = 'flake';
-      const size = 2 + Math.random() * 3.5;
+      s.textContent = glyphs[i % glyphs.length];
+      const size = 11 + Math.random() * 10;
       const dur = 14 + Math.random() * 12;
+      const rot0 = Math.floor(Math.random() * 360);
+      const spin = (Math.random() < 0.5 ? -1 : 1) * (80 + Math.random() * 200);
       s.style.setProperty('--x', (Math.random() * 100) + '%');
       s.style.setProperty('--dx', ((Math.random() - 0.5) * 18) + 'vw');
       s.style.setProperty('--dur', dur + 's');
       s.style.setProperty('--delay', (-Math.random() * dur) + 's');
-      s.style.setProperty('--op', String(0.35 + Math.random() * 0.45));
-      s.style.width = size + 'px';
-      s.style.height = size + 'px';
+      s.style.setProperty('--op', String(0.35 + Math.random() * 0.4));
+      s.style.setProperty('--sz', size + 'px');
+      s.style.setProperty('--rot0', rot0 + 'deg');
+      s.style.setProperty('--rot1', (rot0 + spin) + 'deg');
       frag.appendChild(s);
     }
     layer.appendChild(frag);
