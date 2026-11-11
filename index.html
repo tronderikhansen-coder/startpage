@@ -408,10 +408,113 @@
     :root:not([data-theme="light"])[data-sky="thunder"] #weather-bg{background:radial-gradient(900px 600px at 72% 0%,rgba(88,28,135,.16),transparent 60%),linear-gradient(180deg,rgba(15,23,42,.40),transparent 62%)}
     :root:not([data-theme="light"])[data-sky-day="0"] #weather-bg::after{background:linear-gradient(180deg,rgba(0,0,0,.22),rgba(0,0,0,.30))}
   }
+
+  #weather-bg .sky-art{position:absolute;inset:0;width:100%;height:100%;display:block}
+  #weather-bg{--sky-cloud:rgba(148,163,184,.42);--sky-cloud-dim:rgba(148,163,184,.28);--sky-fog:rgba(203,213,225,.42)}
+  :root[data-theme="dark"] #weather-bg{--sky-cloud:rgba(203,213,225,.18);--sky-cloud-dim:rgba(203,213,225,.11);--sky-fog:rgba(148,163,184,.2)}
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]) #weather-bg{--sky-cloud:rgba(203,213,225,.18);--sky-cloud-dim:rgba(203,213,225,.11);--sky-fog:rgba(148,163,184,.2)}
+  }
+  #weather-bg .sky-sun,#weather-bg .sky-moon,#weather-bg .sky-cloud,#weather-bg .sky-fog,#weather-bg .sky-bolt,#weather-bg .sky-flash{opacity:0}
+  html[data-sky="clear"][data-sky-day="1"] #weather-bg .sky-sun{opacity:.95}
+  html[data-sky="partly"][data-sky-day="1"] #weather-bg .sky-sun{opacity:.7}
+  html[data-sky="clear"][data-sky-day="0"] #weather-bg .sky-moon{opacity:.85}
+  html[data-sky="partly"][data-sky-day="0"] #weather-bg .sky-moon{opacity:.35}
+  html[data-sky="partly"] #weather-bg .sky-cloud-few{opacity:1}
+  html[data-sky="partly"] #weather-bg .sky-cloud-few .sky-puff{fill:var(--sky-cloud-dim)}
+  html[data-sky="cloud"] #weather-bg .sky-cloud-few,
+  html[data-sky="cloud"] #weather-bg .sky-cloud-more{opacity:1}
+  html[data-sky="cloud"] #weather-bg .sky-puff{fill:var(--sky-cloud)}
+  html[data-sky="drizzle"] #weather-bg .sky-cloud-few,
+  html[data-sky="drizzle"] #weather-bg .sky-cloud-more,
+  html[data-sky="rain"] #weather-bg .sky-cloud-few,
+  html[data-sky="rain"] #weather-bg .sky-cloud-more,
+  html[data-sky="snow"] #weather-bg .sky-cloud-few,
+  html[data-sky="thunder"] #weather-bg .sky-cloud-few,
+  html[data-sky="thunder"] #weather-bg .sky-cloud-more{opacity:1}
+  html[data-sky="drizzle"] #weather-bg .sky-puff,
+  html[data-sky="rain"] #weather-bg .sky-puff,
+  html[data-sky="thunder"] #weather-bg .sky-puff{fill:var(--sky-cloud)}
+  html[data-sky="snow"] #weather-bg .sky-puff{fill:var(--sky-cloud-dim)}
+  html[data-sky="fog"] #weather-bg .sky-fog{opacity:1}
+  html[data-sky="fog"] #weather-bg .sky-cloud-few{opacity:.55}
+  html[data-sky="fog"] #weather-bg .sky-puff{fill:var(--sky-fog)}
+  html[data-sky="thunder"] #weather-bg .sky-bolt{animation:sky-bolt 9s ease-in-out infinite}
+  html[data-sky="thunder"] #weather-bg .sky-flash{animation:sky-flash 9s ease-in-out infinite}
+  @keyframes sky-bolt{0%,91%,97%,100%{opacity:0}92.5%{opacity:.8}94%{opacity:.12}95.5%{opacity:.65}}
+  @keyframes sky-flash{0%,91%,97%,100%{opacity:0}92.5%{opacity:.14}94%{opacity:.03}95.5%{opacity:.1}}
+  @keyframes sky-drift-a{0%,100%{transform:translate(0,0)}50%{transform:translate(28px,-8px)}}
+  @keyframes sky-drift-b{0%,100%{transform:translate(0,0)}50%{transform:translate(-22px,6px)}}
+  @keyframes sky-drift-c{0%,100%{transform:translate(0,0)}50%{transform:translate(18px,10px)}}
+  #weather-bg .sky-drift-a{animation:sky-drift-a 80s ease-in-out infinite}
+  #weather-bg .sky-drift-b{animation:sky-drift-b 100s ease-in-out infinite}
+  #weather-bg .sky-drift-c{animation:sky-drift-c 90s ease-in-out infinite}
+  #weather-bg.paused .sky-drift-a,#weather-bg.paused .sky-drift-b,#weather-bg.paused .sky-drift-c,
+  #weather-bg.paused .sky-bolt,#weather-bg.paused .sky-flash{animation-play-state:paused}
+  @media (prefers-reduced-motion:reduce){
+    #weather-bg .sky-drift-a,#weather-bg .sky-drift-b,#weather-bg .sky-drift-c,
+    #weather-bg .sky-bolt,#weather-bg .sky-flash{animation:none!important}
+    html[data-sky="thunder"] #weather-bg .sky-bolt{opacity:.4}
+    html[data-sky="thunder"] #weather-bg .sky-flash{opacity:0}
+  }
 </style>
 </head>
 <body>
-<div id="weather-bg" aria-hidden="true"></div>
+<div id="weather-bg" aria-hidden="true">
+  <svg class="sky-art" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 900" preserveAspectRatio="xMidYMid slice" focusable="false">
+    <defs>
+      <radialGradient id="skySunGlow" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#fff7ed" stop-opacity=".9"/><stop offset=".4" stop-color="#fbbf24" stop-opacity=".32"/><stop offset="1" stop-color="#f59e0b" stop-opacity="0"/></radialGradient>
+      <radialGradient id="skySunDisc" cx="38%" cy="34%" r="65%"><stop offset="0" stop-color="#fffbeb"/><stop offset=".55" stop-color="#fde68a"/><stop offset="1" stop-color="#f59e0b"/></radialGradient>
+      <radialGradient id="skyMoonGlow" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#e2e8f0" stop-opacity=".55"/><stop offset=".45" stop-color="#94a3b8" stop-opacity=".16"/><stop offset="1" stop-color="#64748b" stop-opacity="0"/></radialGradient>
+      <radialGradient id="skyMoonDisc" cx="35%" cy="32%" r="65%"><stop offset="0" stop-color="#f8fafc"/><stop offset=".7" stop-color="#cbd5e1"/><stop offset="1" stop-color="#94a3b8"/></radialGradient>
+      <linearGradient id="skyFogGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e2e8f0" stop-opacity="0"/><stop offset=".4" stop-color="#cbd5e1" stop-opacity=".55"/><stop offset="1" stop-color="#94a3b8" stop-opacity="0"/></linearGradient>
+      <filter id="skyCloudBlur" x="-30%" y="-50%" width="160%" height="200%"><feGaussianBlur stdDeviation="14"/></filter>
+      <filter id="skyFogBlur" x="-20%" y="-40%" width="140%" height="180%"><feGaussianBlur stdDeviation="22"/></filter>
+      <filter id="skyBoltGlow" x="-40%" y="-20%" width="180%" height="140%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    </defs>
+    <g class="sky-sun">
+      <circle cx="150" cy="78" r="155" fill="url(#skySunGlow)"/>
+      <circle cx="150" cy="78" r="44" fill="url(#skySunDisc)"/>
+    </g>
+    <g class="sky-moon">
+      <circle cx="150" cy="78" r="110" fill="url(#skyMoonGlow)"/>
+      <circle cx="150" cy="78" r="26" fill="url(#skyMoonDisc)"/>
+    </g>
+    <g class="sky-cloud sky-cloud-few sky-drift-a" filter="url(#skyCloudBlur)">
+      <ellipse class="sky-puff" cx="520" cy="90" rx="170" ry="44"/>
+      <ellipse class="sky-puff" cx="620" cy="78" rx="120" ry="38"/>
+      <ellipse class="sky-puff" cx="440" cy="86" rx="110" ry="34"/>
+    </g>
+    <g class="sky-cloud sky-cloud-few sky-drift-b" filter="url(#skyCloudBlur)">
+      <ellipse class="sky-puff" cx="980" cy="230" rx="150" ry="40"/>
+      <ellipse class="sky-puff" cx="1080" cy="218" rx="100" ry="32"/>
+      <ellipse class="sky-puff" cx="900" cy="226" rx="90" ry="28"/>
+    </g>
+    <g class="sky-cloud sky-cloud-more sky-drift-c" filter="url(#skyCloudBlur)">
+      <ellipse class="sky-puff" cx="220" cy="200" rx="160" ry="42"/>
+      <ellipse class="sky-puff" cx="320" cy="186" rx="110" ry="34"/>
+      <ellipse class="sky-puff" cx="140" cy="194" rx="95" ry="30"/>
+    </g>
+    <g class="sky-cloud sky-cloud-more sky-drift-a" filter="url(#skyCloudBlur)">
+      <ellipse class="sky-puff" cx="740" cy="40" rx="200" ry="48"/>
+      <ellipse class="sky-puff" cx="860" cy="28" rx="130" ry="36"/>
+      <ellipse class="sky-puff" cx="640" cy="36" rx="110" ry="32"/>
+    </g>
+    <g class="sky-cloud sky-cloud-more sky-drift-b" filter="url(#skyCloudBlur)">
+      <ellipse class="sky-puff" cx="1180" cy="100" rx="150" ry="38"/>
+      <ellipse class="sky-puff" cx="1270" cy="90" rx="100" ry="30"/>
+    </g>
+    <g class="sky-fog" filter="url(#skyFogBlur)">
+      <rect x="-40" y="80" width="1480" height="220" fill="url(#skyFogGrad)"/>
+      <ellipse cx="400" cy="260" rx="420" ry="80" fill="#cbd5e1" fill-opacity=".45"/>
+      <ellipse cx="1000" cy="340" rx="480" ry="90" fill="#e2e8f0" fill-opacity=".4"/>
+      <ellipse cx="700" cy="480" rx="560" ry="100" fill="#cbd5e1" fill-opacity=".35"/>
+    </g>
+    <rect class="sky-flash" x="0" y="0" width="1400" height="900" fill="#e2e8f0"/>
+    <path class="sky-bolt" filter="url(#skyBoltGlow)" fill="#f8fafc" d="M628 36l-28 118h36L598 286l46-122h-30z"/>
+  </svg>
+</div>
+
 <div id="snow-layer" hidden aria-hidden="true"></div>
 <div class="wrap">
   <header>
@@ -1707,7 +1810,10 @@ setInterval(tickBlue,1000);
   }
 
   function syncPause(){
-    layer.classList.toggle('paused', document.hidden);
+    const pause = document.hidden;
+    layer.classList.toggle('paused', pause);
+    const sky = document.getElementById('weather-bg');
+    if (sky) sky.classList.toggle('paused', pause);
   }
 
   function apply(){
