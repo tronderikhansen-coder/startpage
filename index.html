@@ -372,9 +372,46 @@
   }
   .snow-toggle:not([hidden])::before{content:" · "}
   .snow-toggle:hover,.snow-toggle:focus-visible{color:var(--muted);text-decoration:underline;outline:none}
+
+  /* Stavern weather atmosphere (behind content, no photos) */
+  #weather-bg{position:fixed;inset:0;z-index:0;pointer-events:none}
+  #weather-bg::after{content:"";position:absolute;inset:0;pointer-events:none;background:transparent}
+  html[data-sky="clear"][data-sky-day="1"] #weather-bg{background:radial-gradient(1000px 560px at 16% -12%,rgba(125,211,252,.30),transparent 60%),radial-gradient(800px 480px at 90% 0%,rgba(253,224,171,.16),transparent 58%)}
+  html[data-sky="clear"][data-sky-day="0"] #weather-bg{background:radial-gradient(1000px 620px at 22% -16%,rgba(129,140,248,.16),transparent 62%),linear-gradient(180deg,rgba(71,85,105,.12),transparent 58%)}
+  html[data-sky="partly"][data-sky-day="1"] #weather-bg{background:radial-gradient(1000px 560px at 18% -10%,rgba(147,197,253,.20),transparent 62%),radial-gradient(900px 520px at 88% 0%,rgba(148,163,184,.16),transparent 60%)}
+  html[data-sky="partly"][data-sky-day="0"] #weather-bg{background:radial-gradient(1000px 620px at 20% -14%,rgba(100,116,139,.18),transparent 62%),linear-gradient(180deg,rgba(51,65,85,.12),transparent 58%)}
+  html[data-sky="cloud"] #weather-bg{background:radial-gradient(1200px 700px at 50% -12%,rgba(148,163,184,.28),transparent 68%),linear-gradient(180deg,rgba(148,163,184,.14),transparent 55%)}
+  html[data-sky="fog"] #weather-bg{background:linear-gradient(180deg,rgba(203,213,225,.32),rgba(148,163,184,.12) 52%,transparent)}
+  html[data-sky="drizzle"] #weather-bg,html[data-sky="rain"] #weather-bg{background:linear-gradient(180deg,rgba(100,116,139,.32),rgba(71,85,105,.16) 48%,transparent 82%),radial-gradient(1100px 700px at 50% 0%,rgba(51,65,85,.16),transparent 70%)}
+  html[data-sky="snow"] #weather-bg{background:radial-gradient(1100px 640px at 50% -14%,rgba(186,230,253,.26),transparent 64%),linear-gradient(180deg,rgba(226,232,240,.14),transparent 52%)}
+  html[data-sky="thunder"] #weather-bg{background:radial-gradient(900px 600px at 72% 0%,rgba(88,28,135,.12),transparent 60%),linear-gradient(180deg,rgba(51,65,85,.30),transparent 62%)}
+  html[data-sky-day="0"] #weather-bg::after{background:linear-gradient(180deg,rgba(15,23,42,.10),rgba(15,23,42,.16))}
+  :root[data-theme="dark"][data-sky="clear"][data-sky-day="1"] #weather-bg{background:radial-gradient(1000px 560px at 16% -12%,rgba(56,189,248,.18),transparent 60%),radial-gradient(800px 480px at 90% 0%,rgba(96,165,250,.10),transparent 58%)}
+  :root[data-theme="dark"][data-sky="clear"][data-sky-day="0"] #weather-bg{background:radial-gradient(1000px 640px at 24% -18%,rgba(30,64,175,.22),transparent 62%),linear-gradient(180deg,rgba(2,6,23,.28),transparent 60%)}
+  :root[data-theme="dark"][data-sky="partly"][data-sky-day="1"] #weather-bg{background:radial-gradient(1000px 560px at 18% -10%,rgba(96,165,250,.14),transparent 62%),radial-gradient(900px 520px at 88% 0%,rgba(71,85,105,.18),transparent 60%)}
+  :root[data-theme="dark"][data-sky="partly"][data-sky-day="0"] #weather-bg{background:radial-gradient(1000px 640px at 20% -16%,rgba(51,65,85,.28),transparent 62%),linear-gradient(180deg,rgba(2,6,23,.24),transparent 58%)}
+  :root[data-theme="dark"][data-sky="cloud"] #weather-bg{background:radial-gradient(1200px 720px at 50% -12%,rgba(71,85,105,.32),transparent 68%),linear-gradient(180deg,rgba(30,41,59,.22),transparent 55%)}
+  :root[data-theme="dark"][data-sky="fog"] #weather-bg{background:linear-gradient(180deg,rgba(100,116,139,.22),rgba(51,65,85,.14) 52%,transparent)}
+  :root[data-theme="dark"][data-sky="drizzle"] #weather-bg,:root[data-theme="dark"][data-sky="rain"] #weather-bg{background:linear-gradient(180deg,rgba(51,65,85,.42),rgba(30,41,59,.24) 50%,transparent 82%),radial-gradient(1100px 700px at 50% 0%,rgba(15,23,42,.28),transparent 70%)}
+  :root[data-theme="dark"][data-sky="snow"] #weather-bg{background:radial-gradient(1100px 640px at 50% -14%,rgba(147,197,253,.16),transparent 64%),linear-gradient(180deg,rgba(51,65,85,.14),transparent 52%)}
+  :root[data-theme="dark"][data-sky="thunder"] #weather-bg{background:radial-gradient(900px 600px at 72% 0%,rgba(88,28,135,.16),transparent 60%),linear-gradient(180deg,rgba(15,23,42,.40),transparent 62%)}
+  :root[data-theme="dark"][data-sky-day="0"] #weather-bg::after{background:linear-gradient(180deg,rgba(0,0,0,.22),rgba(0,0,0,.30))}
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"])[data-sky="clear"][data-sky-day="1"] #weather-bg{background:radial-gradient(1000px 560px at 16% -12%,rgba(56,189,248,.18),transparent 60%),radial-gradient(800px 480px at 90% 0%,rgba(96,165,250,.10),transparent 58%)}
+    :root:not([data-theme="light"])[data-sky="clear"][data-sky-day="0"] #weather-bg{background:radial-gradient(1000px 640px at 24% -18%,rgba(30,64,175,.22),transparent 62%),linear-gradient(180deg,rgba(2,6,23,.28),transparent 60%)}
+    :root:not([data-theme="light"])[data-sky="partly"][data-sky-day="1"] #weather-bg{background:radial-gradient(1000px 560px at 18% -10%,rgba(96,165,250,.14),transparent 62%),radial-gradient(900px 520px at 88% 0%,rgba(71,85,105,.18),transparent 60%)}
+    :root:not([data-theme="light"])[data-sky="partly"][data-sky-day="0"] #weather-bg{background:radial-gradient(1000px 640px at 20% -16%,rgba(51,65,85,.28),transparent 62%),linear-gradient(180deg,rgba(2,6,23,.24),transparent 58%)}
+    :root:not([data-theme="light"])[data-sky="cloud"] #weather-bg{background:radial-gradient(1200px 720px at 50% -12%,rgba(71,85,105,.32),transparent 68%),linear-gradient(180deg,rgba(30,41,59,.22),transparent 55%)}
+    :root:not([data-theme="light"])[data-sky="fog"] #weather-bg{background:linear-gradient(180deg,rgba(100,116,139,.22),rgba(51,65,85,.14) 52%,transparent)}
+    :root:not([data-theme="light"])[data-sky="drizzle"] #weather-bg,:root:not([data-theme="light"])[data-sky="rain"] #weather-bg{background:linear-gradient(180deg,rgba(51,65,85,.42),rgba(30,41,59,.24) 50%,transparent 82%),radial-gradient(1100px 700px at 50% 0%,rgba(15,23,42,.28),transparent 70%)}
+    :root:not([data-theme="light"])[data-sky="snow"] #weather-bg{background:radial-gradient(1100px 640px at 50% -14%,rgba(147,197,253,.16),transparent 64%),linear-gradient(180deg,rgba(51,65,85,.14),transparent 52%)}
+    :root:not([data-theme="light"])[data-sky="thunder"] #weather-bg{background:radial-gradient(900px 600px at 72% 0%,rgba(88,28,135,.16),transparent 60%),linear-gradient(180deg,rgba(15,23,42,.40),transparent 62%)}
+    :root:not([data-theme="light"])[data-sky-day="0"] #weather-bg::after{background:linear-gradient(180deg,rgba(0,0,0,.22),rgba(0,0,0,.30))}
+  }
 </style>
 </head>
 <body>
+<div id="weather-bg" aria-hidden="true"></div>
 <div id="snow-layer" hidden aria-hidden="true"></div>
 <div class="wrap">
   <header>
@@ -1386,6 +1423,13 @@ async function loadWeather(attempt=1){
     document.getElementById('w-desc').textContent = `${desc} · feels like ${n(c.apparent_temperature)}°`;
     const wind = c.wind_speed_10m.toLocaleString('en-GB',{maximumFractionDigits:0});
     document.getElementById('w-meta').textContent = `Stavern · ${n(j.daily.temperature_2m_min[0])}°/${n(j.daily.temperature_2m_max[0])}° · ${wind} m/s`;
+    if (!window.__stavernSkyApplied){
+      window.__stavernSkyApplied = true;
+      const rootEl = document.documentElement;
+      rootEl.dataset.sky = kind;
+      rootEl.dataset.skyDay = c.is_day===1 ? '1' : '0';
+      if (typeof window.__snowRefresh === 'function') window.__snowRefresh();
+    }
   }catch(e){
     if (attempt < 3){ setTimeout(()=>loadWeather(attempt+1), 4000*attempt); return; }
     document.getElementById('w-icon').innerHTML = icon('cloud', true);
@@ -1620,8 +1664,12 @@ setInterval(tickBlue,1000);
   function setPref(off){
     try{ localStorage.setItem(KEY, off ? 'av' : 'på'); }catch(e){}
   }
+  function weatherAllowsSnow(){
+    const k = document.documentElement.dataset.sky;
+    return k !== 'rain' && k !== 'drizzle' && k !== 'thunder';
+  }
   function allowed(){
-    return inSeason() && !reduce.matches;
+    return inSeason() && !reduce.matches && weatherAllowsSnow();
   }
 
   function buildFlakes(){
@@ -1662,7 +1710,7 @@ setInterval(tickBlue,1000);
     } else {
       layer.hidden = true;
     }
-    if (inSeason() && !reduce.matches){
+    if (inSeason() && !reduce.matches && weatherAllowsSnow()){
       btn.hidden = false;
       btn.textContent = show ? 'Snø av' : 'Snø på';
       btn.setAttribute('aria-pressed', show ? 'true' : 'false');
@@ -1680,6 +1728,7 @@ setInterval(tickBlue,1000);
   document.addEventListener('visibilitychange', syncPause);
   if (reduce.addEventListener) reduce.addEventListener('change', apply);
   else if (reduce.addListener) reduce.addListener(apply);
+  window.__snowRefresh = apply;
   apply();
 })();
 </script>
