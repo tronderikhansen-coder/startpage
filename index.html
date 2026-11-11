@@ -335,9 +335,43 @@
     .stock .chart{height:120px}
   }
   @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+
+  /* Winter snow (Nov–Mar, Europe/Oslo) */
+  #snow-layer{
+    position:fixed;inset:0;z-index:50;pointer-events:none;overflow:hidden;
+  }
+  #snow-layer[hidden]{display:none!important}
+  #snow-layer .flake{
+    position:absolute;left:var(--x);top:-10px;border-radius:50%;
+    background:var(--flake);opacity:var(--op);
+    box-shadow:0 0 4px 1px var(--flake-glow);
+    animation:snow-fall var(--dur) linear var(--delay) infinite;
+    will-change:transform;
+  }
+  :root{--flake:rgba(255,255,255,.92);--flake-glow:rgba(148,163,184,.35)}
+  :root[data-theme="dark"]{--flake:rgba(255,255,255,.82);--flake-glow:rgba(255,255,255,.28)}
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){--flake:rgba(255,255,255,.82);--flake-glow:rgba(255,255,255,.28)}
+  }
+  @keyframes snow-fall{
+    from{transform:translate3d(0,-8vh,0)}
+    to{transform:translate3d(var(--dx),110vh,0)}
+  }
+  #snow-layer.paused .flake{animation-play-state:paused}
+  @media (prefers-reduced-motion:reduce){
+    #snow-layer{display:none!important}
+    #snow-layer .flake{animation:none!important}
+  }
+  .snow-toggle{
+    margin-left:10px;background:none;border:0;padding:0;font:inherit;font-size:12px;
+    color:var(--faint);cursor:pointer;vertical-align:baseline;
+  }
+  .snow-toggle:not([hidden])::before{content:" · "}
+  .snow-toggle:hover,.snow-toggle:focus-visible{color:var(--muted);text-decoration:underline;outline:none}
 </style>
 </head>
 <body>
+<div id="snow-layer" hidden aria-hidden="true"></div>
 <div class="wrap">
   <header>
     <div>
@@ -459,7 +493,7 @@
   </div>
   </div>
 
-  <footer>Weather from <a href="https://open-meteo.com/" target="_blank" rel="noopener noreferrer">Open-Meteo</a></footer>
+  <footer>Weather from <a href="https://open-meteo.com/" target="_blank" rel="noopener noreferrer">Open-Meteo</a><button type="button" class="snow-toggle" id="snowToggle" hidden aria-controls="snow-layer">Snø av</button></footer>
 </div>
 
 <script>
@@ -1559,6 +1593,86 @@ loadBlue(); setInterval(()=>{ if(!document.hidden) loadBlue(); },5*60*1000);
 setInterval(tickBlue,1000);
 
 
+</script>
+
+<script>
+(function(){
+  const layer = document.getElementById('snow-layer');
+  const btn = document.getElementById('snowToggle');
+  if (!layer || !btn) return;
+  const KEY = 'startside-sno';
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+  function monthOslo(){
+    return Number(new Intl.DateTimeFormat('en-GB',{month:'numeric',timeZone:'Europe/Oslo'}).format(new Date()));
+  }
+  function inSeason(){
+    const m = monthOslo();
+    return m >= 11 || m <= 3;
+  }
+  function preferOff(){
+    try{ return localStorage.getItem(KEY) === 'av'; }catch(e){ return false; }
+  }
+  function setPref(off){
+    try{ localStorage.setItem(KEY, off ? 'av' : 'på'); }catch(e){}
+  }
+  function allowed(){
+    return inSeason() && !reduce.matches;
+  }
+
+  function buildFlakes(){
+    if (layer.childElementCount) return;
+    const frag = document.createDocumentFragment();
+    const n = 50;
+    for (let i = 0; i < n; i++){
+      const s = document.createElement('span');
+      s.className = 'flake';
+      const size = 2 + Math.random() * 3.5;
+      const dur = 14 + Math.random() * 12;
+      s.style.setProperty('--x', (Math.random() * 100) + '%');
+      s.style.setProperty('--dx', ((Math.random() - 0.5) * 18) + 'vw');
+      s.style.setProperty('--dur', dur + 's');
+      s.style.setProperty('--delay', (-Math.random() * dur) + 's');
+      s.style.setProperty('--op', String(0.35 + Math.random() * 0.45));
+      s.style.width = size + 'px';
+      s.style.height = size + 'px';
+      frag.appendChild(s);
+    }
+    layer.appendChild(frag);
+  }
+
+  function syncPause(){
+    layer.classList.toggle('paused', document.hidden);
+  }
+
+  function apply(){
+    const show = allowed() && !preferOff();
+    if (show){
+      buildFlakes();
+      layer.hidden = false;
+    } else {
+      layer.hidden = true;
+    }
+    if (inSeason() && !reduce.matches){
+      btn.hidden = false;
+      btn.textContent = show ? 'Snø av' : 'Snø på';
+      btn.setAttribute('aria-pressed', show ? 'true' : 'false');
+      btn.title = show ? 'Slå av snøen' : 'Slå på snøen';
+    } else {
+      btn.hidden = true;
+    }
+    syncPause();
+  }
+
+  btn.addEventListener('click', function(){
+    setPref(!preferOff());
+    apply();
+  });
+  document.addEventListener('visibilitychange', syncPause);
+  if (reduce.addEventListener) reduce.addEventListener('change', apply);
+  else if (reduce.addListener) reduce.addListener(apply);
+  apply();
+})();
 </script>
 </body>
 </html>
