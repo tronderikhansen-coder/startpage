@@ -197,6 +197,10 @@
   .stock .foot:hover .arrow{background:var(--accent-soft);color:var(--accent)}
   .stocks-note{font-size:11.5px;color:var(--faint);margin:8px 2px 0}
   .stocks-note a{color:inherit}
+  .qtrend{margin:6px 2px 2px;font-size:11.5px;font-weight:500;color:var(--muted);letter-spacing:.01em}
+  .qtrend.up{color:#16a34a}
+  .qtrend.down{color:#dc2626}
+  .qtrend.flat{color:var(--muted)}
 
   /* Kursalarmer */
   #aksjer{position:relative}
@@ -768,6 +772,7 @@ function buildStocksSection(){
           <div class="qhead"><span class="qlogo" data-f="logo">${esc(st.tv.split(':')[1][0])}</span><span class="qid"><span class="qtk">${esc(st.tv.split(':')[1])}</span><span class="qnm" data-f="desc">${esc(st.name)}</span></span></div>
           <div class="qprice"><span class="qp" data-f="price">–</span><span class="qcur">${st.cur}</span><span class="qch" data-f="qchg"></span></div>
           <div class="chart" data-f="chart"><div class="loading">Fetching chart …</div></div>
+          <p class="qtrend" data-f="trend">Kort trend: —</p>
         </div>
         ${statsSkeleton()}
         <a class="foot" href="${url}" target="_blank" rel="noopener noreferrer" title="View ${esc(st.name)} on TradingView">
@@ -776,7 +781,8 @@ function buildStocksSection(){
     }
     h += `</div></div>`;
   }
-  h += `<p class="stocks-note">Quotes and key stats from <a href="https://www.tradingview.com/" target="_blank" rel="noopener noreferrer">TradingView</a>, intraday chart (1 min, today or last trading day) from <a href="https://www.cnbc.com/markets/" target="_blank" rel="noopener noreferrer">CNBC</a>. Green/red chart = up/down vs previous close (dashed line). Quotes are delayed by about 15 minutes (Nasdaq and Oslo Stock Exchange), and the chart uses the same delay; the page refreshes everything every minute.</p>`;
+  h += `<p class="stocks-note">Quotes and key stats from <a href="https://www.tradingview.com/" target="_blank" rel="noopener noreferrer">TradingView</a>, intraday chart (1 min, today or last trading day) from <a href="https://www.cnbc.com/markets/" target="_blank" rel="noopener noreferrer">CNBC</a>. Green/red chart = up/down vs previous close (dashed line). Quotes are delayed by about 15 minutes (Nasdaq and Oslo Stock Exchange), and the chart uses the same delay; the page refreshes everything every minute.</p>
+  <p class="stocks-note">Kort trend er en enkel teknisk trend (siste kurs mot et kort glidende gjennomsnitt av minuttpunktene i grafen) og ikke råd.</p>`;
   sec.innerHTML = h;
   return sec;
 }
@@ -973,11 +979,31 @@ function pickSession(st, bars){
   }
   return null;
 }
+function shortTrend(pts){
+  if (!pts || pts.length < 15) return null;
+  const n = Math.min(30, pts.length);
+  const window = pts.slice(-n);
+  const sma = window.reduce((s,p)=>s+p.c,0) / n;
+  const last = pts.at(-1).c;
+  if (!isFinite(last) || !isFinite(sma) || sma <= 0) return null;
+  const dev = (last - sma) / sma;
+  if (dev > 0.004) return 'up';
+  if (dev < -0.004) return 'down';
+  return 'flat';
+}
+function setTrend(card, pts){
+  const el = card.querySelector('[data-f="trend"]');
+  if (!el) return;
+  const t = shortTrend(pts);
+  if (!t){ el.textContent = 'Kort trend: —'; el.className = 'qtrend'; return; }
+  el.textContent = 'Kort trend: ' + (t==='up' ? 'stigende' : t==='down' ? 'fallende' : 'nøytral');
+  el.className = 'qtrend ' + (t==='up' ? 'up' : t==='down' ? 'down' : 'flat');
+}
 function renderChart(card, st){
   const box = card.querySelector('[data-f="chart"]');
   const bars = CHART_BARS[st.tv], d = STAT_DATA[st.tv];
   const S = bars && pickSession(st, bars);
-  if (!S){ if (!box.querySelector('svg')) box.innerHTML = `<div class="loading">${bars ? 'No trading to show' : 'Chart unavailable'}</div>`; return; }
+  if (!S){ setTrend(card, null); if (!box.querySelector('svg')) box.innerHTML = `<div class="loading">${bars ? 'No trading to show' : 'Chart unavailable'}</div>`; return; }
   const W = Math.max(120, Math.round(box.clientWidth)), H = Math.round(box.clientHeight) || 104, AX = 16, PT = 6, PB = 4;
   const statDay = d && d.time ? dayKey(st.tz, d.time*1000) : null;
   let prev = (d && statDay === S.day && d.close!=null && d.change_abs!=null) ? d.close - d.change_abs : null;
@@ -985,6 +1011,7 @@ function renderChart(card, st){
   const chg = (d && statDay === S.day && d.change!=null) ? d.change : (prev!=null ? S.pts.at(-1).c - prev : null);
   const dir = chg==null ? 'flat' : chg>0 ? 'up' : chg<0 ? 'down' : 'flat';
   card.dataset.dir = dir;
+  setTrend(card, S.pts);
   let lo = Math.min(...S.pts.map(p=>p.c)), hi = Math.max(...S.pts.map(p=>p.c));
   if (prev!=null){ lo = Math.min(lo, prev); hi = Math.max(hi, prev); }
   if (hi - lo < hi*1e-4){ hi += hi*5e-4; lo -= lo*5e-4; }
